@@ -1,0 +1,16 @@
+/dist/*
+.local
+/node_modules/**
+
+**/*.svg
+**/*.sh
+
+/public/*
+.next
+
+next-env.d.ts
+next.config.ts
+
+pnpm-lock.yaml
+
+generated

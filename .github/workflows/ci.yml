@@ -1,0 +1,89 @@
+name: App Builder
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  release:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [ ubuntu-latest ]
+        node: [ 21 ]
+
+    steps:
+      - name: Checkout 🛎
+        uses: actions/checkout@master
+
+      - name: Setup node env 🏗
+        uses: actions/setup-node@v2.1.5
+        with:
+          node-version: ${{ matrix.node }}
+          check-latest: true
+
+      - name: Set up .env file
+        run: |
+          echo "REACT_EDITOR=${{ secrets.REACT_EDITOR }}" >> .env
+          echo "NEXT_PUBLIC_BASE_URL=${{ secrets.NEXT_PUBLIC_BASE_URL }}" >> .env
+          echo "NEXT_PUBLIC_SENTRY_DSN=${{ secrets.NEXT_PUBLIC_SENTRY_DSN }}" >> .env
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: Get pnpm store directory
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+      - name: Cache node_modules 📦
+        uses: actions/cache@v4
+        id: pnpm-cache
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: Install dependencies 👨🏻‍💻
+        id: bun-install
+        run: bun install
+
+      - name: Run linter 👀
+        run: pnpm lint
+
+      - name: Build
+        run: pnpm run build
+
+      - name: Deploy to server
+        id: deploy
+        uses: Pendect/action-rsyncer@v1.1.0
+        env:
+          DEPLOY_KEY: ${{ secrets.SSH_KEY }}
+        with:
+          flags: '-avzr'
+          options: ''
+          src: '.next package.json pnpm-lock.yaml public'
+          dest: 'root@${{ secrets.SSH_HOST }}:${{ secrets.ROOT_DIR }}/current'
+
+      - name: Install dependencies and run on server
+        uses: appleboy/ssh-action@master
+        id: create-release-dir
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          key: ${{ secrets.SSH_KEY }}
+          username: root
+          port: 22
+          script: |
+            bash ${{ secrets.ROOT_DIR }}/scripts/deploy.sh
+
+      - name: Discord notification
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+        uses: Ilshidur/action-discord@master
+        with:
+          args: 'The project {{ EVENT_PAYLOAD.repository.full_name }} has been deployed.'
