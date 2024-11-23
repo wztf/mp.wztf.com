@@ -1,10 +1,6 @@
 {
   "compilerOptions": {
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -23,27 +19,14 @@
       }
     ],
     "paths": {
-      "@/*": [
-        "./*"
-      ],
-      "@layouts/*": [
-        "./layouts/*"
-      ],
-      "@components/*": [
-        "./components/*"
-      ],
-      "@config/*": [
-        "./config/*"
-      ],
-      "@assets/*": [
-        "./assets/*"
-      ],
-      "@plugins/*": [
-        "./plugins/*"
-      ],
-      "@store/*": [
-        "./store/*"
-      ]
+      "@/*": ["./*"],
+      "@layouts/*": ["./layouts/*"],
+      "@components/*": ["./components/*"],
+      "@config/*": ["./config/*"],
+      "@assets/*": ["./assets/*"],
+      "@plugins/*": ["./plugins/*"],
+      "@store/*": ["./store/*"],
+      "@generated/*": ["./generated/*"]
     }
   },
   "include": [
@@ -55,9 +38,5 @@
     "codegen.ts",
     "next.config.mjs"
   ],
-  "exclude": [
-    "node_modules",
-    "target",
-    "src"
-  ]
+  "exclude": ["node_modules", "target", "src"]
 }

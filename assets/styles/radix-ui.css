@@ -18,3 +18,8 @@
 * [animate.css](https://animate.style/)
 */
 @import 'animate.css';
+
+/**
+* pure-react-carousel
+*/
+@import 'pure-react-carousel/dist/react-carousel.es.css';

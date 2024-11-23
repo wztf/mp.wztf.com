@@ -3,9 +3,9 @@ import React from 'react'
 import { ApolloWrapper } from '@layouts/ApolloWrapper'
 import DefaultLayout from '@layouts/default'
 
-import type { Metadata } from 'next'
 import '@assets/styles/app.scss'
 import '@assets/styles/radix-ui.css'
+import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
   title: 'Next',
@@ -19,7 +19,7 @@ type Props = {
 export default function RootLayout({ children }: Readonly<Props>) {
   return (
     <html lang='en' suppressHydrationWarning>
-      <body>
+      <body className='font-sans'>
         <ApolloWrapper>
           <DefaultLayout>{children}</DefaultLayout>
         </ApolloWrapper>

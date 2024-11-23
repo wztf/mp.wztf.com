@@ -2,7 +2,9 @@ import { HttpLink } from '@apollo/client'
 import { loadDevMessages, loadErrorMessages } from '@apollo/client/dev'
 import { ApolloClient, InMemoryCache, registerApolloClient } from '@apollo/experimental-nextjs-app-support'
 
-import { appid, graphqlUri } from '../config'
+import { useStore } from '@/store'
+
+import { appid } from '@config/index'
 
 if (process.env.NODE_ENV !== 'production') {
   loadDevMessages()
@@ -14,7 +16,7 @@ export const { getClient, query, PreloadQuery } = registerApolloClient(
     new ApolloClient({
       cache: new InMemoryCache(),
       link: new HttpLink({
-        uri: graphqlUri
+        uri: `${process.env.NEXT_PUBLIC_BASE_URL}/graphql`
       }),
       defaultOptions: {
         query: {
@@ -28,7 +30,7 @@ export const { getClient, query, PreloadQuery } = registerApolloClient(
         }
       },
       headers: {
-        Authorization: process.env.ACCESS_TOKEN ?? '',
+        Authorization: useStore().token ?? '',
         Appid: appid
       }
     })
