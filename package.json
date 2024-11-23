@@ -1,6 +1,6 @@
 {
   "name": "ilikechair.com",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "private": false,
   "license": "MIT",
   "appid": "aa069ed4223ac1660f",
@@ -94,6 +94,7 @@
     "@types/node": "22.5.1",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "animate.css": "^4.1.1",
     "eslint": "^8.57.1",
     "eslint-config-next": "14.2.7",
     "postcss": "^8.4.47",
