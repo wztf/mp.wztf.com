@@ -60,6 +60,7 @@ module.exports = {
     '@next/next/no-img-element': 'off',
     'react/no-unescaped-entities': 'off',
     '@typescript-eslint/no-unsafe-return': 'off',
-    '@typescript-eslint/no-unsafe-call': 'off'
+    '@typescript-eslint/no-unsafe-call': 'off',
+    '@typescript-eslint/no-misused-promises': 'off'
   }
 }

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-misused-promises */
 'use client'
 import { useMutation } from '@apollo/client'
 import { Signatory } from '@cakioe/kit.js'
@@ -43,18 +44,18 @@ const Page = () => {
   }, [code, state])
 
   const [formValues, setFormValues] = useState<FormProps>({
-    email: '',
-    password: ''
+    email: '211321136@qq.com',
+    password: '830605'
   })
   const [errors, setErrors] = useState<{ [key: string]: string | null }>({
     email: null,
     password: null
   })
 
-  const onSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    const data = Object.fromEntries(new FormData(e.currentTarget))
-    console.log(data)
+
+    console.log('preventDefault')
 
     let newErrors = {}
     if (!formValues.email) {
@@ -69,10 +70,27 @@ const Page = () => {
     console.log(newErrors)
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors)
-    } else {
-      setErrors({ email: null, password: null })
-      console.log('Form submitted:', formValues)
+      return
     }
+
+    const payload = signer.toBase64String({ app: 'gg', ...formValues })
+    try {
+      const res = await fetch({
+        variables: { input: payload },
+        context: {
+          headers: {
+            appid: appid
+          }
+        }
+      })
+      console.log(res)
+    } catch (error) {
+      console.log(error)
+    } finally {
+      // setFormValues({ email: '', password: '' })
+      // setErrors({ email: null, password: null })
+    }
+    console.log('Form submitted:', formValues)
   }
 
   const onReset = (method: 'sms' | 'password' = 'sms') => {

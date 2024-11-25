@@ -11,12 +11,14 @@ if (process.env.NODE_ENV !== 'production') {
   loadErrorMessages()
 }
 
+const BASE_URL = `${process.env.NEXT_PUBLIC_BASE_URL}/graphql`
+
 export const { getClient, query, PreloadQuery } = registerApolloClient(
   () =>
     new ApolloClient({
       cache: new InMemoryCache(),
       link: new HttpLink({
-        uri: `${process.env.NEXT_PUBLIC_BASE_URL}/graphql`
+        uri: BASE_URL
       }),
       defaultOptions: {
         query: {
