@@ -5,7 +5,6 @@ const Page = () => {
   return (
     <>
       <h1>blogs</h1>
-
       <div className='bg-gray-800'>
         <div className='2xl:container 2xl:mx-auto md:py-12 lg:px-20 md:px-6 py-9 px-4'>
           <div id='viewerButton' className='hidden w-full flex justify-center'>

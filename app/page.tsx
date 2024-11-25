@@ -1,46 +1,9 @@
-import { Box, Button, Container, Flex, Text } from '@radix-ui/themes'
+import { Box, Button, Container, Flex } from '@radix-ui/themes'
 import Link from 'next/link'
 
 export default function Home() {
   return (
     <>
-      <nav className='w-full border-b'>
-        <div className='py-5 md:py-0 container mx-auto px-6 flex items-center justify-between'>
-          <Text>hello world</Text>
-          <div>
-            <button className='sm:block md:hidden text-gray-500 hover:text-gray-700 focus:text-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500'>
-              #
-            </button>
-            <div id='menu' className='md:block lg:block hidden'>
-              <button className='block md:hidden lg:hidden text-gray-500 hover:text-gray-700 focus:text-gray-700 fixed focus:outline-none focus:ring-2 focus:ring-gray-500 z-30 top-0 mt-6'>
-                #
-              </button>
-              <ul className='flex text-3xl md:text-base items-center py-10 md:flex flex-col md:flex-row justify-center fixed md:relative top-0 bottom-0 left-0 right-0 bg-white md:bg-transparent z-20'>
-                <li className='text-gray-700 hover:text-gray-900 cursor-pointer text-base lg:text-lg pt-10 md:pt-0'>
-                  <Link href='/signin'>Feature</Link>
-                </li>
-                <li className='text-gray-700 hover:text-gray-900 cursor-pointer text-base lg:text-lg pt-10 md:pt-0 md:ml-5 lg:ml-10'>
-                  <Link href='/signin'>Marketplace</Link>
-                </li>
-                <li className='text-gray-700 hover:text-gray-900 cursor-pointer text-base lg:text-lg pt-10 md:pt-0 md:ml-5 lg:ml-10'>
-                  <Link href='/signin'>Company</Link>
-                </li>
-                <li className='text-gray-700 hover:text-gray-900 cursor-pointer text-base lg:text-lg pt-10 md:pt-0 md:ml-5 lg:ml-10'>
-                  <Link href='/signin'>Features</Link>
-                </li>
-                <li className='text-gray-700 hover:text-gray-900 cursor-pointer text-base lg:text-lg pt-10 md:pt-0 md:ml-5 lg:ml-10'>
-                  <Link href='/signin'>Contact</Link>
-                </li>
-              </ul>
-            </div>
-          </div>
-          <Link href='/signin'>
-            <Button size='3' color='blue'>
-              登录
-            </Button>
-          </Link>
-        </div>
-      </nav>
       <Box className='bg-gray-100 mx-auto'>
         <Container className='py-12 sm:py-24'>
           <div className='w-11/12 mx-auto sm:w-2/3 mb-5 sm:mb-10'>
@@ -765,7 +728,7 @@ export default function Home() {
             </div>
           </div>
 
-          <div className='flex flex-col sm:flex-row jusitfy-center items-center sm:space-x-5 xl:space-x-8 space-y-4 sm:space-y-0'>
+          <div className='flex flex-col sm:flex-row justify-center items-center sm:space-x-5 xl:space-x-8 space-y-4 sm:space-y-0'>
             <div>
               <img
                 className='hidden lg:block'

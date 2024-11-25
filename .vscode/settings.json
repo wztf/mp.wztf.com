@@ -22,5 +22,6 @@
   "i18n-ally.localesPaths": ["messages", "src/i18n"],
   "[ignore]": {
     "editor.defaultFormatter": "foxundermoon.shell-format"
-  }
+  },
+  "typescript.tsdk": "node_modules\\typescript\\lib"
 }

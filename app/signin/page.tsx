@@ -3,17 +3,19 @@ import { useMutation } from '@apollo/client'
 import { Signatory } from '@cakioe/kit.js'
 import * as Form from '@radix-ui/react-form'
 import * as Separator from '@radix-ui/react-separator'
-import { Box, Button, Card, Container, Flex, Heading, Skeleton, Spinner, Text } from '@radix-ui/themes'
+import { Badge, Box, Button, Card, Container, Flex, Heading, Skeleton, Spinner, Text } from '@radix-ui/themes'
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { FormEvent, useEffect, useState } from 'react'
 import { FcGoogle } from 'react-icons/fc'
 
 import { appid, version } from '@config/index'
 import { LoginDocument } from '@generated/graphql'
 
-// state=Z4-kUZnvh8esWVjK1exXpA&code=4%2F0AeanS0aM9gKmMRtEPb9rXmwcmvaPGbTX0_CX0jxFxTLC3v-lAZbpLC89Ppfd5ikbJifgGQ&
-// scope=email+profile+openid+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email&authuser=0&prompt=consent
+type FormProps = {
+  email: string
+  password: string
+}
 
 const Page = () => {
   const params = useSearchParams()
@@ -40,6 +42,45 @@ const Page = () => {
     }
   }, [code, state])
 
+  const [formValues, setFormValues] = useState<FormProps>({
+    email: '',
+    password: ''
+  })
+  const [errors, setErrors] = useState<{ [key: string]: string | null }>({
+    email: null,
+    password: null
+  })
+
+  const onSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    const data = Object.fromEntries(new FormData(e.currentTarget))
+    console.log(data)
+
+    let newErrors = {}
+    if (!formValues.email) {
+      newErrors = { ...newErrors, email: '请输入邮箱地址' }
+    } else if (!/^\S+@\S+\.\S+$/.test(formValues.email)) {
+      newErrors = { ...newErrors, email: '请输入正确的邮箱地址' }
+    }
+
+    if (!formValues.password) {
+      newErrors = { ...newErrors, password: '请输入密码或验证码' }
+    }
+    console.log(newErrors)
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors)
+    } else {
+      setErrors({ email: null, password: null })
+      console.log('Form submitted:', formValues)
+    }
+  }
+
+  const onReset = (method: 'sms' | 'password' = 'sms') => {
+    setMethod(method)
+    setFormValues({ email: '', password: '' })
+    setErrors({ email: null, password: null })
+  }
+
   if (loading) {
     return (
       <Flex justify='center' align='center' className='h-screen w-screen  bg-gray-50'>
@@ -56,7 +97,6 @@ const Page = () => {
       <>
         <Flex justify='center' align='center' className='h-screen w-screen  bg-gray-50'>
           <Spinner size='3' />
-
           {data && (
             <Text color='gray' className='text-base font-bold ml-1'>
               {data.login}
@@ -87,31 +127,63 @@ const Page = () => {
                   <Heading as='h3' className='mb-4 text-base font-bold leading-none'>
                     {method === 'sms' ? '验证码登录 / 注册' : '密码登录'}
                   </Heading>
-                  <Form.Root className='w-full space-y-2 text-sm'>
+                  <Form.Root className='w-full space-y-2 text-sm' autoCapitalize='off' onSubmit={onSubmit}>
                     <Form.Field name='email'>
                       <Flex justify='between' align='center' className='text-base'>
                         <Form.Label className='mb-1.5'></Form.Label>
                       </Flex>
-                      <Form.Control asChild>
-                        <input className='h-12 w-full rounded-sm border bg-gray-50' type='email' required />
+                      <Form.Control
+                        asChild
+                        onChange={e =>
+                          setFormValues(prev => ({
+                            ...prev,
+                            email: e.target.value
+                          }))
+                        }
+                      >
+                        <input
+                          className={`h-12 p-2 w-full rounded-sm border bg-white outline-none focus:border-blue-500 ${errors.email ? 'border-red-500' : ''}`}
+                          type='text'
+                          value={formValues.email}
+                          required
+                        />
                       </Form.Control>
-                      <Form.Message className='text-red-600' match='valueMissing'>
-                        请输入邮箱
-                      </Form.Message>
-                      <Form.Message className='text-red-600' match='typeMismatch'>
-                        请输入正确的邮箱
-                      </Form.Message>
+                      {errors.email && <Form.Message className='text-red-600'>{errors.email}</Form.Message>}
                     </Form.Field>
                     <Form.Field name='password'>
                       <Flex justify='between' align='center' className='text-base'>
                         <Form.Label className='mb-1.5'></Form.Label>
                       </Flex>
-                      <Form.Control asChild>
-                        <input className='h-12 w-full rounded-sm border bg-gray-50' type='password' required />
-                      </Form.Control>
-                      <Form.Message className='text-red-600' match='valueMissing'>
-                        请输入密码
-                      </Form.Message>
+                      <Flex
+                        justify='between'
+                        align='center'
+                        className={`text-base border bg-white outline-none focus-within:border-blue-500 ${errors.password ? 'border-red-500' : ''}`}
+                      >
+                        <Form.Control
+                          asChild
+                          onChange={e =>
+                            setFormValues(prev => ({
+                              ...prev,
+                              password: e.target.value
+                            }))
+                          }
+                        >
+                          <input
+                            className='h-12 w-full rounded-sm border-none outline-none focus:outline-none p-2 flex-auto bg-transparent'
+                            type='password'
+                            required
+                            value={formValues.password}
+                          />
+                        </Form.Control>
+                        {method === 'sms' ? (
+                          <Text className='flex-0 text-nowrap bg-transparent text-sm p-2 cursor-pointer text-blue-500'>
+                            获取验证码
+                          </Text>
+                        ) : (
+                          <Text className='flex-0 text-nowrap bg-transparent text-sm p-2 cursor-pointer'>忘记密码</Text>
+                        )}
+                      </Flex>
+                      {errors.password && <Form.Message className='text-red-600'>{errors.password}</Form.Message>}
                     </Form.Field>
 
                     {method === 'sms' ? (
@@ -122,13 +194,7 @@ const Page = () => {
                       </div>
                     ) : (
                       <div className='grid grid-cols-2 gap-4 pt-5'>
-                        <Button
-                          type='button'
-                          size='3'
-                          variant='outline'
-                          color='blue'
-                          onClick={() => setMethod('password')}
-                        >
+                        <Button type='button' size='3' variant='outline' color='blue' onClick={() => onReset('sms')}>
                           注册
                         </Button>
                         <Button size='3' color='blue'>
@@ -145,22 +211,24 @@ const Page = () => {
                       </Link>
                     </Flex>
                     {method === 'sms' ? (
-                      <Text className='cursor-pointer' onClick={() => setMethod('password')}>
+                      <Text className='cursor-pointer' onClick={() => onReset('password')}>
                         密码登录
                       </Text>
                     ) : (
-                      <Text className='cursor-pointer' onClick={() => setMethod('sms')}>
+                      <Text className='cursor-pointer' onClick={() => onReset('sms')}>
                         验证码登录
                       </Text>
                     )}
                   </Flex>
                 </div>
                 <div className='flex-0 md:w-[250px] border-l px-4 text-sm'>
-                  <Flex className='text-base leading-none' align='center'>
-                    <Text>扫码登录</Text>
-                    <Text className='text-xs' color='blue'>
-                      (仅支持微信)
-                    </Text>
+                  <Flex className='text-base leading-none space-x-0.5' align='center' justify='start'>
+                    <Heading as='h3' className='mb-0 text-base font-bold leading-none'>
+                      扫码登录
+                    </Heading>
+                    <Badge radius='full' variant='solid' color='blue'>
+                      仅支持微信
+                    </Badge>
                   </Flex>
                   <Flex align='center' justify='start' className='my-2.5'>
                     <Skeleton className='h-[144px] w-[144px] border bg-gray-100'></Skeleton>
@@ -185,7 +253,12 @@ const Page = () => {
           </Container>
         </Box>
         <Flex className='my-1 flex items-center justify-center text-sm text-gray-600'>
-          <Link href='/' className='mx-0.5 text-blue-500 underline hover:text-blue-700'>
+          <Link
+            href='/'
+            target='_blank'
+            rel='noreferrer nofollow'
+            className='mx-0.5 text-blue-500 underline hover:text-blue-700'
+          >
             粤ICP备XXXX号
           </Link>
           <Separator.Root decorative orientation='vertical' className='mx-2 h-4 w-0.5 bg-gray-200' />
