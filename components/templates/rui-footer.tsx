@@ -6,6 +6,7 @@ import RuiBacktop from '@components/rui-backtop'
 const RuiFooter = () => {
   return (
     <>
+      <Separator.Root decorative orientation='vertical' className='h-px w-full bg-gray-100' />
       <footer className='w-full'>
         <div className='mx-auto container px-4 sm:px-6 lg:px-8'>
           <div className='grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-3 gap-y-8 md:gap-8 py-10 max-w-sm mx-auto sm:max-w-3xl lg:max-w-full'>
