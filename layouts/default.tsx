@@ -14,7 +14,7 @@ type Props = {
 const DefaultLayout = ({ children }: Readonly<Props>) => {
   const pathname = usePathname()
   // 是否显示 Header & Footer
-  const isVisible = pathname !== '/signin'
+  const isVisible = !['/signin', '/forgot'].includes(pathname)
 
   return (
     <>

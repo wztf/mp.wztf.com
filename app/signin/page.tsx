@@ -44,8 +44,8 @@ const Page = () => {
   }, [code, state])
 
   const [formValues, setFormValues] = useState<FormProps>({
-    email: '211321136@qq.com',
-    password: '830605'
+    email: 'cleveng@gmail.com',
+    password: '123456'
   })
   const [errors, setErrors] = useState<{ [key: string]: string | null }>({
     email: null,
@@ -73,7 +73,7 @@ const Page = () => {
       return
     }
 
-    const payload = signer.toBase64String({ app: 'gg', ...formValues })
+    const payload = signer.toBase64String({ app: 'gg', ...formValues, method: 'password' })
     try {
       const res = await fetch({
         variables: { input: payload },
@@ -95,7 +95,7 @@ const Page = () => {
 
   const onReset = (method: 'sms' | 'password' = 'sms') => {
     setMethod(method)
-    setFormValues({ email: '', password: '' })
+    // setFormValues({ email: '', password: '' })
     setErrors({ email: null, password: null })
   }
 
@@ -198,7 +198,9 @@ const Page = () => {
                             获取验证码
                           </Text>
                         ) : (
-                          <Text className='flex-0 text-nowrap bg-transparent text-sm p-2 cursor-pointer'>忘记密码</Text>
+                          <Link href='/forgot' className='flex-0 text-nowrap bg-transparent text-sm p-2 cursor-pointer'>
+                            忘记密码
+                          </Link>
                         )}
                       </Flex>
                       {errors.password && <Form.Message className='text-red-600'>{errors.password}</Form.Message>}
