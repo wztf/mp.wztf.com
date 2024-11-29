@@ -1,13 +1,63 @@
+'use client'
+
 import * as Separator from '@radix-ui/react-separator'
+import { Flex, Text } from '@radix-ui/themes'
 import Link from 'next/link'
+import { usePathname, useRouter } from 'next/navigation'
+import { FaHome } from 'react-icons/fa'
+import { FaRegUser } from 'react-icons/fa6'
+import { GrTest } from 'react-icons/gr'
+import { SiKnowledgebase } from 'react-icons/si'
+
+import { useStore } from '@/store'
 
 import RuiBacktop from '@components/rui-backtop'
 
 const RuiFooter = () => {
+  const router = useRouter()
+  const loggedIn = useStore(state => state.loggedIn)
+  const pathname = usePathname()
+
   return (
     <>
-      <Separator.Root decorative orientation='vertical' className='h-px w-full bg-gray-100' />
-      <footer className='w-full'>
+      <div className='fixed md:hidden bottom-0 left-0 z-50 w-full h-16 bg-white border-t border-gray-200 dark:bg-gray-700 dark:border-gray-600'>
+        <div className='grid h-full max-w-lg grid-cols-4 mx-auto font-medium'>
+          <Link
+            href='/'
+            className={`inline-flex justify-center items-center flex-col px-5 hover:bg-gray-50 dark:hover:bg-gray-800 group ${pathname === '/' ? 'text-blue-600 dark:text-blue-500' : 'text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-500'}`}
+          >
+            <FaHome />
+            <Text className='text-sm'>首页</Text>
+          </Link>
+          <Flex
+            justify='center'
+            align='center'
+            className={`inline-flex flex-col px-5 hover:bg-gray-50 dark:hover:bg-gray-800 group ${pathname === '/assessments' ? 'text-blue-600 dark:text-blue-500' : 'text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-500'}`}
+            onClick={() => router.push(loggedIn ? '/assessments' : '/signin')}
+          >
+            <GrTest />
+            <Text className='text-sm'>测评</Text>
+          </Flex>
+          <Link
+            href='/courses'
+            className={`inline-flex justify-center items-center flex-col px-5 hover:bg-gray-50 dark:hover:bg-gray-800 group ${pathname === '/courses' ? 'text-blue-600 dark:text-blue-500' : 'text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-500'}`}
+          >
+            <SiKnowledgebase />
+            <Text className='text-sm'>学习</Text>
+          </Link>
+          <Flex
+            justify='center'
+            align='center'
+            className={`inline-flex flex-col px-5 hover:bg-gray-50 dark:hover:bg-gray-800 group ${pathname === '/profile' ? 'text-blue-600 dark:text-blue-500' : 'text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-500'}`}
+            onClick={() => router.push(loggedIn ? '/profile' : '/signin')}
+          >
+            <FaRegUser />
+            <Text className='text-sm'>我的</Text>
+          </Flex>
+        </div>
+      </div>
+      <Separator.Root decorative orientation='vertical' className='h-px w-full bg-gray-100 hidden md:block' />
+      <footer className='w-full hidden md:block'>
         <div className='mx-auto container px-4 sm:px-6 lg:px-8'>
           <div className='grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-3 gap-y-8 md:gap-8 py-10 max-w-sm mx-auto sm:max-w-3xl lg:max-w-full'>
             <div className='col-span-full mb-10 lg:col-span-2 lg:mb-0'>

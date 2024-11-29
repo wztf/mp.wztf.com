@@ -1,75 +1,130 @@
-import { Button, DropdownMenu, Text } from '@radix-ui/themes'
+import { DropdownMenu, Flex, Text } from '@radix-ui/themes'
+import Image from 'next/image'
 import Link from 'next/link'
-import { FaRegUser } from 'react-icons/fa'
-import { IoExitOutline, IoSettingsOutline } from 'react-icons/io5'
+import { useRouter } from 'next/navigation'
+import { useEffect, useState } from 'react'
+import { FaChevronRight, FaRegUser } from 'react-icons/fa6'
+import { FiMenu } from 'react-icons/fi'
+import { IoClose, IoExitOutline, IoSettingsOutline } from 'react-icons/io5'
 
 import { useStore } from '@/store'
 
 const UriHeader = () => {
+  const router = useRouter()
+
   const loggedIn = useStore(state => state.loggedIn)
   const logout = useStore(state => state.logout)
+
+  const [state, setState] = useState<boolean>(false)
+
+  useEffect(() => {
+    document.onclick = (e: MouseEvent) => {
+      const target = e.target as HTMLElement
+      // 用户登录的button 点击弹窗 tagName === HTML
+      if (!target?.closest('.menu-btn') && target.tagName !== 'HTML') {
+        setState(false)
+      }
+    }
+  }, [])
+
+  const Brand = () => (
+    <div className='flex items-center justify-between py-5 md:block'>
+      <Link href='/'>
+        <Image src='https://www.floatui.com/logo-dark.svg' width={120} height={50} alt='Float UI logo' />
+      </Link>
+      <div className='md:hidden'>
+        <button className='menu-btn text-gray-400 hover:text-gray-300 text-3xl' onClick={() => setState(!state)}>
+          {state ? <IoClose /> : <FiMenu />}
+        </button>
+      </div>
+    </div>
+  )
+
   return (
     <>
-      <nav id='nav' className='w-full border-b sticky top-0 z-50 bg-white'>
-        <div className='py-5 md:py-0 container mx-auto px-6 flex items-center justify-between'>
-          <Link href='/'>
-            <Text>hello world</Text>
-          </Link>
-          <div>
-            <button className='sm:block md:hidden text-gray-500 hover:text-gray-700 focus:text-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500'>
-              #
-            </button>
-            <div id='menu' className='md:block lg:block hidden'>
-              <button className='block md:hidden lg:hidden text-gray-500 hover:text-gray-700 focus:text-gray-700 fixed focus:outline-none focus:ring-2 focus:ring-gray-500 z-30 top-0 mt-6'>
-                #
-              </button>
-              <ul className='flex text-3xl md:text-base items-center py-8 md:flex flex-col md:flex-row justify-center fixed md:relative top-0 bottom-0 left-0 right-0 bg-white md:bg-transparent z-20'>
-                <li className='text-gray-700 hover:text-gray-900 cursor-pointer text-base lg:text-lg pt-10 md:pt-0'>
-                  <Link href='/signin'>Feature</Link>
-                </li>
-                <li className='text-gray-700 hover:text-gray-900 cursor-pointer text-base lg:text-lg pt-10 md:pt-0 md:ml-5 lg:ml-10'>
-                  <Link href='/signin'>Marketplace</Link>
-                </li>
-                <li className='text-gray-700 hover:text-gray-900 cursor-pointer text-base lg:text-lg pt-10 md:pt-0 md:ml-5 lg:ml-10'>
-                  <Link href='/signin'>Company</Link>
-                </li>
-                <li className='text-gray-700 hover:text-gray-900 cursor-pointer text-base lg:text-lg pt-10 md:pt-0 md:ml-5 lg:ml-10'>
-                  <Link href='/signin'>Features</Link>
-                </li>
-                <li className='text-gray-700 hover:text-gray-900 cursor-pointer text-base lg:text-lg pt-10 md:pt-0 md:ml-5 lg:ml-10'>
-                  <Link href='/signin'>Contact</Link>
-                </li>
-              </ul>
-            </div>
+      <div className='bg-gray-900'>
+        <header>
+          <div className={`md:hidden ${state ? 'mx-2 md:pb-5' : 'hidden'}`}>
+            <Brand />
           </div>
-          {loggedIn ? (
-            <DropdownMenu.Root>
-              <DropdownMenu.Trigger>
-                <Button variant='soft'>
-                  <FaRegUser />
-                  <DropdownMenu.TriggerIcon />
-                </Button>
-              </DropdownMenu.Trigger>
-              <DropdownMenu.Content>
-                <DropdownMenu.Item>
-                  <IoSettingsOutline />
-                  个人设置
-                </DropdownMenu.Item>
-                <DropdownMenu.Separator />
-                <DropdownMenu.Item onClick={logout}>
-                  <IoExitOutline /> 退出登录
-                </DropdownMenu.Item>
-              </DropdownMenu.Content>
-            </DropdownMenu.Root>
-          ) : (
-            <Link href='/signin'>
-              <Button size='3' color='blue'>
-                登录
-              </Button>
-            </Link>
-          )}
-        </div>
-      </nav>
+          <nav
+            className={`md:text-sm ${state ? 'pb-5 absolute z-20 top-0 inset-x-0 bg-gray-800 rounded-xl mx-2 mt-2 md:mx-0 md:mt-0 md:relative md:bg-transparent' : ''}`}
+          >
+            <div className='gap-x-14 items-center container mx-auto px-4 md:flex md:px-8'>
+              <Brand />
+              <div className={`flex-1 items-center mt-8 md:mt-0 md:flex ${state ? 'block' : 'hidden'} `}>
+                <ul className='flex-1 justify-end items-center space-y-6 md:flex md:space-x-6 md:space-y-0'>
+                  <li className='text-gray-300 hover:text-gray-400'>
+                    <Link href='/' className='block'>
+                      首页
+                    </Link>
+                  </li>
+                  <li className='text-gray-300 hover:text-gray-400'>
+                    <Text
+                      className='block cursor-pointer'
+                      onClick={() => router.push(loggedIn ? '/assessments' : '/signin')}
+                    >
+                      天赋测评
+                    </Text>
+                  </li>
+                  <li className='text-gray-300 hover:text-gray-400'>
+                    <Link href='/courses' className='block'>
+                      天赋课程
+                    </Link>
+                  </li>
+                  <li className='text-gray-300 hover:text-gray-400'>
+                    <Link href='/articles' className='block'>
+                      天赋专题
+                    </Link>
+                  </li>
+                  <li className='menu-btn'>
+                    {loggedIn ? (
+                      <DropdownMenu.Root>
+                        <DropdownMenu.Trigger>
+                          <div className='items-center justify-end mt-6 space-y-6 md:flex md:mt-0'>
+                            <Flex
+                              justify='center'
+                              align='center'
+                              gapX='1'
+                              className='py-2 px-4 text-white font-medium bg-sky-500 hover:bg-sky-400 active:bg-sky-600 duration-150 rounded-full md:inline-flex'
+                            >
+                              <Text>Sign in</Text>
+                              <FaRegUser />
+                              <DropdownMenu.TriggerIcon />
+                            </Flex>
+                          </div>
+                        </DropdownMenu.Trigger>
+                        <DropdownMenu.Content>
+                          <DropdownMenu.Item onClick={() => router.push('/profile')}>
+                            <IoSettingsOutline />
+                            个人设置
+                          </DropdownMenu.Item>
+                          <DropdownMenu.Separator />
+                          <DropdownMenu.Item onClick={logout}>
+                            <IoExitOutline /> 退出登录
+                          </DropdownMenu.Item>
+                        </DropdownMenu.Content>
+                      </DropdownMenu.Root>
+                    ) : (
+                      <Link href='/signin'>
+                        <Flex
+                          align='center'
+                          justify='center'
+                          gapX='1'
+                          className='py-2 px-4 text-white font-medium bg-sky-500 hover:bg-sky-400 active:bg-sky-600 duration-150 rounded-full md:inline-flex'
+                        >
+                          <Text>登 录</Text>
+                          <FaChevronRight />
+                        </Flex>
+                      </Link>
+                    )}
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </nav>
+        </header>
+      </div>
     </>
   )
 }

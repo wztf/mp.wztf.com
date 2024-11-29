@@ -21,7 +21,7 @@ const DefaultLayout = ({ children }: Readonly<Props>) => {
       <ThemeProvider attribute='class' defaultTheme='light' enableSystem disableTransitionOnChange>
         <Theme accentColor='violet' grayColor='mauve' panelBackground='translucent' radius='small'>
           {isVisible && <RuiHeader />}
-          {children}
+          <div className='pb-18 md:pb-0'>{children}</div>
           {isVisible && <RuiFooter />}
         </Theme>
       </ThemeProvider>

@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 'use client'
+
 import { useMutation } from '@apollo/client'
 import { ApolloError } from '@apollo/client/errors'
 import { Signatory } from '@cakioe/kit.js'
@@ -35,6 +36,7 @@ const Page = () => {
   })
 
   const login = useStore(state => state.login)
+  const loggedIn = useStore(state => state.loggedIn)
 
   useEffect(() => {
     const auth = async () => {
@@ -103,6 +105,11 @@ const Page = () => {
     setMethod(method)
     // setFormValues({ email: '', password: '' })
     setErrors({ email: null, password: null })
+  }
+
+  // 已经登录的跳转回首页
+  if (loggedIn) {
+    return redirect('/')
   }
 
   if (loading) {
