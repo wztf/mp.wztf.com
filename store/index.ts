@@ -16,7 +16,9 @@ interface Actions {
   setApp: (app: string) => void
 }
 
-export const useStore = create<States & Actions>()(
+export type Store = States & Actions
+
+export const useStore = create<Store>()(
   persist(
     set => ({
       loggedIn: false,

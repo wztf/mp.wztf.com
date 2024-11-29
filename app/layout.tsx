@@ -1,4 +1,5 @@
 import React from 'react'
+import { ToastContainer } from 'react-toastify'
 
 import { ApolloWrapper } from '@layouts/ApolloWrapper'
 import DefaultLayout from '@layouts/default'
@@ -23,6 +24,7 @@ export default function RootLayout({ children }: Readonly<Props>) {
         <ApolloWrapper>
           <DefaultLayout>{children}</DefaultLayout>
         </ApolloWrapper>
+        <ToastContainer />
       </body>
     </html>
   )

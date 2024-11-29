@@ -5,24 +5,24 @@ import { loadDevMessages, loadErrorMessages } from '@apollo/client/dev'
 import { ApolloClient, ApolloNextAppProvider, InMemoryCache } from '@apollo/experimental-nextjs-app-support'
 import React from 'react'
 
-import { appid } from '@config/index'
+import { appid, isDev } from '@config/index'
 
-if (process.env.NODE_ENV !== 'production') {
+if (isDev) {
   loadDevMessages()
   loadErrorMessages()
 }
 
-const BASE_URL = `${process.env.NEXT_PUBLIC_BASE_URL}/graphql`
-
 // eslint-disable-next-line react-hooks/rules-of-hooks
 
 // have a function to create a client for you
-const makeClient = () =>
-  new ApolloClient({
+const makeClient = () => {
+  const httpLink = new HttpLink({
+    uri: `${process.env.NEXT_PUBLIC_BASE_URL}/graphql`
+  })
+
+  return new ApolloClient({
     cache: new InMemoryCache(),
-    link: new HttpLink({
-      uri: BASE_URL
-    }),
+    link: httpLink,
     defaultOptions: {
       query: {
         context: {
@@ -39,6 +39,7 @@ const makeClient = () =>
       Appid: appid
     }
   })
+}
 
 export function ApolloWrapper({ children }: React.PropsWithChildren) {
   return <ApolloNextAppProvider makeClient={makeClient}>{children}</ApolloNextAppProvider>

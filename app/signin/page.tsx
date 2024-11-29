@@ -1,14 +1,18 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 'use client'
 import { useMutation } from '@apollo/client'
+import { ApolloError } from '@apollo/client/errors'
 import { Signatory } from '@cakioe/kit.js'
 import * as Form from '@radix-ui/react-form'
 import * as Separator from '@radix-ui/react-separator'
 import { Badge, Box, Button, Card, Container, Flex, Heading, Skeleton, Spinner, Text } from '@radix-ui/themes'
 import Link from 'next/link'
-import { useSearchParams } from 'next/navigation'
+import { redirect, useSearchParams } from 'next/navigation'
 import { FormEvent, useEffect, useState } from 'react'
 import { FcGoogle } from 'react-icons/fc'
+import { toast } from 'react-toastify'
+
+import { useStore } from '@/store'
 
 import { appid, version } from '@config/index'
 import { LoginDocument } from '@generated/graphql'
@@ -26,22 +30,34 @@ const Page = () => {
   const [method, setMethod] = useState<'sms' | 'password'>('sms')
 
   const signer = new Signatory(appid)
-  const [fetch, { loading, data }] = useMutation(LoginDocument)
+  const [fetch, { loading, data, error }] = useMutation(LoginDocument, {
+    variables: { input: '' }
+  })
+
+  const login = useStore(state => state.login)
 
   useEffect(() => {
-    const login = async () => {
-      const payload = signer.toBase64String({ app: 'gg', code: code })
+    const auth = async () => {
+      const payload = signer.toBase64String({ app: 'gg', code: code, state: state })
       try {
-        const res = await fetch({ variables: { input: payload } })
+        const res = await fetch({
+          variables: { input: payload },
+          context: {
+            headers: {
+              appid: appid
+            }
+          }
+        })
         console.log(res)
       } catch (error) {
         console.log(error)
       }
     }
     if (code && state) {
-      login().catch(console.error)
+      auth().catch(console.error)
     }
-  }, [code, state])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [code])
 
   const [formValues, setFormValues] = useState<FormProps>({
     email: 'cleveng@gmail.com',
@@ -55,8 +71,6 @@ const Page = () => {
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
-    console.log('preventDefault')
-
     let newErrors = {}
     if (!formValues.email) {
       newErrors = { ...newErrors, email: '请输入邮箱地址' }
@@ -67,30 +81,22 @@ const Page = () => {
     if (!formValues.password) {
       newErrors = { ...newErrors, password: '请输入密码或验证码' }
     }
-    console.log(newErrors)
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors)
       return
     }
 
     const payload = signer.toBase64String({ app: 'gg', ...formValues, method: 'password' })
-    try {
-      const res = await fetch({
-        variables: { input: payload },
-        context: {
-          headers: {
-            appid: appid
-          }
+    await fetch({
+      variables: { input: payload },
+      context: {
+        headers: {
+          appid: appid
         }
-      })
-      console.log(res)
-    } catch (error) {
-      console.log(error)
-    } finally {
-      // setFormValues({ email: '', password: '' })
-      // setErrors({ email: null, password: null })
-    }
-    console.log('Form submitted:', formValues)
+      }
+    })
+    // setFormValues({ email: '', password: '' })
+    // setErrors({ email: null, password: null })
   }
 
   const onReset = (method: 'sms' | 'password' = 'sms') => {
@@ -110,19 +116,15 @@ const Page = () => {
     )
   }
 
+  if (error as ApolloError) {
+    console.log(error?.message, '20092')
+  }
+
   if (data) {
-    return (
-      <>
-        <Flex justify='center' align='center' className='h-screen w-screen  bg-gray-50'>
-          <Spinner size='3' />
-          {data && (
-            <Text color='gray' className='text-base font-bold ml-1'>
-              {data.login}
-            </Text>
-          )}
-        </Flex>
-      </>
-    )
+    toast.success('登录成功', { autoClose: 15000 })
+    login(data.login)
+    // NOTE: 获取用户信息
+    return redirect('/')
   }
 
   return (

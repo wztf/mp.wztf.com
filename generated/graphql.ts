@@ -33,6 +33,7 @@ export type AccountObject = {
 export type Mutation = {
   code: Scalars['String']['output'];
   createAccount: Scalars['String']['output'];
+  createSetting: Scalars['String']['output'];
   login: Scalars['String']['output'];
   signup: Scalars['String']['output'];
 };
@@ -48,6 +49,11 @@ export type MutationCreateAccountArgs = {
 };
 
 
+export type MutationCreateSettingArgs = {
+  input: SettingInput;
+};
+
+
 export type MutationLoginArgs = {
   payload: Scalars['String']['input'];
 };
@@ -60,6 +66,7 @@ export type MutationSignupArgs = {
 export type Query = {
   getAccount: AccountObject;
   hello: Scalars['String']['output'];
+  setting: SettingObject;
 };
 
 
@@ -70,6 +77,31 @@ export type QueryGetAccountArgs = {
 
 export type QueryHelloArgs = {
   payload: Scalars['String']['input'];
+};
+
+export type SettingInput = {
+  description?: InputMaybe<Scalars['String']['input']>;
+  emailDriver?: InputMaybe<Scalars['String']['input']>;
+  emailEncryption?: InputMaybe<Scalars['String']['input']>;
+  emailFromAddress?: InputMaybe<Scalars['String']['input']>;
+  emailFromName?: InputMaybe<Scalars['String']['input']>;
+  emailHost?: InputMaybe<Scalars['String']['input']>;
+  emailPassword?: InputMaybe<Scalars['String']['input']>;
+  emailPort: Scalars['Int']['input'];
+  emailUsername?: InputMaybe<Scalars['String']['input']>;
+  folder: Scalars['String']['input'];
+  host: Scalars['String']['input'];
+  keywords?: InputMaybe<Scalars['String']['input']>;
+  registrable: Scalars['Boolean']['input'];
+  title: Scalars['String']['input'];
+};
+
+export type SettingObject = {
+  description?: Maybe<Scalars['String']['output']>;
+  host: Scalars['String']['output'];
+  keywords?: Maybe<Scalars['String']['output']>;
+  registrable: Scalars['Boolean']['output'];
+  title: Scalars['String']['output'];
 };
 
 export type LoginMutationVariables = Exact<{

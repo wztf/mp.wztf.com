@@ -1,7 +1,13 @@
-import { Button, Text } from '@radix-ui/themes'
+import { Button, DropdownMenu, Text } from '@radix-ui/themes'
 import Link from 'next/link'
+import { FaRegUser } from 'react-icons/fa'
+import { IoExitOutline, IoSettingsOutline } from 'react-icons/io5'
+
+import { useStore } from '@/store'
 
 const UriHeader = () => {
+  const loggedIn = useStore(state => state.loggedIn)
+  const logout = useStore(state => state.logout)
   return (
     <>
       <nav id='nav' className='w-full border-b sticky top-0 z-50 bg-white'>
@@ -36,11 +42,32 @@ const UriHeader = () => {
               </ul>
             </div>
           </div>
-          <Link href='/signin'>
-            <Button size='3' color='blue'>
-              登录
-            </Button>
-          </Link>
+          {loggedIn ? (
+            <DropdownMenu.Root>
+              <DropdownMenu.Trigger>
+                <Button variant='soft'>
+                  <FaRegUser />
+                  <DropdownMenu.TriggerIcon />
+                </Button>
+              </DropdownMenu.Trigger>
+              <DropdownMenu.Content>
+                <DropdownMenu.Item>
+                  <IoSettingsOutline />
+                  个人设置
+                </DropdownMenu.Item>
+                <DropdownMenu.Separator />
+                <DropdownMenu.Item onClick={logout}>
+                  <IoExitOutline /> 退出登录
+                </DropdownMenu.Item>
+              </DropdownMenu.Content>
+            </DropdownMenu.Root>
+          ) : (
+            <Link href='/signin'>
+              <Button size='3' color='blue'>
+                登录
+              </Button>
+            </Link>
+          )}
         </div>
       </nav>
     </>
