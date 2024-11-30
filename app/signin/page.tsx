@@ -1,18 +1,18 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 'use client'
 
-import { useMutation } from '@apollo/client'
+import { ServerError, useMutation } from '@apollo/client'
 import { ApolloError } from '@apollo/client/errors'
 import { Signatory } from '@cakioe/kit.js'
-import * as Form from '@radix-ui/react-form'
 import * as Separator from '@radix-ui/react-separator'
-import { Badge, Box, Button, Card, Container, Flex, Heading, Skeleton, Spinner, Text } from '@radix-ui/themes'
+import { Box, Card, Container, Flex, Heading, Text } from '@radix-ui/themes'
 import Link from 'next/link'
 import { redirect, useSearchParams } from 'next/navigation'
 import { FormEvent, useEffect, useState } from 'react'
 import { FcGoogle } from 'react-icons/fc'
 import { toast } from 'react-toastify'
 
+import { RuiLogin, RuiRegister, RuiWechat } from '@/components/account'
 import { useStore } from '@/store'
 
 import { appid, version } from '@config/index'
@@ -31,8 +31,13 @@ const Page = () => {
   const [method, setMethod] = useState<'sms' | 'password'>('sms')
 
   const signer = new Signatory(appid)
-  const [fetch, { loading, data, error }] = useMutation(LoginDocument, {
-    variables: { input: '' }
+  const [fetch, { loading, data }] = useMutation(LoginDocument, {
+    variables: { input: '' },
+    onError: ({ networkError }: ApolloError) => {
+      const { result } = networkError as ServerError
+      const { errors } = result as Record<string, { message: string }[]>
+      toast.error(errors[0].message)
+    }
   })
 
   const login = useStore(state => state.login)
@@ -112,23 +117,8 @@ const Page = () => {
     return redirect('/')
   }
 
-  if (loading) {
-    return (
-      <Flex justify='center' align='center' className='h-screen w-screen  bg-gray-50'>
-        <Spinner size='3' />
-        <Text color='gray' className='text-base font-bold ml-1'>
-          正在处理...
-        </Text>
-      </Flex>
-    )
-  }
-
-  if (error as ApolloError) {
-    console.log(error?.message, '20092')
-  }
-
   if (data) {
-    toast.success('登录成功', { autoClose: 15000 })
+    toast.success('登录成功')
     login(data.login)
     // NOTE: 获取用户信息
     return redirect('/')
@@ -151,87 +141,7 @@ const Page = () => {
               </Flex>
               <Flex justify='between' align='start' className='pt-2.5 text-gray-600'>
                 <div className='flex-auto pr-4'>
-                  <Heading as='h3' className='mb-4 text-base font-bold leading-none'>
-                    {method === 'sms' ? '验证码登录 / 注册' : '密码登录'}
-                  </Heading>
-                  <Form.Root className='w-full space-y-2 text-sm' autoCapitalize='off' onSubmit={onSubmit}>
-                    <Form.Field name='email'>
-                      <Flex justify='between' align='center' className='text-base'>
-                        <Form.Label className='mb-1.5'></Form.Label>
-                      </Flex>
-                      <Form.Control
-                        asChild
-                        onChange={e =>
-                          setFormValues(prev => ({
-                            ...prev,
-                            email: e.target.value
-                          }))
-                        }
-                      >
-                        <input
-                          className={`h-12 p-2 w-full rounded-sm border bg-white outline-none focus:border-blue-500 ${errors.email ? 'border-red-500' : ''}`}
-                          type='text'
-                          value={formValues.email}
-                          required
-                        />
-                      </Form.Control>
-                      {errors.email && <Form.Message className='text-red-600'>{errors.email}</Form.Message>}
-                    </Form.Field>
-                    <Form.Field name='password'>
-                      <Flex justify='between' align='center' className='text-base'>
-                        <Form.Label className='mb-1.5'></Form.Label>
-                      </Flex>
-                      <Flex
-                        justify='between'
-                        align='center'
-                        className={`text-base border bg-white outline-none focus-within:border-blue-500 ${errors.password ? 'border-red-500' : ''}`}
-                      >
-                        <Form.Control
-                          asChild
-                          onChange={e =>
-                            setFormValues(prev => ({
-                              ...prev,
-                              password: e.target.value
-                            }))
-                          }
-                        >
-                          <input
-                            className='h-12 w-full rounded-sm border-none outline-none focus:outline-none p-2 flex-auto bg-transparent'
-                            type='password'
-                            required
-                            value={formValues.password}
-                          />
-                        </Form.Control>
-                        {method === 'sms' ? (
-                          <Text className='flex-0 text-nowrap bg-transparent text-sm p-2 cursor-pointer text-blue-500'>
-                            获取验证码
-                          </Text>
-                        ) : (
-                          <Link href='/forgot' className='flex-0 text-nowrap bg-transparent text-sm p-2 cursor-pointer'>
-                            忘记密码
-                          </Link>
-                        )}
-                      </Flex>
-                      {errors.password && <Form.Message className='text-red-600'>{errors.password}</Form.Message>}
-                    </Form.Field>
-
-                    {method === 'sms' ? (
-                      <div className='pt-5'>
-                        <Button size='3' color='blue' className='block w-full'>
-                          登录 / 注册
-                        </Button>
-                      </div>
-                    ) : (
-                      <div className='grid grid-cols-2 gap-4 pt-5'>
-                        <Button type='button' size='3' variant='outline' color='blue' onClick={() => onReset('sms')}>
-                          注册
-                        </Button>
-                        <Button size='3' color='blue'>
-                          登录
-                        </Button>
-                      </div>
-                    )}
-                  </Form.Root>
+                  {method === 'sms' ? <RuiLogin /> : <RuiRegister onReset={onReset} />}
                   <Flex justify='between' align='center' className='pt-3 text-sm'>
                     <Flex align='center'>
                       <Text>其它登录：</Text>
@@ -251,21 +161,7 @@ const Page = () => {
                   </Flex>
                 </div>
                 <div className='flex-0 md:w-[250px] border-l px-4 text-sm'>
-                  <Flex className='text-base leading-none space-x-0.5' align='center' justify='start'>
-                    <Heading as='h3' className='mb-0 text-base font-bold leading-none'>
-                      扫码登录
-                    </Heading>
-                    <Badge radius='full' variant='solid' color='blue'>
-                      仅支持微信
-                    </Badge>
-                  </Flex>
-                  <Flex align='center' justify='start' className='my-2.5'>
-                    <Skeleton className='h-[144px] w-[144px] border bg-gray-100'></Skeleton>
-                  </Flex>
-                  <div>
-                    打开 <Text color='blue'>微信APP</Text>
-                  </div>
-                  <p>点击“发现-扫一扫”登录</p>
+                  <RuiWechat />
                 </div>
               </Flex>
               <div className='pt-6 text-center text-sm text-gray-600 space-x-0.5'>

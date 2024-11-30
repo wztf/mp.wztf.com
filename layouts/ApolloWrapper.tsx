@@ -1,7 +1,8 @@
 'use client'
 
-import { HttpLink } from '@apollo/client'
+import { HttpLink, from } from '@apollo/client'
 import { loadDevMessages, loadErrorMessages } from '@apollo/client/dev'
+import { onError } from '@apollo/client/link/error'
 import { ApolloClient, ApolloNextAppProvider, InMemoryCache } from '@apollo/experimental-nextjs-app-support'
 import React from 'react'
 
@@ -12,17 +13,27 @@ if (isDev) {
   loadErrorMessages()
 }
 
+const httpLink = new HttpLink({
+  uri: `${process.env.NEXT_PUBLIC_BASE_URL}/graphql`
+})
+
+const errorLink = onError(({ graphQLErrors, networkError }) => {
+  if (graphQLErrors)
+    graphQLErrors.forEach(({ message, locations, path }) =>
+      // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+      console.log(`[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`)
+    )
+
+  if (networkError) console.log(`[Network error]: ${networkError}`)
+})
+
 // eslint-disable-next-line react-hooks/rules-of-hooks
 
 // have a function to create a client for you
 const makeClient = () => {
-  const httpLink = new HttpLink({
-    uri: `${process.env.NEXT_PUBLIC_BASE_URL}/graphql`
-  })
-
   return new ApolloClient({
     cache: new InMemoryCache(),
-    link: httpLink,
+    link: from([errorLink, httpLink]),
     defaultOptions: {
       query: {
         context: {

@@ -1,4 +1,4 @@
-import { DropdownMenu, Flex, Text } from '@radix-ui/themes'
+import { DropdownMenu, Flex, Spinner, Text } from '@radix-ui/themes'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -12,17 +12,22 @@ import { useStore } from '@/store'
 const UriHeader = () => {
   const router = useRouter()
 
+  const [loading, setLoading] = useState<boolean>(true)
   const loggedIn = useStore(state => state.loggedIn)
   const logout = useStore(state => state.logout)
 
-  const [state, setState] = useState<boolean>(false)
+  const [isOpen, setIsOpen] = useState<boolean>(false)
+
+  useEffect(() => {
+    setLoading(false)
+  }, [])
 
   useEffect(() => {
     document.onclick = (e: MouseEvent) => {
       const target = e.target as HTMLElement
       // 用户登录的button 点击弹窗 tagName === HTML
       if (!target?.closest('.menu-btn') && target.tagName !== 'HTML') {
-        setState(false)
+        setIsOpen(false)
       }
     }
   }, [])
@@ -33,8 +38,8 @@ const UriHeader = () => {
         <Image src='https://www.floatui.com/logo-dark.svg' width={120} height={50} alt='Float UI logo' />
       </Link>
       <div className='md:hidden'>
-        <button className='menu-btn text-gray-400 hover:text-gray-300 text-3xl' onClick={() => setState(!state)}>
-          {state ? <IoClose /> : <FiMenu />}
+        <button className='menu-btn text-gray-400 hover:text-gray-300 text-3xl' onClick={() => setIsOpen(!isOpen)}>
+          {isOpen ? <IoClose /> : <FiMenu />}
         </button>
       </div>
     </div>
@@ -44,15 +49,15 @@ const UriHeader = () => {
     <>
       <div className='bg-gray-900'>
         <header>
-          <div className={`md:hidden ${state ? 'mx-2 md:pb-5' : 'hidden'}`}>
+          <div className={`md:hidden ${isOpen ? 'mx-2 md:pb-5' : 'hidden'}`}>
             <Brand />
           </div>
           <nav
-            className={`md:text-sm ${state ? 'pb-5 absolute z-20 top-0 inset-x-0 bg-gray-800 rounded-xl mx-2 mt-2 md:mx-0 md:mt-0 md:relative md:bg-transparent' : ''}`}
+            className={`md:text-sm ${isOpen ? 'pb-5 absolute z-20 top-0 inset-x-0 bg-gray-800 rounded-xl mx-2 mt-2 md:mx-0 md:mt-0 md:relative md:bg-transparent' : ''}`}
           >
             <div className='gap-x-14 items-center container mx-auto px-4 md:flex md:px-8'>
               <Brand />
-              <div className={`flex-1 items-center mt-8 md:mt-0 md:flex ${state ? 'block' : 'hidden'} `}>
+              <div className={`flex-1 items-center mt-8 md:mt-0 md:flex ${isOpen ? 'block' : 'hidden'} `}>
                 <ul className='flex-1 justify-end items-center space-y-6 md:flex md:space-x-6 md:space-y-0'>
                   <li className='text-gray-300 hover:text-gray-400'>
                     <Link href='/' className='block'>
@@ -78,7 +83,17 @@ const UriHeader = () => {
                     </Link>
                   </li>
                   <li className='menu-btn'>
-                    {loggedIn ? (
+                    {loading ? (
+                      <Flex
+                        align='center'
+                        justify='center'
+                        gapX='1'
+                        className='py-2 px-4 text-white font-medium bg-sky-500 hover:bg-sky-400 active:bg-sky-600 duration-150 rounded-full md:inline-flex'
+                      >
+                        <Spinner size='2' />
+                        <Text>加载中</Text>
+                      </Flex>
+                    ) : loggedIn ? (
                       <DropdownMenu.Root>
                         <DropdownMenu.Trigger>
                           <div className='items-center justify-end mt-6 space-y-6 md:flex md:mt-0'>
@@ -95,7 +110,7 @@ const UriHeader = () => {
                           </div>
                         </DropdownMenu.Trigger>
                         <DropdownMenu.Content>
-                          <DropdownMenu.Item onClick={() => router.push('/profile')}>
+                          <DropdownMenu.Item onClick={() => router.push('/dashboard')}>
                             <IoSettingsOutline />
                             个人设置
                           </DropdownMenu.Item>

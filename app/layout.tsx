@@ -24,7 +24,7 @@ export default function RootLayout({ children }: Readonly<Props>) {
         <ApolloWrapper>
           <DefaultLayout>{children}</DefaultLayout>
         </ApolloWrapper>
-        <ToastContainer />
+        <ToastContainer position='top-center' autoClose={5000} hideProgressBar={false} draggable={false} />
       </body>
     </html>
   )
