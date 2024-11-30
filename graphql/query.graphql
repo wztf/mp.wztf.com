@@ -1,3 +1,15 @@
 query Hello($input: String!) {
   hello(payload: $input)
 }
+
+query Profile {
+    profile {
+        id
+        email
+        name
+        profile_url
+        status
+        email_verified_at
+        is_admin
+    }
+}

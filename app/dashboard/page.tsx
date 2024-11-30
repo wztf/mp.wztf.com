@@ -1,8 +1,40 @@
+'use client'
+
+import { useLazyQuery } from '@apollo/client'
 import Link from 'next/link'
+import { useEffect } from 'react'
 import { GiBugleCall } from 'react-icons/gi'
 import { IoClose } from 'react-icons/io5'
 
+import { useStore } from '@/store'
+
+import { appid } from '@config/index'
+import { ProfileDocument, ProfileQuery } from '@generated/graphql'
+
 const Page = () => {
+  const token = useStore(state => state.token)
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-assignment
+  const [fetch, { loading, data }] = useLazyQuery(ProfileDocument, {
+    context: {
+      headers: {
+        appid,
+        Authorization: `Bearer ${token}`
+      }
+    }
+  })
+
+  useEffect(() => {
+    fetch().catch(console.error)
+  }, [])
+
+  if (loading) {
+    return <>loading</>
+  }
+
+  if (data as ProfileQuery) {
+    console.log(data)
+  }
+
   return (
     <div>
       <div className='bg-indigo-600'>

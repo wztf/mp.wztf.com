@@ -18,6 +18,7 @@
         "name": "next"
       }
     ],
+    "typeRoots": ["./types"],
     "paths": {
       "@/*": ["./*"],
       "@layouts/*": ["./layouts/*"],
@@ -26,7 +27,8 @@
       "@assets/*": ["./assets/*"],
       "@plugins/*": ["./plugins/*"],
       "@store/*": ["./store/*"],
-      "@generated/*": ["./generated/*"]
+      "@generated/*": ["./generated/*"],
+      "/#/*": ["types/*"]
     }
   },
   "include": [

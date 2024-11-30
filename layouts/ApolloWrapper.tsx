@@ -3,6 +3,7 @@
 import { HttpLink, from } from '@apollo/client'
 import { loadDevMessages, loadErrorMessages } from '@apollo/client/dev'
 import { onError } from '@apollo/client/link/error'
+import { removeTypenameFromVariables } from '@apollo/client/link/remove-typename'
 import { ApolloClient, ApolloNextAppProvider, InMemoryCache } from '@apollo/experimental-nextjs-app-support'
 import React from 'react'
 
@@ -16,6 +17,8 @@ if (isDev) {
 const httpLink = new HttpLink({
   uri: `${process.env.NEXT_PUBLIC_BASE_URL}/graphql`
 })
+
+const removeTypenameLink = removeTypenameFromVariables()
 
 const errorLink = onError(({ graphQLErrors, networkError }) => {
   if (graphQLErrors)
@@ -32,8 +35,10 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
 // have a function to create a client for you
 const makeClient = () => {
   return new ApolloClient({
-    cache: new InMemoryCache(),
-    link: from([errorLink, httpLink]),
+    cache: new InMemoryCache({
+      addTypename: false
+    }),
+    link: from([errorLink, httpLink, removeTypenameLink]),
     defaultOptions: {
       query: {
         context: {
