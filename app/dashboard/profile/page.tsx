@@ -1,11 +1,17 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 'use client'
+
+import { ServerError, useMutation } from '@apollo/client'
+import { ApolloError } from '@apollo/client/errors'
 import * as Tabs from '@radix-ui/react-tabs'
 import { Upload } from 'antd'
 import { useState } from 'react'
+import { toast } from 'react-toastify'
 
 import { appid } from '@/config'
 import { useStore } from '@/store'
+
+import { FileInput, UploadFileDocument } from '@generated/graphql'
 
 import type { UploadFile, UploadProps } from 'antd'
 
@@ -28,9 +34,50 @@ const Page = () => {
     Appid: appid
   }
 
+  const [upload, { loading, data }] = useMutation(UploadFileDocument, {
+    variables: { input: { file: '' } },
+    onError: ({ networkError }: ApolloError) => {
+      const { result } = networkError as ServerError
+      const { errors } = result as Record<string, { message: string }[]>
+      toast.error(errors[0].message)
+    }
+  })
+
   // eslint-disable-next-line @typescript-eslint/require-await
   const uploadImage: UploadProps['customRequest'] = async ({ file }) => {
-    console.log(file)
+    const data = new FormData()
+    data.append('file', file)
+    console.log(data, file)
+    const fileInput: FileInput = {
+      file: data
+    }
+    await upload({
+      variables: { input: fileInput },
+      context: {
+        headers: {
+          ...headers
+          // 'Content-Type': 'multipart/form-data'
+        }
+      }
+    })
+  }
+
+  const onChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (file) {
+      const fileInput: FileInput = {
+        file: file
+      }
+      await upload({
+        variables: { input: fileInput },
+        context: {
+          headers: {
+            ...headers
+            // 'Content-Type': 'multipart/form-data'
+          }
+        }
+      })
+    }
   }
 
   const handleChange: UploadProps['onChange'] = ({ fileList }) => {
@@ -43,9 +90,18 @@ const Page = () => {
     </button>
   )
 
+  if (data) {
+    console.log(data, 'data')
+  }
+
+  if (loading) {
+    return <>loading</>
+  }
+
   return (
     <div>
       <h1>Profile</h1>
+      <input type='file' accept='image/*' name='file' onChange={onChange} />
       <Tabs.Root
         className='max-w-screen-xl mx-auto mt-4 px-4 md:px-8'
         value={selectedTab}
