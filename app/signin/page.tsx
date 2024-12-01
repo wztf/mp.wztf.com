@@ -8,7 +8,7 @@ import * as Separator from '@radix-ui/react-separator'
 import { Box, Card, Container, Flex, Heading, Text } from '@radix-ui/themes'
 import Link from 'next/link'
 import { redirect, useSearchParams } from 'next/navigation'
-import { FormEvent, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { FcGoogle } from 'react-icons/fc'
 import { toast } from 'react-toastify'
 
@@ -17,11 +17,6 @@ import { useStore } from '@/store'
 
 import { appid, version } from '@config/index'
 import { LoginDocument } from '@generated/graphql'
-
-type FormProps = {
-  email: string
-  password: string
-}
 
 const Page = () => {
   const params = useSearchParams()
@@ -66,50 +61,8 @@ const Page = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [code])
 
-  const [formValues, setFormValues] = useState<FormProps>({
-    email: 'cleveng@gmail.com',
-    password: '123456'
-  })
-  const [errors, setErrors] = useState<{ [key: string]: string | null }>({
-    email: null,
-    password: null
-  })
-
-  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-
-    let newErrors = {}
-    if (!formValues.email) {
-      newErrors = { ...newErrors, email: '请输入邮箱地址' }
-    } else if (!/^\S+@\S+\.\S+$/.test(formValues.email)) {
-      newErrors = { ...newErrors, email: '请输入正确的邮箱地址' }
-    }
-
-    if (!formValues.password) {
-      newErrors = { ...newErrors, password: '请输入密码或验证码' }
-    }
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors)
-      return
-    }
-
-    const payload = signer.toBase64String({ app: 'gg', ...formValues, method: 'password' })
-    await fetch({
-      variables: { input: payload },
-      context: {
-        headers: {
-          appid: appid
-        }
-      }
-    })
-    // setFormValues({ email: '', password: '' })
-    // setErrors({ email: null, password: null })
-  }
-
   const onReset = (method: 'sms' | 'password' = 'sms') => {
     setMethod(method)
-    // setFormValues({ email: '', password: '' })
-    setErrors({ email: null, password: null })
   }
 
   // 已经登录的跳转回首页
@@ -136,12 +89,12 @@ const Page = () => {
                   登录账户畅享更多权益
                 </Heading>
                 <Link href='/' className='mx-0.5 text-gray-700 hover:underline text-sm '>
-                  返回首页
+                  返回首页 {loading && '...'}
                 </Link>
               </Flex>
               <Flex justify='between' align='start' className='pt-2.5 text-gray-600'>
                 <div className='flex-auto pr-4'>
-                  {method === 'sms' ? <RuiLogin /> : <RuiRegister onReset={onReset} />}
+                  {method === 'sms' ? <RuiRegister /> : <RuiLogin onReset={onReset} />}
                   <Flex justify='between' align='center' className='pt-3 text-sm'>
                     <Flex align='center'>
                       <Text>其它登录：</Text>

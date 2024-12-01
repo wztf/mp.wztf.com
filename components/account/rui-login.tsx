@@ -5,7 +5,8 @@ import { ServerError, useMutation } from '@apollo/client'
 import { ApolloError } from '@apollo/client/errors'
 import { Signatory } from '@cakioe/kit.js'
 import * as Form from '@radix-ui/react-form'
-import { Button, Flex, Heading, Text } from '@radix-ui/themes'
+import { Button, Flex, Heading } from '@radix-ui/themes'
+import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { FormEvent, useState } from 'react'
 import { toast } from 'react-toastify'
@@ -13,26 +14,21 @@ import { toast } from 'react-toastify'
 import { useStore } from '@/store'
 
 import { appid } from '@config/index'
-import { SignupDocument } from '@generated/graphql'
+import { LoginDocument } from '@generated/graphql'
+
+type Props = {
+  onReset: (method: 'sms' | 'password') => void
+}
 
 type FormProps = {
   email: string
-  security_code: string
+  password: string
 }
 
-const RuiLogin = () => {
+const RuiRegister = ({ onReset }: Props) => {
   const app = useStore(state => state.app)
   const signer = new Signatory(appid)
-  const [formValues, setFormValues] = useState<FormProps>({
-    email: 'cleveng@gmail.com',
-    security_code: '123456'
-  })
-  const [errors, setErrors] = useState<{ [key: string]: string | null }>({
-    email: null,
-    security_code: null
-  })
-
-  const [fetch, { loading, data }] = useMutation(SignupDocument, {
+  const [fetch, { loading, data }] = useMutation(LoginDocument, {
     variables: { input: '' },
     onError: ({ networkError }: ApolloError) => {
       const { result } = networkError as ServerError
@@ -40,6 +36,16 @@ const RuiLogin = () => {
       toast.error(errors[0].message)
     }
   })
+
+  const [formValues, setFormValues] = useState<FormProps>({
+    email: 'cleveng@gmail.com',
+    password: '123456'
+  })
+  const [errors, setErrors] = useState<{ [key: string]: string | null }>({
+    email: null,
+    password: null
+  })
+
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
@@ -50,15 +56,15 @@ const RuiLogin = () => {
       newErrors = { ...newErrors, email: '请输入正确的邮箱地址' }
     }
 
-    if (!formValues.security_code) {
-      newErrors = { ...newErrors, security_code: '请输入验证码' }
+    if (!formValues.password) {
+      newErrors = { ...newErrors, password: '请输入密码或验证码' }
     }
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors)
       return
     }
 
-    const payload = signer.toBase64String({ app: app, ...formValues, method: 'sns' })
+    const payload = signer.toBase64String({ app: app, ...formValues, method: 'password' })
     await fetch({
       variables: { input: payload },
       context: {
@@ -74,7 +80,7 @@ const RuiLogin = () => {
   const login = useStore(state => state.login)
   if (data) {
     toast.success('登录成功')
-    login(data.signup)
+    login(data.login)
     // NOTE: 获取用户信息
     return redirect('/')
   }
@@ -82,7 +88,7 @@ const RuiLogin = () => {
   return (
     <>
       <Heading as='h3' className='mb-4 text-base font-bold leading-none'>
-        验证码登录 / 注册
+        密码登录
       </Heading>
       <Form.Root className='w-full space-y-2 text-sm' autoCapitalize='off' onSubmit={onSubmit}>
         <Form.Field name='email'>
@@ -121,26 +127,30 @@ const RuiLogin = () => {
               onChange={e =>
                 setFormValues(prev => ({
                   ...prev,
-                  security_code: e.target.value
+                  password: e.target.value
                 }))
               }
             >
               <input
                 className='h-12 w-full rounded-sm border-none outline-none focus:outline-none p-2 flex-auto bg-transparent'
-                type='text'
+                type='password'
                 required
-                value={formValues.security_code}
+                value={formValues.password}
               />
             </Form.Control>
-            <Text className='flex-0 text-nowrap bg-transparent text-sm p-2 cursor-pointer text-blue-500'>
-              获取验证码
-            </Text>
+            <Link href='/forgot' className='flex-0 text-nowrap bg-transparent text-sm p-2 cursor-pointer'>
+              忘记密码
+            </Link>
           </Flex>
-          {errors.security_code && <Form.Message className='text-red-600'>{errors.security_code}</Form.Message>}
+          {errors.password && <Form.Message className='text-red-600'>{errors.password}</Form.Message>}
         </Form.Field>
-        <div className='pt-5'>
-          <Button loading={loading} size='3' color='blue' className='block w-full'>
-            登录 / 注册
+
+        <div className='grid grid-cols-2 gap-4 pt-5'>
+          <Button type='button' size='3' variant='outline' color='blue' onClick={() => onReset('sms')}>
+            注册
+          </Button>
+          <Button loading={loading} size='3' color='blue'>
+            登录
           </Button>
         </div>
       </Form.Root>
@@ -148,4 +158,4 @@ const RuiLogin = () => {
   )
 }
 
-export default RuiLogin
+export default RuiRegister

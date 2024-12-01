@@ -251,7 +251,7 @@ const Sidebar = ({ children }: Readonly<Props>) => {
                       <span className='block text-gray-500/80 p-2'>vienna@gmail.com</span>
                       <DropdownMenu.Item asChild className='outline-none'>
                         <a
-                          href='/dashboard'
+                          href='/dashboard/profile'
                           className='block w-full p-2 text-left rounded-md hover:bg-gray-50 active:bg-gray-100 duration-150'
                         >
                           Dashboard

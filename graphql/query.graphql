@@ -13,3 +13,13 @@ query Profile {
         is_admin
     }
 }
+
+query Setting {
+    setting {
+        title
+        keywords
+        description
+        host
+        registrable
+    }
+}

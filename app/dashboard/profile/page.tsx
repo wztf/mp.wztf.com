@@ -1,10 +1,48 @@
+/* eslint-disable @typescript-eslint/no-misused-promises */
 'use client'
 import * as Tabs from '@radix-ui/react-tabs'
+import { Upload } from 'antd'
 import { useState } from 'react'
+
+import { appid } from '@/config'
+import { useStore } from '@/store'
+
+import type { UploadFile, UploadProps } from 'antd'
 
 const Page = () => {
   const [selectedTab, setSelectedTab] = useState('Overview')
   const tabItems = ['Overview', 'Integration', 'Billing', 'Transactions', 'plans']
+
+  const [fileList, setFileList] = useState<UploadFile[]>([
+    {
+      uid: '-1',
+      name: 'image.png',
+      status: 'done',
+      url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png'
+    }
+  ])
+
+  const token = useStore(state => state.token)
+  const headers = {
+    Authorization: `Bearer ${token}`,
+    Appid: appid
+  }
+
+  // eslint-disable-next-line @typescript-eslint/require-await
+  const uploadImage: UploadProps['customRequest'] = async ({ file }) => {
+    console.log(file)
+  }
+
+  const handleChange: UploadProps['onChange'] = ({ fileList }) => {
+    setFileList(fileList)
+  }
+
+  const uploadButton = (
+    <button style={{ border: 0, background: 'none' }} type='button'>
+      <div style={{ marginTop: 8 }}>Upload</div>
+    </button>
+  )
+
   return (
     <div>
       <h1>Profile</h1>
@@ -63,6 +101,16 @@ const Page = () => {
           </Tabs.Content>
         ))}
       </Tabs.Root>
+
+      <Upload
+        listType='picture-card'
+        headers={headers}
+        fileList={fileList}
+        onChange={handleChange}
+        customRequest={uploadImage}
+      >
+        {fileList.length >= 8 ? null : uploadButton}
+      </Upload>
     </div>
   )
 }

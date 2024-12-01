@@ -5,8 +5,8 @@ import { ServerError, useMutation } from '@apollo/client'
 import { ApolloError } from '@apollo/client/errors'
 import { Signatory } from '@cakioe/kit.js'
 import * as Form from '@radix-ui/react-form'
-import { Button, Flex, Heading } from '@radix-ui/themes'
-import Link from 'next/link'
+import { Button, Flex, Heading, Text } from '@radix-ui/themes'
+import { useCountDown, useUnmount } from 'ahooks'
 import { redirect } from 'next/navigation'
 import { FormEvent, useState } from 'react'
 import { toast } from 'react-toastify'
@@ -14,21 +14,76 @@ import { toast } from 'react-toastify'
 import { useStore } from '@/store'
 
 import { appid } from '@config/index'
-import { LoginDocument } from '@generated/graphql'
-
-type Props = {
-  onReset: (method: 'sms' | 'password') => void
-}
+import { CodeDocument, SignupDocument } from '@generated/graphql'
 
 type FormProps = {
   email: string
-  password: string
+  security_code: string
 }
 
-const RuiRegister = ({ onReset }: Props) => {
+const RuiLogin = () => {
   const app = useStore(state => state.app)
   const signer = new Signatory(appid)
-  const [fetch, { loading, data }] = useMutation(LoginDocument, {
+  const [formValues, setFormValues] = useState<FormProps>({
+    email: 'cleveng@gmail.com',
+    security_code: '123456'
+  })
+  const [errors, setErrors] = useState<{ [key: string]: string | null }>({
+    email: null,
+    security_code: null
+  })
+
+  // 验证码倒计时
+  const [targetDate, setTargetDate] = useState<number>()
+  const [countdown] = useCountDown({
+    targetDate,
+    onEnd: () => {
+      setTargetDate(undefined)
+    }
+  })
+
+  // 组件卸载
+  useUnmount(() => {
+    setTargetDate(undefined)
+  })
+
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-assignment
+  const [fetchCode] = useMutation(CodeDocument, {
+    variables: { input: '' },
+    onError: ({ networkError }: ApolloError) => {
+      const { result } = networkError as ServerError
+      const { errors } = result as Record<string, { message: string }[]>
+      setTargetDate(undefined)
+      toast.error(errors[0].message)
+    },
+    onCompleted: () => {
+      toast.success('验证码已经发送到您的邮箱')
+      setTargetDate(Date.now() + 60000)
+      setFormValues({
+        ...formValues,
+        security_code: ''
+      })
+    }
+  })
+
+  const getSecurityCode = async () => {
+    if (!formValues.email) {
+      toast.error('请输入邮箱地址')
+      return
+    }
+
+    const payload = signer.toBase64String({ email: formValues.email, method: 'register' })
+    await fetchCode({
+      variables: { input: payload },
+      context: {
+        headers: {
+          appid: appid
+        }
+      }
+    })
+  }
+
+  const [fetch, { loading, data }] = useMutation(SignupDocument, {
     variables: { input: '' },
     onError: ({ networkError }: ApolloError) => {
       const { result } = networkError as ServerError
@@ -36,16 +91,6 @@ const RuiRegister = ({ onReset }: Props) => {
       toast.error(errors[0].message)
     }
   })
-
-  const [formValues, setFormValues] = useState<FormProps>({
-    email: 'cleveng@gmail.com',
-    password: '123456'
-  })
-  const [errors, setErrors] = useState<{ [key: string]: string | null }>({
-    email: null,
-    password: null
-  })
-
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
@@ -56,15 +101,15 @@ const RuiRegister = ({ onReset }: Props) => {
       newErrors = { ...newErrors, email: '请输入正确的邮箱地址' }
     }
 
-    if (!formValues.password) {
-      newErrors = { ...newErrors, password: '请输入密码或验证码' }
+    if (!formValues.security_code) {
+      newErrors = { ...newErrors, security_code: '请输入验证码' }
     }
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors)
       return
     }
 
-    const payload = signer.toBase64String({ app: app, ...formValues, method: 'password' })
+    const payload = signer.toBase64String({ app: app, ...formValues, method: 'sns' })
     await fetch({
       variables: { input: payload },
       context: {
@@ -80,7 +125,7 @@ const RuiRegister = ({ onReset }: Props) => {
   const login = useStore(state => state.login)
   if (data) {
     toast.success('登录成功')
-    login(data.login)
+    login(data.signup)
     // NOTE: 获取用户信息
     return redirect('/')
   }
@@ -88,7 +133,7 @@ const RuiRegister = ({ onReset }: Props) => {
   return (
     <>
       <Heading as='h3' className='mb-4 text-base font-bold leading-none'>
-        密码登录
+        验证码登录 / 注册
       </Heading>
       <Form.Root className='w-full space-y-2 text-sm' autoCapitalize='off' onSubmit={onSubmit}>
         <Form.Field name='email'>
@@ -127,30 +172,29 @@ const RuiRegister = ({ onReset }: Props) => {
               onChange={e =>
                 setFormValues(prev => ({
                   ...prev,
-                  password: e.target.value
+                  security_code: e.target.value
                 }))
               }
             >
               <input
                 className='h-12 w-full rounded-sm border-none outline-none focus:outline-none p-2 flex-auto bg-transparent'
-                type='password'
+                type='text'
                 required
-                value={formValues.password}
+                value={formValues.security_code}
               />
             </Form.Control>
-            <Link href='/forgot' className='flex-0 text-nowrap bg-transparent text-sm p-2 cursor-pointer'>
-              忘记密码
-            </Link>
+            <Text
+              onClick={getSecurityCode}
+              className={`flex-0 text-nowrap bg-transparent text-sm p-2 cursor-pointer ${countdown === 0 ? 'text-blue-500' : 'text-red-500'}`}
+            >
+              {countdown === 0 ? '获取验证码' : `${Math.round(countdown / 1000)}s 后重试`}
+            </Text>
           </Flex>
-          {errors.password && <Form.Message className='text-red-600'>{errors.password}</Form.Message>}
+          {errors.security_code && <Form.Message className='text-red-600'>{errors.security_code}</Form.Message>}
         </Form.Field>
-
-        <div className='grid grid-cols-2 gap-4 pt-5'>
-          <Button type='button' size='3' variant='outline' color='blue' onClick={() => onReset('sms')}>
-            注册
-          </Button>
-          <Button loading={loading} size='3' color='blue'>
-            登录
+        <div className='pt-5'>
+          <Button loading={loading} size='3' color='blue' className='block w-full'>
+            登录 / 注册
           </Button>
         </div>
       </Form.Root>
@@ -158,4 +202,4 @@ const RuiRegister = ({ onReset }: Props) => {
   )
 }
 
-export default RuiRegister
+export default RuiLogin

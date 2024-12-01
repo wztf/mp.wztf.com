@@ -1,4 +1,5 @@
 import { DropdownMenu, Flex, Spinner, Text } from '@radix-ui/themes'
+import { useCountDown } from 'ahooks'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -21,6 +22,10 @@ const UriHeader = () => {
   useEffect(() => {
     setLoading(false)
   }, [])
+  useCountDown({
+    targetDate: Date.now() + 3000,
+    onEnd: () => setLoading(false)
+  })
 
   useEffect(() => {
     document.onclick = (e: MouseEvent) => {

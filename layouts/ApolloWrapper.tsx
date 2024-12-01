@@ -1,10 +1,11 @@
 'use client'
 
-import { HttpLink, from } from '@apollo/client'
+import { ApolloLink, HttpLink, from } from '@apollo/client'
 import { loadDevMessages, loadErrorMessages } from '@apollo/client/dev'
 import { onError } from '@apollo/client/link/error'
 import { removeTypenameFromVariables } from '@apollo/client/link/remove-typename'
 import { ApolloClient, ApolloNextAppProvider, InMemoryCache } from '@apollo/experimental-nextjs-app-support'
+import createUploadLink from 'apollo-upload-client/createUploadLink.mjs'
 import React from 'react'
 
 import { appid, isDev } from '@config/index'
@@ -14,9 +15,17 @@ if (isDev) {
   loadErrorMessages()
 }
 
+const BASE_URL = `${process.env.NEXT_PUBLIC_BASE_URL}/graphql`
+
 const httpLink = new HttpLink({
-  uri: `${process.env.NEXT_PUBLIC_BASE_URL}/graphql`
+  uri: BASE_URL
 })
+
+// eslint-disable-next-line @typescript-eslint/no-unsafe-call
+const uploadLink = createUploadLink({
+  uri: BASE_URL,
+  headers: { 'Apollo-Require-Preflight': 'true' }
+}) as ApolloLink
 
 const removeTypenameLink = removeTypenameFromVariables()
 
@@ -30,15 +39,14 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
   if (networkError) console.log(`[Network error]: ${networkError}`)
 })
 
-// eslint-disable-next-line react-hooks/rules-of-hooks
-
 // have a function to create a client for you
+// https://www.apollographql.com/docs/react/data/file-uploads 没有开箱即用的上传组件
 const makeClient = () => {
   return new ApolloClient({
     cache: new InMemoryCache({
       addTypename: false
     }),
-    link: from([errorLink, httpLink, removeTypenameLink]),
+    link: from([errorLink, httpLink, removeTypenameLink, uploadLink]),
     defaultOptions: {
       query: {
         context: {

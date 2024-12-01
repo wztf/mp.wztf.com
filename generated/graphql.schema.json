@@ -32,7 +32,7 @@
             "deprecationReason": null
           },
           {
-            "name": "appSecret",
+            "name": "app_secret",
             "description": null,
             "type": {
               "kind": "SCALAR",
@@ -159,6 +159,34 @@
         "isOneOf": null,
         "fields": null,
         "inputFields": null,
+        "interfaces": null,
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "FileInput",
+        "description": null,
+        "isOneOf": false,
+        "fields": null,
+        "inputFields": [
+          {
+            "name": "file",
+            "description": null,
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Upload",
+                "ofType": null
+              }
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
         "interfaces": null,
         "enumValues": null,
         "possibleTypes": null
@@ -366,6 +394,39 @@
             },
             "isDeprecated": false,
             "deprecationReason": null
+          },
+          {
+            "name": "uploadFile",
+            "description": null,
+            "args": [
+              {
+                "name": "input",
+                "description": null,
+                "type": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "FileInput",
+                    "ofType": null
+                  }
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              }
+            ],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
           }
         ],
         "inputFields": null,
@@ -503,7 +564,7 @@
             "deprecationReason": null
           },
           {
-            "name": "emailDriver",
+            "name": "email_driver",
             "description": null,
             "type": {
               "kind": "SCALAR",
@@ -515,7 +576,7 @@
             "deprecationReason": null
           },
           {
-            "name": "emailEncryption",
+            "name": "email_encryption",
             "description": null,
             "type": {
               "kind": "SCALAR",
@@ -527,7 +588,7 @@
             "deprecationReason": null
           },
           {
-            "name": "emailFromAddress",
+            "name": "email_from_address",
             "description": null,
             "type": {
               "kind": "SCALAR",
@@ -539,7 +600,7 @@
             "deprecationReason": null
           },
           {
-            "name": "emailFromName",
+            "name": "email_from_name",
             "description": null,
             "type": {
               "kind": "SCALAR",
@@ -551,7 +612,7 @@
             "deprecationReason": null
           },
           {
-            "name": "emailHost",
+            "name": "email_host",
             "description": null,
             "type": {
               "kind": "SCALAR",
@@ -563,7 +624,7 @@
             "deprecationReason": null
           },
           {
-            "name": "emailPassword",
+            "name": "email_password",
             "description": null,
             "type": {
               "kind": "SCALAR",
@@ -575,7 +636,7 @@
             "deprecationReason": null
           },
           {
-            "name": "emailPort",
+            "name": "email_port",
             "description": null,
             "type": {
               "kind": "NON_NULL",
@@ -591,7 +652,7 @@
             "deprecationReason": null
           },
           {
-            "name": "emailUsername",
+            "name": "email_username",
             "description": null,
             "type": {
               "kind": "SCALAR",
@@ -771,6 +832,17 @@
         "kind": "SCALAR",
         "name": "String",
         "description": "The `String` scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text.",
+        "isOneOf": null,
+        "fields": null,
+        "inputFields": null,
+        "interfaces": null,
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "SCALAR",
+        "name": "Upload",
+        "description": null,
         "isOneOf": null,
         "fields": null,
         "inputFields": null,
