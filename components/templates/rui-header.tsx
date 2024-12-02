@@ -20,10 +20,10 @@ const UriHeader = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false)
 
   useEffect(() => {
-    setLoading(false)
-  }, [])
+    if (loading) setLoading(false)
+  }, [loading])
   useCountDown({
-    targetDate: Date.now() + 3000,
+    targetDate: Date.now() + 5000,
     onEnd: () => setLoading(false)
   })
 

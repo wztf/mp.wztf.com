@@ -11,7 +11,7 @@ import { toast } from 'react-toastify'
 import { appid } from '@/config'
 import { useStore } from '@/store'
 
-import { FileInput, UploadFileDocument } from '@generated/graphql'
+import { UploadFileDocument } from '@generated/graphql'
 
 import type { UploadFile, UploadProps } from 'antd'
 
@@ -35,28 +35,31 @@ const Page = () => {
   }
 
   const [upload, { loading, data }] = useMutation(UploadFileDocument, {
-    variables: { input: { file: '' } },
+    variables: { input: null },
     onError: ({ networkError }: ApolloError) => {
       const { result } = networkError as ServerError
       const { errors } = result as Record<string, { message: string }[]>
-      toast.error(errors[0].message)
+      if (errors) {
+        toast.error(errors[0].message)
+      }
     }
   })
 
   // eslint-disable-next-line @typescript-eslint/require-await
-  const uploadImage: UploadProps['customRequest'] = async ({ file }) => {
-    const data = new FormData()
-    data.append('file', file)
-    console.log(data, file)
-    const fileInput: FileInput = {
-      file: data
+  const uploadImage: UploadProps['customRequest'] = async ({ file, data }) => {
+    const v = new FormData()
+    if (data) {
+      Object.keys(data).forEach(key => v.append(key, data[key] as string))
     }
+    v.append('file', file as File, 'file')
+    console.log(v, file)
+
     await upload({
-      variables: { input: fileInput },
+      variables: { input: data },
       context: {
         headers: {
-          ...headers
-          // 'Content-Type': 'multipart/form-data'
+          ...headers,
+          'Content-Type': 'multipart/form-data'
         }
       }
     })
@@ -65,15 +68,16 @@ const Page = () => {
   const onChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (file) {
-      const fileInput: FileInput = {
-        file: file
-      }
+      const v = new FormData()
+      console.log(file, 'file')
+      v.append('file', file)
+
       await upload({
-        variables: { input: fileInput },
+        variables: { input: v },
         context: {
           headers: {
-            ...headers
-            // 'Content-Type': 'multipart/form-data'
+            ...headers,
+            'Content-Type': 'multipart/form-data'
           }
         }
       })

@@ -164,30 +164,30 @@
         "possibleTypes": null
       },
       {
-        "kind": "INPUT_OBJECT",
-        "name": "FileInput",
+        "kind": "OBJECT",
+        "name": "FileObject",
         "description": null,
-        "isOneOf": false,
-        "fields": null,
-        "inputFields": [
+        "isOneOf": null,
+        "fields": [
           {
-            "name": "file",
+            "name": "file_url",
             "description": null,
+            "args": [],
             "type": {
               "kind": "NON_NULL",
               "name": null,
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Upload",
+                "name": "String",
                 "ofType": null
               }
             },
-            "defaultValue": null,
             "isDeprecated": false,
             "deprecationReason": null
           }
         ],
-        "interfaces": null,
+        "inputFields": null,
+        "interfaces": [],
         "enumValues": null,
         "possibleTypes": null
       },
@@ -400,14 +400,14 @@
             "description": null,
             "args": [
               {
-                "name": "input",
+                "name": "file",
                 "description": null,
                 "type": {
                   "kind": "NON_NULL",
                   "name": null,
                   "ofType": {
-                    "kind": "INPUT_OBJECT",
-                    "name": "FileInput",
+                    "kind": "SCALAR",
+                    "name": "Upload",
                     "ofType": null
                   }
                 },
@@ -420,8 +420,8 @@
               "kind": "NON_NULL",
               "name": null,
               "ofType": {
-                "kind": "SCALAR",
-                "name": "String",
+                "kind": "OBJECT",
+                "name": "FileObject",
                 "ofType": null
               }
             },

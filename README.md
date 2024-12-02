@@ -17,3 +17,5 @@ https://github.com/jaydenseric/apollo-upload-examples/tree/master
 https://dev.to/dnature/file-uploads-with-react-and-apollo-part-2-3fja
 
 https://github.com/async-graphql/async-graphql/issues/127
+
+https://github.com/actix/examples/blob/master/forms/multipart/src/main.rs

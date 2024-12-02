@@ -1,7 +1,8 @@
 # https://www.apollographql.com/docs/apollo-server/v3/data/file-uploads
-type FileInput {
-  file: Upload!
-}
+# type FileInput {
+#   file: Upload!
+# }
+scalar Upload
 
 # 登录 通过code 或者密码
 mutation Login($input: String!) {
@@ -19,6 +20,8 @@ mutation Code($input: String!) {
 }
 
 # 上传附件 使用 /api/v1/files
-mutation UploadFile($input: FileInput!) {
-    uploadFile(input: $input)
+mutation UploadFile($input: Upload!) {
+    uploadFile(file: $input) {
+      file_url
+    }
 }
