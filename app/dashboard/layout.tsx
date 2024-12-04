@@ -1,15 +1,20 @@
 'use client'
 
+import { ServerError, useLazyQuery } from '@apollo/client'
+import { ApolloError } from '@apollo/client/errors'
 import * as Avatar from '@radix-ui/react-avatar'
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
 import * as Tabs from '@radix-ui/react-tabs'
 import { Flex, Spinner, Text } from '@radix-ui/themes'
+import { useMount } from 'ahooks'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { toast } from 'react-toastify'
 
 import { useStore } from '@/store'
+
+import { AuthDocument } from '@generated/graphql'
 
 type Props = {
   children: React.ReactNode
@@ -17,7 +22,23 @@ type Props = {
 
 const Sidebar = ({ children }: Readonly<Props>) => {
   const loggedIn = useStore(state => state.loggedIn)
+  const token = useStore(state => state.token)
   const logout = useStore(state => state.logout)
+  const [fetch, { loading }] = useLazyQuery(AuthDocument, {
+    onError: ({ networkError }: ApolloError) => {
+      const { result } = networkError as ServerError
+      const { errors } = result as Record<string, { message: string }[]>
+      toast.error(errors[0].message)
+      logout()
+    }
+  })
+
+  // eslint-disable-next-line @typescript-eslint/no-misused-promises
+  useMount(async () => {
+    if (loggedIn && token) {
+      await fetch()
+    }
+  })
 
   const navigation = [
     {
@@ -168,11 +189,6 @@ const Sidebar = ({ children }: Readonly<Props>) => {
   const [selectedTab, setSelectedTab] = useState('Overview')
 
   const tabItems = ['Overview', 'Integration', 'Billing', 'Transactions', 'plans']
-
-  const [loading, setLoading] = useState<boolean>(true)
-  useEffect(() => {
-    setLoading(false)
-  }, [])
 
   if (loading) {
     return (

@@ -5,6 +5,7 @@ import { ServerError, useMutation } from '@apollo/client'
 import { ApolloError } from '@apollo/client/errors'
 import * as Tabs from '@radix-ui/react-tabs'
 import { Upload } from 'antd'
+import axios from 'axios'
 import { useState } from 'react'
 import { toast } from 'react-toastify'
 
@@ -68,19 +69,20 @@ const Page = () => {
   const onChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (file) {
-      const v = new FormData()
-      console.log(file, 'file')
-      v.append('file', file)
+      const formData = new FormData()
+      formData.append('file', file)
 
-      await upload({
-        variables: { input: v },
-        context: {
+      try {
+        const res = await axios.post('http://localhost:8090/api/v1/files', formData, {
           headers: {
             ...headers,
             'Content-Type': 'multipart/form-data'
           }
-        }
-      })
+        })
+        console.log(res)
+      } catch (error) {
+        console.log(error)
+      }
     }
   }
 
@@ -105,7 +107,7 @@ const Page = () => {
   return (
     <div>
       <h1>Profile</h1>
-      <input type='file' accept='image/*' name='file' onChange={onChange} />
+      <input type='file' name='file' onChange={onChange} />
       <Tabs.Root
         className='max-w-screen-xl mx-auto mt-4 px-4 md:px-8'
         value={selectedTab}

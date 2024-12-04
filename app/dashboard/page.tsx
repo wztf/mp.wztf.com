@@ -8,20 +8,13 @@ import { IoClose } from 'react-icons/io5'
 
 import { useStore } from '@/store'
 
-import { appid } from '@config/index'
 import { ProfileDocument, ProfileQuery } from '@generated/graphql'
 
+import { API } from '/#/api'
+
 const Page = () => {
-  const token = useStore(state => state.token)
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-assignment
-  const [fetch, { loading, data }] = useLazyQuery(ProfileDocument, {
-    context: {
-      headers: {
-        appid,
-        Authorization: `Bearer ${token}`
-      }
-    }
-  })
+  const setProfile = useStore(state => state.setProfile)
+  const [fetch, { loading, data }] = useLazyQuery(ProfileDocument)
 
   useEffect(() => {
     fetch().catch(console.error)
@@ -31,8 +24,8 @@ const Page = () => {
     return <>loading</>
   }
 
-  if (data as ProfileQuery) {
-    console.log(data)
+  if ((data as ProfileQuery) && data?.profile) {
+    setProfile(data.profile as unknown as API.Profile)
   }
 
   return (

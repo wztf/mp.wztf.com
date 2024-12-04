@@ -23,3 +23,8 @@ query Setting {
         registrable
     }
 }
+
+# 判断token是否有效
+query Auth {
+    auth
+}

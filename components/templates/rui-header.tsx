@@ -1,5 +1,5 @@
 import { DropdownMenu, Flex, Spinner, Text } from '@radix-ui/themes'
-import { useCountDown } from 'ahooks'
+import { useMount } from 'ahooks'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -22,9 +22,8 @@ const UriHeader = () => {
   useEffect(() => {
     if (loading) setLoading(false)
   }, [loading])
-  useCountDown({
-    targetDate: Date.now() + 5000,
-    onEnd: () => setLoading(false)
+  useMount(() => {
+    if (loading) setLoading(false)
   })
 
   useEffect(() => {

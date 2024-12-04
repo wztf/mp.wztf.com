@@ -1,5 +1,5 @@
 export declare namespace API {
-  export interface User {
+  export interface Profile {
     id: number
     name: string
     email: string
