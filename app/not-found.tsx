@@ -1,6 +1,4 @@
 'use client'
-import { Text } from '@radix-ui/themes'
-import Link from 'next/link'
 
 type Props = {
   error: Error & { digest?: string }
@@ -10,36 +8,29 @@ type Props = {
 export default function Error(_: Props) {
   return (
     <>
-      <section className='bg-gray-50'>
-        <div className='mx-auto max-w-screen-xl px-4 py-32 lg:flex lg:h-screen lg:items-center'>
-          <div className='mx-auto max-w-xl text-center'>
-            <h1 className='text-3xl font-extrabold sm:text-5xl'>
-              Understand User Flow.
-              <strong className='font-extrabold text-red-700 sm:block'> Increase Conversion. </strong>
-            </h1>
-
-            <Text className='mt-4 sm:text-xl/relaxed'>
-              Lorem ipsum dolor sit amet consectetur, adipisicing elit. Nesciunt illo tenetur fuga ducimus numquam ea!
-            </Text>
-
-            <div className='mt-8 flex flex-wrap justify-center gap-4'>
-              <Link
-                className='block w-full rounded bg-red-600 px-12 py-3 text-sm font-medium text-white shadow hover:bg-red-700 focus:outline-none focus:ring active:bg-red-500 sm:w-auto'
-                href='/'
+      <main>
+        <div className='max-w-screen-xl mx-auto px-4 flex items-center justify-start min-h-[520px] md:px-8'>
+          <div className='max-w-lg mx-auto space-y-3 text-center'>
+            <h3 className='text-indigo-600 font-semibold'>404 Error</h3>
+            <p className='text-gray-800 text-4xl font-semibold sm:text-5xl'>Page not found</p>
+            <p className='text-gray-600'>Sorry, the page you are looking for could not be found or has been removed.</p>
+            <div className='flex flex-wrap items-center justify-center gap-3'>
+              <a
+                href='javascript:void(0)'
+                className='block py-2 px-4 text-white font-medium bg-indigo-600 duration-150 hover:bg-indigo-500 active:bg-indigo-700 rounded-lg'
               >
-                Get Started
-              </Link>
-
-              <Link
-                className='block w-full rounded px-12 py-3 text-sm font-medium text-red-600 shadow hover:text-red-700 focus:outline-none focus:ring active:text-red-500 sm:w-auto'
-                href='#'
+                Go back
+              </a>
+              <a
+                href='javascript:void(0)'
+                className='block py-2 px-4 text-gray-700 hover:bg-gray-50 font-medium duration-150 active:bg-gray-100 border rounded-lg'
               >
-                Learn More
-              </Link>
+                Contact support
+              </a>
             </div>
           </div>
         </div>
-      </section>
+      </main>
     </>
   )
 }

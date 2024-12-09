@@ -9,6 +9,7 @@ import { Box, Card, Container, Flex, Heading, Text } from '@radix-ui/themes'
 import Link from 'next/link'
 import { redirect, useSearchParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
+import { FaWeixin } from 'react-icons/fa'
 import { FcGoogle } from 'react-icons/fc'
 import { toast } from 'react-toastify'
 
@@ -98,8 +99,16 @@ const Page = () => {
                   <Flex justify='between' align='center' className='pt-3 text-sm'>
                     <Flex align='center'>
                       <Text>其它登录：</Text>
-                      <Link href='/auth/login?app=gg&name=google' target='_self' rel='noreferrer nofollow'>
+                      <Link
+                        className='mr-2'
+                        href='/auth/login?app=gg&name=google'
+                        target='_self'
+                        rel='noreferrer nofollow'
+                      >
                         <FcGoogle className='text-xl' />
+                      </Link>
+                      <Link href='/auth/login?app=wechat&name=wechat' target='_self' rel='noreferrer nofollow'>
+                        <FaWeixin className='text-xl text-green-500' />
                       </Link>
                     </Flex>
                     {method === 'sms' ? (

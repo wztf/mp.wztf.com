@@ -38,8 +38,8 @@ const RuiRegister = ({ onReset }: Props) => {
   })
 
   const [formValues, setFormValues] = useState<FormProps>({
-    email: 'cleveng@gmail.com',
-    password: '123456'
+    email: '',
+    password: ''
   })
   const [errors, setErrors] = useState<{ [key: string]: string | null }>({
     email: null,

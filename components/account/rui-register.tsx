@@ -25,8 +25,8 @@ const RuiLogin = () => {
   const app = useStore(state => state.app)
   const signer = new Signatory(appid)
   const [formValues, setFormValues] = useState<FormProps>({
-    email: 'cleveng@gmail.com',
-    security_code: '123456'
+    email: '',
+    security_code: ''
   })
   const [errors, setErrors] = useState<{ [key: string]: string | null }>({
     email: null,
