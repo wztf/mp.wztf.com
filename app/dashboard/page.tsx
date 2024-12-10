@@ -1,33 +1,10 @@
 'use client'
 
-import { useLazyQuery } from '@apollo/client'
 import Link from 'next/link'
-import { useEffect } from 'react'
 import { GiBugleCall } from 'react-icons/gi'
 import { IoClose } from 'react-icons/io5'
 
-import { useStore } from '@/store'
-
-import { ProfileDocument, ProfileQuery } from '@generated/graphql'
-
-import { API } from '/#/api'
-
 const Page = () => {
-  const setProfile = useStore(state => state.setProfile)
-  const [fetch, { loading, data }] = useLazyQuery(ProfileDocument)
-
-  useEffect(() => {
-    fetch().catch(console.error)
-  }, [])
-
-  if (loading) {
-    return <>loading</>
-  }
-
-  if ((data as ProfileQuery) && data?.profile) {
-    setProfile(data.profile as unknown as API.Profile)
-  }
-
   return (
     <div>
       <div className='bg-indigo-600'>

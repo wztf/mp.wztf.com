@@ -23,6 +23,7 @@ type Props = {
 const Sidebar = ({ children }: Readonly<Props>) => {
   const loggedIn = useStore(state => state.loggedIn)
   const token = useStore(state => state.token)
+  const profile = useStore(state => state.profile)
   const logout = useStore(state => state.logout)
   const [fetch, { loading }] = useLazyQuery(AuthDocument, {
     onError: ({ networkError }: ApolloError) => {
@@ -250,56 +251,34 @@ const Sidebar = ({ children }: Readonly<Props>) => {
                     <Avatar.Root>
                       <Avatar.Image
                         className='w-12 h-12 flex items-center gap-x-4 cursor-pointer rounded-full ring-offset-2 ring-gray-800 focus:ring-2 duration-150'
-                        src='https://randomuser.me/api/portraits/women/79.jpg'
-                        alt='vienna'
+                        src={profile?.profile_url}
+                        alt={profile?.name}
                       />
                       <Avatar.Fallback
                         className='flex w-12 h-12 rounded-full items-center justify-center text-white text-sm font-medium bg-gradient-to-r from-teal-400 to-blue-500'
                         delayMs={600}
                       >
-                        VI
+                        U
                       </Avatar.Fallback>
                     </Avatar.Root>
                   </DropdownMenu.Trigger>
-
                   <DropdownMenu.Portal>
                     <DropdownMenu.Content className='absolute bottom-4 left-10 w-64 rounded-lg bg-white shadow-md border text-sm text-gray-600 p-2'>
-                      <span className='block text-gray-500/80 p-2'>vienna@gmail.com</span>
+                      <span className='block text-gray-500/80 p-2'>{profile?.email}</span>
                       <DropdownMenu.Item asChild className='outline-none'>
-                        <a
+                        <Link
                           href='/dashboard/profile'
                           className='block w-full p-2 text-left rounded-md hover:bg-gray-50 active:bg-gray-100 duration-150'
                         >
-                          Dashboard
-                        </a>
+                          用户设置
+                        </Link>
                       </DropdownMenu.Item>
-                      <div className='relative rounded-md hover:bg-gray-50 active:bg-gray-100 duration-150'>
-                        <svg
-                          xmlns='http://www.w3.org/2000/svg'
-                          viewBox='0 0 20 20'
-                          fill='currentColor'
-                          className='w-4 h-4 absolute right-1 inset-y-0 my-auto pointer-events-none'
-                        >
-                          <path
-                            fillRule='evenodd'
-                            d='M10 3a.75.75 0 01.55.24l3.25 3.5a.75.75 0 11-1.1 1.02L10 4.852 7.3 7.76a.75.75 0 01-1.1-1.02l3.25-3.5A.75.75 0 0110 3zm-3.76 9.2a.75.75 0 011.06.04l2.7 2.908 2.7-2.908a.75.75 0 111.1 1.02l-3.25 3.5a.75.75 0 01-1.1 0l-3.25-3.5a.75.75 0 01.04-1.06z'
-                            clipRule='evenodd'
-                          />
-                        </svg>
-                        <select className='w-full cursor-pointer appearance-none bg-transparent p-2 outline-none'>
-                          <option disabled selected>
-                            Theme
-                          </option>
-                          <option>Dark</option>
-                          <option>Light</option>
-                        </select>
-                      </div>
                       <DropdownMenu.Item asChild className='outline-none'>
                         <button
                           className='block w-full p-2 text-left rounded-md hover:bg-gray-50 active:bg-gray-100 duration-150'
                           onClick={logout}
                         >
-                          Logout
+                          退出登录
                         </button>
                       </DropdownMenu.Item>
                     </DropdownMenu.Content>

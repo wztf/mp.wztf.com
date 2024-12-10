@@ -1,10 +1,13 @@
+import { version } from '@config/index'
+
+import { makeClient } from '@/plugins/apollo'
+
+import { ProfileDocument } from '@generated/graphql'
+
 import { create } from 'zustand'
 import { createJSONStorage, persist } from 'zustand/middleware'
 
-import { version } from '@config/index'
-
 import { API } from '/#/api'
-
 export interface States {
   loggedIn: boolean
   token: string | null
@@ -13,9 +16,9 @@ export interface States {
 }
 
 interface Actions {
-  login: (token: string) => void //Promise<void>
+  login: (token: string) => Promise<void>
   logout: () => void
-  setProfile: (profile: API.Profile) => void
+  getProfile: () => Promise<void>
   setApp: (app: string) => void
 }
 
@@ -23,19 +26,27 @@ export type Store = States & Actions
 
 export const useStore = create<Store>()(
   persist(
-    set => ({
+    (set, get) => ({
       loggedIn: false,
       token: null,
       app: 'gg',
       profile: null,
-      login: (token: string) => {
+      login: async (token: string) => {
         set({ loggedIn: true, token })
+        await get().getProfile()
       },
       logout: () => {
         set({ loggedIn: false, token: null, profile: null })
       },
-      setProfile: (profile: API.Profile) => {
-        set({ profile })
+      getProfile: async () => {
+        const { data } = await makeClient().query({
+          query: ProfileDocument,
+          variables: {},
+          context: { headers: { Authorization: `Bearer ${get().token}` } }
+        })
+        if (data && data.profile) {
+          set({ profile: data.profile as unknown as API.Profile })
+        }
       },
       setApp: (app: string) => set({ app })
     }),

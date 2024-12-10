@@ -6,7 +6,8 @@ import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { FaChevronRight, FaRegUser } from 'react-icons/fa6'
 import { FiMenu } from 'react-icons/fi'
-import { IoClose, IoExitOutline, IoSettingsOutline } from 'react-icons/io5'
+import { IoClose, IoExitOutline } from 'react-icons/io5'
+import { RiDashboardLine } from 'react-icons/ri'
 
 import { useStore } from '@/store'
 
@@ -15,6 +16,7 @@ const UriHeader = () => {
 
   const [loading, setLoading] = useState<boolean>(true)
   const loggedIn = useStore(state => state.loggedIn)
+  const profile = useStore(state => state.profile)
   const logout = useStore(state => state.logout)
 
   const [isOpen, setIsOpen] = useState<boolean>(false)
@@ -107,7 +109,7 @@ const UriHeader = () => {
                               gapX='1'
                               className='py-2 px-4 text-white font-medium bg-sky-500 hover:bg-sky-400 active:bg-sky-600 duration-150 rounded-full md:inline-flex'
                             >
-                              <Text>Sign in</Text>
+                              <Text>{profile?.name}</Text>
                               <FaRegUser />
                               <DropdownMenu.TriggerIcon />
                             </Flex>
@@ -115,8 +117,8 @@ const UriHeader = () => {
                         </DropdownMenu.Trigger>
                         <DropdownMenu.Content>
                           <DropdownMenu.Item onClick={() => router.push('/dashboard')}>
-                            <IoSettingsOutline />
-                            个人设置
+                            <RiDashboardLine />
+                            控制面板
                           </DropdownMenu.Item>
                           <DropdownMenu.Separator />
                           <DropdownMenu.Item onClick={logout}>
