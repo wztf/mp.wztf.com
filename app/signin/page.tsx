@@ -27,7 +27,7 @@ const Page = () => {
   const [method, setMethod] = useState<'sms' | 'password'>('sms')
 
   const signer = new Signatory(appid)
-  const [fetch, { loading, data }] = useMutation(LoginDocument, {
+  const [fetch, { data }] = useMutation(LoginDocument, {
     variables: { input: '' },
     onError: ({ networkError }: ApolloError) => {
       const { result } = networkError as ServerError
@@ -90,7 +90,7 @@ const Page = () => {
                   登录账户畅享更多权益
                 </Heading>
                 <Link href='/' className='mx-0.5 text-gray-700 hover:underline text-sm '>
-                  返回首页 {loading && '...'}
+                  返回首页
                 </Link>
               </Flex>
               <Flex justify='between' align='start' className='pt-2.5 text-gray-600'>

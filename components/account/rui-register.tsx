@@ -72,7 +72,7 @@ const RuiLogin = () => {
       return
     }
 
-    const payload = signer.toBase64String({ email: formValues.email, method: 'register' })
+    const payload = signer.toBase64String({ email: formValues.email, action_type: 'register' })
     await fetchCode({
       variables: { input: payload },
       context: {

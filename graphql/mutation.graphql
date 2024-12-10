@@ -25,3 +25,8 @@ mutation UploadFile($input: Upload!) {
       file_url
     }
 }
+
+# 重设密码
+mutation ResetPassword($input: String!) {
+    resetPassword(payload: $input)
+}
