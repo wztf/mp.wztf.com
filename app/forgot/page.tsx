@@ -150,9 +150,15 @@ const Page = () => {
                 <Heading as='h2' className='text-lg text-gray-700 font-bold leading-none'>
                   忘记密码
                 </Heading>
-                <Link href='/signin' className='mx-0.5 text-gray-700 hover:underline text-sm '>
-                  返回登录
-                </Link>
+                <Flex align='center' gapX='1'>
+                  <Link href='/signin' className='text-gray-700 hover:underline text-sm '>
+                    返回登录
+                  </Link>
+                  <Separator.Root decorative orientation='vertical' className='mx-2 h-4 w-0.5 bg-gray-200' />
+                  <Link href='/' className='underline text-sm'>
+                    回到首页
+                  </Link>
+                </Flex>
               </Flex>
               <div className='pt-2.5 text-gray-600'>
                 <Heading as='h3' className='mb-4 text-base font-bold leading-none'>

@@ -36,13 +36,13 @@ export const useStore = create<Store>()(
       profile: null,
       setting: null,
       login: async (token: string) => {
+        Cookies.set('token', token, { path: '/' })
         set({ loggedIn: true, token })
-        Cookies.set('token', token)
         await get().getProfile()
       },
       logout: () => {
-        set({ loggedIn: false, token: null, profile: null })
         Cookies.remove('token')
+        set({ loggedIn: false, token: null, profile: null })
       },
       getProfile: async () => {
         const { data } = await makeClient().query({

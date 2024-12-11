@@ -1,11 +1,10 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
 
-import { useStore } from '@/store'
+import type { NextRequest } from 'next/server'
 
 export function middleware(request: NextRequest) {
-  const token = useStore.getState().token
-  const loggedIn = useStore.getState().loggedIn
-  if (!token && !loggedIn) {
+  const token = request.cookies.get('token')?.value
+  if (!token) {
     return NextResponse.redirect(new URL('/signin', request.url))
   }
 
@@ -16,5 +15,5 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/dashboard/*']
+  matcher: ['/dashboard/:path*']
 }

@@ -199,9 +199,8 @@ const Sidebar = ({ children }: Readonly<Props>) => {
       </Flex>
     )
   } else if (!loggedIn) {
-    // 退出，跳转回首页
-    toast.success('已退出，正在跳转回首页')
-    redirect('/')
+    // 未登录，跳转到登录页
+    redirect('/signin')
   }
 
   return (
