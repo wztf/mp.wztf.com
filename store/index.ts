@@ -4,6 +4,7 @@ import { makeClient } from '@/plugins/apollo'
 
 import { ProfileDocument, SettingDocument } from '@generated/graphql'
 
+import Cookies from 'js-cookie'
 import { create } from 'zustand'
 import { createJSONStorage, persist } from 'zustand/middleware'
 
@@ -36,10 +37,12 @@ export const useStore = create<Store>()(
       setting: null,
       login: async (token: string) => {
         set({ loggedIn: true, token })
+        Cookies.set('token', token)
         await get().getProfile()
       },
       logout: () => {
         set({ loggedIn: false, token: null, profile: null })
+        Cookies.remove('token')
       },
       getProfile: async () => {
         const { data } = await makeClient().query({
