@@ -1,7 +1,7 @@
 'use client'
-
 import { ServerError, useLazyQuery } from '@apollo/client'
 import { ApolloError } from '@apollo/client/errors'
+import * as AlertDialog from '@radix-ui/react-alert-dialog'
 import * as Avatar from '@radix-ui/react-avatar'
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
 import * as Tabs from '@radix-ui/react-tabs'
@@ -10,6 +10,13 @@ import { useMount } from 'ahooks'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import React, { useState } from 'react'
+import { CiSearch } from 'react-icons/ci'
+import { GoLock } from 'react-icons/go'
+import { GrRefresh } from 'react-icons/gr'
+import { HiMiniLanguage } from 'react-icons/hi2'
+import { IoSettingsOutline } from 'react-icons/io5'
+import { RiMenuUnfold4Line } from 'react-icons/ri'
+import { SlSizeFullscreen } from 'react-icons/sl'
 import { toast } from 'react-toastify'
 
 import { useStore } from '@/store'
@@ -187,6 +194,9 @@ const Sidebar = ({ children }: Readonly<Props>) => {
       )
     }
   ]
+
+  const [state, setState] = useState(false)
+
   const [selectedTab, setSelectedTab] = useState('Overview')
 
   const tabItems = ['Overview', 'Integration', 'Billing', 'Transactions', 'plans']
@@ -244,100 +254,249 @@ const Sidebar = ({ children }: Readonly<Props>) => {
                   </li>
                 ))}
               </ul>
-              <div className='relative py-4 px-4 border-t'>
-                <DropdownMenu.Root>
-                  <DropdownMenu.Trigger className='outline-none'>
-                    <Avatar.Root>
-                      <Avatar.Image
-                        className='w-12 h-12 flex items-center gap-x-4 cursor-pointer rounded-full ring-offset-2 ring-gray-800 focus:ring-2 duration-150'
-                        src={profile?.profile_url}
-                        alt={profile?.name}
-                      />
-                      <Avatar.Fallback
-                        className='flex w-12 h-12 rounded-full items-center justify-center text-white text-sm font-medium bg-gradient-to-r from-teal-400 to-blue-500'
-                        delayMs={600}
-                      >
-                        U
-                      </Avatar.Fallback>
-                    </Avatar.Root>
-                  </DropdownMenu.Trigger>
-                  <DropdownMenu.Portal>
-                    <DropdownMenu.Content className='absolute bottom-4 left-10 w-64 rounded-lg bg-white shadow-md border text-sm text-gray-600 p-2'>
-                      <span className='block text-gray-500/80 p-2'>{profile?.email}</span>
-                      <DropdownMenu.Item asChild className='outline-none'>
-                        <Link
-                          href='/dashboard/profile'
-                          className='block w-full p-2 text-left rounded-md hover:bg-gray-50 active:bg-gray-100 duration-150'
-                        >
-                          用户设置
-                        </Link>
-                      </DropdownMenu.Item>
-                      <DropdownMenu.Item asChild className='outline-none'>
-                        <button
-                          className='block w-full p-2 text-left rounded-md hover:bg-gray-50 active:bg-gray-100 duration-150'
-                          onClick={logout}
-                        >
-                          退出登录
-                        </button>
-                      </DropdownMenu.Item>
-                    </DropdownMenu.Content>
-                  </DropdownMenu.Portal>
-                </DropdownMenu.Root>
+              <div className=' py-4 px-4 border-t'>
+                <Avatar.Root>
+                  <Avatar.Image
+                    className='w-12 h-12 flex items-center gap-x-4 cursor-pointer rounded-full ring-offset-2 ring-gray-800 focus:ring-2 duration-150'
+                    src={profile?.profile_url}
+                    alt={profile?.name}
+                  />
+                  <Avatar.Fallback
+                    className='flex w-12 h-12 rounded-full items-center justify-center text-white text-sm font-medium bg-gradient-to-r from-teal-400 to-blue-500'
+                    delayMs={600}
+                  >
+                    U
+                  </Avatar.Fallback>
+                </Avatar.Root>
               </div>
             </div>
           </div>
         </div>
       </nav>
-      <div className='flex-1 w-full ml-20 p-4 overflow-y-auto'>
-        <Tabs.Root className='mx-auto' value={selectedTab} onValueChange={val => setSelectedTab(val)}>
-          <Tabs.List
-            className='hidden bg-gray-100 py-1.5 px-2.5 rounded-lg gap-x-3 overflow-x-auto text-sm sm:flex'
-            aria-label='Manage your account'
+      <div className='flex-1 w-full ml-20 overflow-y-auto'>
+        <header className='bg-gray-50 sticky top-0 min-h-[60px]'>
+          <div
+            className={`bg-white items-center gap-x-14 px-4 mx-auto lg:flex lg:static ${state ? 'h-full fixed inset-x-0' : ''}`}
           >
-            {tabItems.map((item, idx) => (
-              <Tabs.Trigger
-                key={idx}
-                className='data-[state=active]:bg-white data-[state=active]:text-indigo-600 data-[state=active]:shadow-sm py-1.5 px-3 rounded-lg duration-150 text-gray-500 hover:text-indigo-600 hover:bg-white active:bg-white/50 font-medium'
-                value={item}
-              >
-                {item}
-              </Tabs.Trigger>
-            ))}
-          </Tabs.List>
-          <div className='relative text-gray-500 sm:hidden'>
-            <svg
-              xmlns='http://www.w3.org/2000/svg'
-              viewBox='0 0 20 20'
-              fill='currentColor'
-              className='pointer-events-none w-5 h-5 absolute right-2 inset-y-0 my-auto'
+            <Flex align='center' justify='between' className='py-3 lg:py-5 lg:block'>
+              <ul className='flex items-center lg:space-x-6 space-x-4'>
+                <li>
+                  <RiMenuUnfold4Line className='text-base' onClick={() => setState(!state)} />
+                </li>
+                <li>
+                  <GrRefresh className='text-base' />
+                </li>
+              </ul>
+            </Flex>
+            <div
+              className={`nav-menu flex-1 pb-28 md:mt-8 overflow-y-auto max-h-screen lg:block lg:overflow-visible lg:pb-0 lg:mt-0 ${state ? '' : 'md:hidden'}`}
             >
-              <path
-                fillRule='evenodd'
-                d='M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z'
-                clipRule='evenodd'
-              />
-            </svg>
-            <select
-              value={selectedTab}
-              className='py-2 px-3 w-full bg-transparent appearance-none outline-none border rounded-lg shadow-sm focus:border-indigo-600 text-sm'
-              onChange={e => setSelectedTab(e.target.value)}
+              <div className='items-center space-y-6 hidden lg:flex lg:space-x-6 lg:space-y-0'>
+                <form
+                  onSubmit={e => e.preventDefault()}
+                  className='flex-1 items-center justify-start pb-4 lg:flex lg:pb-0'
+                >
+                  <Flex gap='1' align='center' className='px-2 border rounded-lg'>
+                    <CiSearch />
+                    <input
+                      type='text'
+                      placeholder='Search'
+                      className='w-full px-2 py-2 text-gray-500 bg-transparent rounded-md outline-none'
+                    />
+                  </Flex>
+                </form>
+                <ul className='flex items-center lg:space-x-6'>
+                  <li>
+                    <DropdownMenu.Root>
+                      <DropdownMenu.Trigger className='outline-none'>
+                        <HiMiniLanguage className='text-lg inline-block' />
+                      </DropdownMenu.Trigger>
+                      <DropdownMenu.Portal>
+                        <DropdownMenu.Content
+                          className='rounded-md bg-white p-[5px] shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] will-change-[opacity,transform] data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade data-[side=right]:animate-slideLeftAndFade data-[side=top]:animate-slideDownAndFade'
+                          sideOffset={5}
+                        >
+                          <DropdownMenu.Arrow className='fill-white' />
+                          <DropdownMenu.Item asChild className='outline-none text-sm'>
+                            <button className='block w-full p-2 text-left rounded-md hover:bg-gray-50 active:bg-gray-100 duration-150'>
+                              中文 - Chinese
+                            </button>
+                          </DropdownMenu.Item>
+                          <DropdownMenu.Item asChild className='outline-none text-sm'>
+                            <button className='block w-full p-2 text-left rounded-md hover:bg-gray-50 active:bg-gray-100 duration-150'>
+                              英文 - English
+                            </button>
+                          </DropdownMenu.Item>
+                        </DropdownMenu.Content>
+                      </DropdownMenu.Portal>
+                    </DropdownMenu.Root>
+                  </li>
+                  <li>
+                    <AlertDialog.Root>
+                      <AlertDialog.Trigger asChild>
+                        <GoLock className='inline-block text-base' />
+                      </AlertDialog.Trigger>
+                      <AlertDialog.Portal>
+                        <AlertDialog.Overlay className='fixed inset-0 bg-blackA6 data-[state=open]:animate-overlayShow' />
+                        <AlertDialog.Content className='fixed left-1/2 top-1/2 max-h-[85vh] w-[90vw] max-w-[500px] -translate-x-1/2 -translate-y-1/2 rounded-md bg-white p-[25px] shadow-[hsl(206_22%_7%_/_35%)_0px_10px_38px_-10px,_hsl(206_22%_7%_/_20%)_0px_10px_20px_-15px] focus:outline-none data-[state=open]:animate-contentShow'>
+                          <AlertDialog.Title className='m-0 text-[17px] font-medium text-mauve12'>
+                            Are you absolutely sure?
+                          </AlertDialog.Title>
+                          <AlertDialog.Description className='mb-5 mt-[15px] text-[15px] leading-normal text-mauve11'>
+                            This action cannot be undone. This will permanently delete your account and remove your data
+                            from our servers.
+                          </AlertDialog.Description>
+                          <div className='flex justify-end gap-[25px]'>
+                            <AlertDialog.Cancel asChild>
+                              <button className='inline-flex h-[35px] items-center justify-center rounded bg-mauve4 px-[15px] font-medium leading-none text-mauve11 outline-none hover:bg-mauve5 focus:shadow-[0_0_0_2px] focus:shadow-mauve7'>
+                                Cancel
+                              </button>
+                            </AlertDialog.Cancel>
+                            <AlertDialog.Action asChild>
+                              <button className='inline-flex h-[35px] items-center justify-center rounded bg-red4 px-[15px] font-medium leading-none text-red11 outline-none hover:bg-red5 focus:shadow-[0_0_0_2px] focus:shadow-red7'>
+                                Yes, delete account
+                              </button>
+                            </AlertDialog.Action>
+                          </div>
+                        </AlertDialog.Content>
+                      </AlertDialog.Portal>
+                    </AlertDialog.Root>
+                  </li>
+                  <li>
+                    <SlSizeFullscreen className='text-base' />
+                  </li>
+                  <li>
+                    <DropdownMenu.Root>
+                      <DropdownMenu.Trigger className='outline-none'>
+                        <Avatar.Root>
+                          <Avatar.Image
+                            className='w-8 h-8 flex items-center gap-x-4 cursor-pointer rounded-full ring-offset-2 ring-gray-200 focus:ring-2 duration-150'
+                            src={profile?.profile_url}
+                            alt={profile?.name}
+                          />
+                          <Avatar.Fallback
+                            className='flex w-8 h-8 rounded-full items-center justify-center text-white text-sm font-medium bg-gradient-to-r from-teal-400 to-blue-500'
+                            delayMs={600}
+                          >
+                            U
+                          </Avatar.Fallback>
+                        </Avatar.Root>
+                      </DropdownMenu.Trigger>
+                      <DropdownMenu.Portal>
+                        <DropdownMenu.Content
+                          className='min-w-[220px] rounded-md bg-white p-[5px] shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] will-change-[opacity,transform] data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade data-[side=right]:animate-slideLeftAndFade data-[side=top]:animate-slideDownAndFade'
+                          sideOffset={5}
+                        >
+                          <DropdownMenu.Arrow className='fill-white' />
+                          <span className='block text-gray-500/80 p-2'>{profile?.email}</span>
+                          <DropdownMenu.Item asChild className='outline-none text-sm'>
+                            <Link
+                              href='/dashboard/profile'
+                              className='block w-full p-2 text-left rounded-md hover:bg-gray-50 active:bg-gray-100 duration-150'
+                            >
+                              个人设置
+                            </Link>
+                          </DropdownMenu.Item>
+                          <DropdownMenu.Item asChild className='outline-none text-sm'>
+                            <AlertDialog.Root>
+                              <AlertDialog.Trigger asChild>
+                                <button className='block w-full p-2 text-sm text-left rounded-md hover:bg-gray-50 active:bg-gray-100 duration-150'>
+                                  退出登录
+                                </button>
+                              </AlertDialog.Trigger>
+                              <AlertDialog.Portal>
+                                <AlertDialog.Overlay className='fixed inset-0 bg-blackA6 data-[state=open]:animate-overlayShow' />
+                                <AlertDialog.Content className='fixed left-1/2 top-1/2 max-h-[85vh] w-[90vw] max-w-[500px] -translate-x-1/2 -translate-y-1/2 rounded-md bg-white p-[25px] shadow-[hsl(206_22%_7%_/_35%)_0px_10px_38px_-10px,_hsl(206_22%_7%_/_20%)_0px_10px_20px_-15px] focus:outline-none data-[state=open]:animate-contentShow'>
+                                  <AlertDialog.Title className='m-0 text-[17px] font-medium text-mauve12'>
+                                    Are you absolutely sure?
+                                  </AlertDialog.Title>
+                                  <AlertDialog.Description className='mb-5 mt-[15px] text-[15px] leading-normal text-mauve11'>
+                                    This action cannot be undone. This will permanently delete your account and remove
+                                    your data from our servers.
+                                  </AlertDialog.Description>
+                                  <div className='flex justify-end gap-[25px]'>
+                                    <AlertDialog.Cancel asChild>
+                                      <button className='inline-flex h-[35px] items-center justify-center rounded bg-mauve4 px-[15px] font-medium leading-none text-mauve11 outline-none hover:bg-mauve5 focus:shadow-[0_0_0_2px] focus:shadow-mauve7'>
+                                        Cancel
+                                      </button>
+                                    </AlertDialog.Cancel>
+                                    <AlertDialog.Action asChild>
+                                      <button
+                                        onClick={logout}
+                                        className='inline-flex h-[35px] items-center justify-center rounded bg-red4 px-[15px] font-medium leading-none text-red11 outline-none hover:bg-red5 focus:shadow-[0_0_0_2px] focus:shadow-red7'
+                                      >
+                                        Yes, delete account
+                                      </button>
+                                    </AlertDialog.Action>
+                                  </div>
+                                </AlertDialog.Content>
+                              </AlertDialog.Portal>
+                            </AlertDialog.Root>
+                          </DropdownMenu.Item>
+                        </DropdownMenu.Content>
+                      </DropdownMenu.Portal>
+                    </DropdownMenu.Root>
+                  </li>
+                  <li>
+                    <IoSettingsOutline className='text-base' />
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </header>
+
+        <main>
+          <Tabs.Root className='mx-auto' value={selectedTab} onValueChange={val => setSelectedTab(val)}>
+            <Tabs.List
+              className='hidden bg-gray-100 py-1.5 px-2.5 rounded-lg gap-x-3 overflow-x-auto text-sm sm:flex'
+              aria-label='Manage your account'
             >
               {tabItems.map((item, idx) => (
-                <option key={idx} id={idx.toString()} value={item}>
+                <Tabs.Trigger
+                  key={idx}
+                  className='data-[state=active]:bg-white data-[state=active]:text-indigo-600 data-[state=active]:shadow-sm py-1.5 px-3 rounded-lg duration-150 text-gray-500 hover:text-indigo-600 hover:bg-white active:bg-white/50 font-medium'
+                  value={item}
+                >
                   {item}
-                </option>
+                </Tabs.Trigger>
               ))}
-            </select>
-          </div>
-          {tabItems.map((item, idx) => (
-            <Tabs.Content key={idx} className='py-6' value={item}>
-              <p className='text-xs leading-normal'>
-                This is <b>{item}</b> Tab
-              </p>
-            </Tabs.Content>
-          ))}
-        </Tabs.Root>
-        {children}
+            </Tabs.List>
+            <div className='relative text-gray-500 sm:hidden'>
+              <svg
+                xmlns='http://www.w3.org/2000/svg'
+                viewBox='0 0 20 20'
+                fill='currentColor'
+                className='pointer-events-none w-5 h-5 absolute right-2 inset-y-0 my-auto'
+              >
+                <path
+                  fillRule='evenodd'
+                  d='M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z'
+                  clipRule='evenodd'
+                />
+              </svg>
+              <select
+                value={selectedTab}
+                className='py-2 px-3 w-full bg-transparent appearance-none outline-none border rounded-lg shadow-sm focus:border-indigo-600 text-sm'
+                onChange={e => setSelectedTab(e.target.value)}
+              >
+                {tabItems.map((item, idx) => (
+                  <option key={idx} id={idx.toString()} value={item}>
+                    {item}
+                  </option>
+                ))}
+              </select>
+            </div>
+            {tabItems.map((item, idx) => (
+              <Tabs.Content key={idx} className='py-6' value={item}>
+                <p className='text-xs leading-normal'>
+                  This is <b>{item}</b> Tab
+                </p>
+              </Tabs.Content>
+            ))}
+          </Tabs.Root>
+          {children}
+        </main>
       </div>
     </div>
   )

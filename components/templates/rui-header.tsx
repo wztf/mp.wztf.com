@@ -71,12 +71,9 @@ const UriHeader = () => {
                     </Link>
                   </li>
                   <li className='text-gray-300 hover:text-gray-400'>
-                    <Text
-                      className='block cursor-pointer'
-                      onClick={() => router.push(loggedIn ? '/assessments' : '/signin')}
-                    >
+                    <Link href='/assessments' className='block'>
                       天赋测评
-                    </Text>
+                    </Link>
                   </li>
                   <li className='text-gray-300 hover:text-gray-400'>
                     <Link href='/courses' className='block'>

@@ -258,7 +258,7 @@ const RuiFooter = () => {
                 <Flex
                   justify='center'
                   align='center'
-                  className='relative w-8 h-8 rounded-full transition-all duration-500 bg-[linear-gradient(45deg,#FEE411_6.9%,#FEDB16_10.98%,#FEC125_17.77%,#FE983D_26.42%,#FE5F5E_36.5%,#FE2181_46.24%,#9000DC_85.57%)]  hover:bg-gradient-to-b from-gray-900 to-gray-900
+                  className='w-8 h-8 rounded-full transition-all duration-500 bg-[linear-gradient(45deg,#FEE411_6.9%,#FEDB16_10.98%,#FEC125_17.77%,#FE983D_26.42%,#FE5F5E_36.5%,#FE2181_46.24%,#9000DC_85.57%)]  hover:bg-gradient-to-b from-gray-900 to-gray-900
                         '
                 >
                   <FaInstagram className='text-white' />
@@ -268,7 +268,7 @@ const RuiFooter = () => {
                 <Flex
                   justify='center'
                   align='center'
-                  className='relative w-8 h-8 rounded-full transition-all duration-500 bg-[#337FFF] hover:bg-gray-900'
+                  className='w-8 h-8 rounded-full transition-all duration-500 bg-[#337FFF] hover:bg-gray-900'
                 >
                   <FaFacebookF className='text-white' />
                 </Flex>
@@ -277,9 +277,9 @@ const RuiFooter = () => {
                 <Flex
                   justify='center'
                   align='center'
-                  className='relative w-8 h-8 rounded-full transition-all duration-500 bg-[#FF0000] hover:bg-gray-900'
+                  className='w-8 h-8 rounded-full transition-all duration-500 bg-[#FF0000] hover:bg-gray-900'
                 >
-                  <PiYoutubeLogo />
+                  <PiYoutubeLogo className='text-white' />
                 </Flex>
               </Link>
             </div>

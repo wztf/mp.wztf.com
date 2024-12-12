@@ -36,21 +36,15 @@ const Page = () => {
     }
   })
 
+  const app = useStore(state => state.app)
   const login = useStore(state => state.login)
   const loggedIn = useStore(state => state.loggedIn)
 
   useEffect(() => {
     const auth = async () => {
-      const payload = signer.toBase64String({ app: 'gg', code: code, state: state })
+      const payload = signer.toBase64String({ app: app, code: code, state: state })
       try {
-        const res = await fetch({
-          variables: { input: payload },
-          context: {
-            headers: {
-              appid: appid
-            }
-          }
-        })
+        const res = await fetch({ variables: { input: payload } })
         console.log(res)
       } catch (error) {
         console.log(error)

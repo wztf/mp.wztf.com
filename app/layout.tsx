@@ -5,7 +5,7 @@ import { ApolloWrapper } from '@layouts/ApolloWrapper'
 import DefaultLayout from '@layouts/default'
 
 import '@assets/styles/app.scss'
-import '@assets/styles/radix-ui.css'
+import '@assets/styles/globals.css'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {

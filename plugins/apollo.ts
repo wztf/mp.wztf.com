@@ -1,5 +1,3 @@
-'use client'
-
 import { ApolloLink, from, HttpLink } from '@apollo/client'
 import { loadDevMessages, loadErrorMessages } from '@apollo/client/dev'
 import { setContext } from '@apollo/client/link/context'
