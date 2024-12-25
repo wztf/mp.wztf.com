@@ -4,33 +4,48 @@
 import { ServerError, useMutation } from '@apollo/client'
 import { ApolloError } from '@apollo/client/errors'
 import { Signatory } from '@cakioe/kit.js'
-import * as Form from '@radix-ui/react-form'
-import { Button, Flex, Heading, Text } from '@radix-ui/themes'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { Flex, Heading, Text } from '@radix-ui/themes'
 import { useCountDown, useUnmount } from 'ahooks'
 import { redirect } from 'next/navigation'
-import { FormEvent, useState } from 'react'
+import { useState } from 'react'
+import { useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
+import { z } from 'zod'
 
+import { Button } from '@/components/ui/button'
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
 import { useStore } from '@/store'
 
 import { appid } from '@config/index'
 import { CodeDocument, SignupDocument } from '@generated/graphql'
 
-type FormProps = {
-  email: string
-  security_code: string
-}
+const formSchema = z.object({
+  email: z
+    .string({
+      required_error: '请输入邮箱',
+      invalid_type_error: '请输入正确的邮箱地址'
+    })
+    .min(8, {
+      message: '邮箱至少8位'
+    })
+    .email('请输入正确的邮箱地址'),
+  security_code: z.string().min(4, {
+    message: '验证码至少4位'
+  })
+})
 
 const RuiLogin = () => {
   const app = useStore(state => state.app)
   const signer = new Signatory(appid)
-  const [formValues, setFormValues] = useState<FormProps>({
-    email: '',
-    security_code: ''
-  })
-  const [errors, setErrors] = useState<{ [key: string]: string | null }>({
-    email: null,
-    security_code: null
+
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      email: '',
+      security_code: ''
+    }
   })
 
   // 验证码倒计时
@@ -59,28 +74,17 @@ const RuiLogin = () => {
     onCompleted: () => {
       toast.success('验证码已经发送到您的邮箱')
       setTargetDate(Date.now() + 60000)
-      setFormValues({
-        ...formValues,
-        security_code: ''
-      })
     }
   })
 
   const getSecurityCode = async () => {
-    if (!formValues.email) {
+    const email = form.getValues().email
+    if (email === '') {
       toast.error('请输入邮箱地址')
       return
     }
-
-    const payload = signer.toBase64String({ email: formValues.email, action_type: 'register' })
-    await fetchCode({
-      variables: { input: payload },
-      context: {
-        headers: {
-          appid: appid
-        }
-      }
-    })
+    const payload = signer.toBase64String({ email: email, action_type: 'register' })
+    await fetchCode({ variables: { input: payload } })
   }
 
   const [fetch, { loading, data }] = useMutation(SignupDocument, {
@@ -91,35 +95,10 @@ const RuiLogin = () => {
       toast.error(errors[0].message)
     }
   })
-  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
 
-    let newErrors = {}
-    if (!formValues.email) {
-      newErrors = { ...newErrors, email: '请输入邮箱地址' }
-    } else if (!/^\S+@\S+\.\S+$/.test(formValues.email)) {
-      newErrors = { ...newErrors, email: '请输入正确的邮箱地址' }
-    }
-
-    if (!formValues.security_code) {
-      newErrors = { ...newErrors, security_code: '请输入验证码' }
-    }
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors)
-      return
-    }
-
-    const payload = signer.toBase64String({ app: app, ...formValues, method: 'sns' })
-    await fetch({
-      variables: { input: payload },
-      context: {
-        headers: {
-          appid: appid
-        }
-      }
-    })
-    // setFormValues({ email: '', password: '' })
-    // setErrors({ email: null, password: null })
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    const payload = signer.toBase64String({ app: app, ...values, method: 'sms' })
+    await fetch({ variables: { input: payload } })
   }
 
   const login = useStore(state => state.login)
@@ -135,69 +114,58 @@ const RuiLogin = () => {
       <Heading as='h3' className='mb-4 text-base font-bold leading-none'>
         验证码登录 / 注册
       </Heading>
-      <Form.Root className='w-full space-y-2 text-sm' autoCapitalize='off' onSubmit={onSubmit}>
-        <Form.Field name='email'>
-          <Flex justify='between' align='center' className='text-base'>
-            <Form.Label className='mb-1.5'></Form.Label>
-          </Flex>
-          <Form.Control
-            asChild
-            onChange={e =>
-              setFormValues(prev => ({
-                ...prev,
-                email: e.target.value
-              }))
-            }
-          >
-            <input
-              className={`h-12 p-2 w-full rounded-sm border bg-white outline-none focus:border-blue-500 ${errors.email ? 'border-red-500' : ''}`}
-              type='text'
-              value={formValues.email}
-              required
-            />
-          </Form.Control>
-          {errors.email && <Form.Message className='text-red-600'>{errors.email}</Form.Message>}
-        </Form.Field>
-        <Form.Field name='password'>
-          <Flex justify='between' align='center' className='text-base'>
-            <Form.Label className='mb-1.5'></Form.Label>
-          </Flex>
-          <Flex
-            justify='between'
-            align='center'
-            className={`text-base border bg-white outline-none focus-within:border-blue-500 ${errors.password ? 'border-red-500' : ''}`}
-          >
-            <Form.Control
-              asChild
-              onChange={e =>
-                setFormValues(prev => ({
-                  ...prev,
-                  security_code: e.target.value
-                }))
-              }
-            >
-              <input
-                className='h-12 w-full rounded-sm border-none outline-none focus:outline-none p-2 flex-auto bg-transparent'
-                type='text'
-                required
-                value={formValues.security_code}
-              />
-            </Form.Control>
-            <Text
-              onClick={getSecurityCode}
-              className={`flex-0 text-nowrap bg-transparent text-sm p-2 cursor-pointer ${countdown === 0 ? 'text-blue-500' : 'text-red-500'}`}
-            >
-              {countdown === 0 ? '获取验证码' : `${Math.round(countdown / 1000)}s 后重试`}
-            </Text>
-          </Flex>
-          {errors.security_code && <Form.Message className='text-red-600'>{errors.security_code}</Form.Message>}
-        </Form.Field>
-        <div className='pt-5'>
-          <Button loading={loading} size='3' color='blue' className='block w-full'>
-            登录 / 注册
-          </Button>
-        </div>
-      </Form.Root>
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} autoComplete='off'>
+          <FormField
+            control={form.control}
+            name='email'
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className='sr-only'>登录邮箱</FormLabel>
+                <FormControl>
+                  <Input type='email' className='h-12' placeholder='请输入邮箱地址' {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name='security_code'
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className='sr-only'>验证码</FormLabel>
+                <Flex
+                  justify='between'
+                  align='center'
+                  className='text-base border rounded-md border-input bg-transparent focus-within:outline-none focus-within:ring-1 focus-within:ring-ring'
+                >
+                  <FormControl>
+                    <Input
+                      type='password'
+                      className='h-12 border-none outline-none focus:border-none focus:outline-none focus-visible:ring-0 focus-visible:border-none focus-visible:outline-none'
+                      placeholder='请输入验证码'
+                      {...field}
+                    />
+                  </FormControl>
+                  <Text
+                    onClick={getSecurityCode}
+                    className={`flex-0 text-nowrap bg-transparent text-sm p-2 cursor-pointer ${countdown === 0 ? '' : 'text-red-500'}`}
+                  >
+                    {countdown === 0 ? '获取验证码' : `${Math.round(countdown / 1000)}s 后重试`}
+                  </Text>
+                </Flex>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <div className='mt-5'>
+            <Button size='lg' disabled={loading} className='block w-full'>
+              登录 / 注册
+            </Button>
+          </div>
+        </form>
+      </Form>
     </>
   )
 }

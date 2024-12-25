@@ -20,9 +20,16 @@ import { appid, version } from '@config/index'
 import { LoginDocument } from '@generated/graphql'
 
 const Page = () => {
+  const setApp = useStore(state => state.setApp)
   const params = useSearchParams()
+
   const code = params.get('code') || ''
   const state = params.get('state') || ''
+  const app = params.get('app') || 'gg'
+  useEffect(() => {
+    setApp(app)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [app])
 
   const [method, setMethod] = useState<'sms' | 'password'>('sms')
 
@@ -36,7 +43,6 @@ const Page = () => {
     }
   })
 
-  const app = useStore(state => state.app)
   const login = useStore(state => state.login)
   const loggedIn = useStore(state => state.loggedIn)
 
@@ -98,10 +104,16 @@ const Page = () => {
                         href='/auth/login?app=gg&name=google'
                         target='_self'
                         rel='noreferrer nofollow'
+                        onClick={() => setApp('gg')}
                       >
                         <FcGoogle className='text-xl' />
                       </Link>
-                      <Link href='/auth/login?app=wechat&name=wechat' target='_self' rel='noreferrer nofollow'>
+                      <Link
+                        href='/auth/login?app=wechat&name=wechat'
+                        target='_self'
+                        rel='noreferrer nofollow'
+                        onClick={() => setApp('wechat')}
+                      >
                         <FaWeixin className='text-xl text-green-500' />
                       </Link>
                     </Flex>
@@ -121,7 +133,7 @@ const Page = () => {
                 </div>
               </Flex>
               <div className='pt-6 text-center text-sm text-gray-600 space-x-0.5'>
-                <Text>注册登录即表示同意</Text>
+                <Text>注册/登录即表示同意</Text>
                 <Link href='/terms' className='text-blue-500 hover:underline'>
                   用户协议
                 </Link>

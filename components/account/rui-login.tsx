@@ -4,13 +4,17 @@
 import { ServerError, useMutation } from '@apollo/client'
 import { ApolloError } from '@apollo/client/errors'
 import { Signatory } from '@cakioe/kit.js'
-import * as Form from '@radix-ui/react-form'
-import { Button, Flex, Heading } from '@radix-ui/themes'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { Flex, Heading } from '@radix-ui/themes'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
-import { FormEvent, useState } from 'react'
+import { useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
+import { z } from 'zod'
 
+import { Button } from '@/components/ui/button'
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
 import { useStore } from '@/store'
 
 import { appid } from '@config/index'
@@ -20,10 +24,20 @@ type Props = {
   onReset: (method: 'sms' | 'password') => void
 }
 
-type FormProps = {
-  email: string
-  password: string
-}
+const formSchema = z.object({
+  email: z
+    .string({
+      required_error: '请输入邮箱',
+      invalid_type_error: '请输入正确的邮箱地址'
+    })
+    .min(8, {
+      message: '邮箱至少8位'
+    })
+    .email('请输入正确的邮箱地址'),
+  password: z.string().min(8, {
+    message: '密码至少8位'
+  })
+})
 
 const RuiRegister = ({ onReset }: Props) => {
   const app = useStore(state => state.app)
@@ -37,44 +51,17 @@ const RuiRegister = ({ onReset }: Props) => {
     }
   })
 
-  const [formValues, setFormValues] = useState<FormProps>({
-    email: '',
-    password: ''
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      email: '',
+      password: ''
+    }
   })
-  const [errors, setErrors] = useState<{ [key: string]: string | null }>({
-    email: null,
-    password: null
-  })
 
-  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-
-    let newErrors = {}
-    if (!formValues.email) {
-      newErrors = { ...newErrors, email: '请输入邮箱地址' }
-    } else if (!/^\S+@\S+\.\S+$/.test(formValues.email)) {
-      newErrors = { ...newErrors, email: '请输入正确的邮箱地址' }
-    }
-
-    if (!formValues.password) {
-      newErrors = { ...newErrors, password: '请输入密码或验证码' }
-    }
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors)
-      return
-    }
-
-    const payload = signer.toBase64String({ app: app, ...formValues, method: 'password' })
-    await fetch({
-      variables: { input: payload },
-      context: {
-        headers: {
-          appid: appid
-        }
-      }
-    })
-    // setFormValues({ email: '', password: '' })
-    // setErrors({ email: null, password: null })
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    const payload = signer.toBase64String({ app: app, ...values, method: 'password' })
+    await fetch({ variables: { input: payload } })
   }
 
   const login = useStore(state => state.login)
@@ -90,70 +77,65 @@ const RuiRegister = ({ onReset }: Props) => {
       <Heading as='h3' className='mb-4 text-base font-bold leading-none'>
         密码登录
       </Heading>
-      <Form.Root className='w-full space-y-2 text-sm' autoCapitalize='off' onSubmit={onSubmit}>
-        <Form.Field name='email'>
-          <Flex justify='between' align='center' className='text-base'>
-            <Form.Label className='mb-1.5'></Form.Label>
-          </Flex>
-          <Form.Control
-            asChild
-            onChange={e =>
-              setFormValues(prev => ({
-                ...prev,
-                email: e.target.value
-              }))
-            }
-          >
-            <input
-              className={`h-12 p-2 w-full rounded-sm border bg-white outline-none focus:border-blue-500 ${errors.email ? 'border-red-500' : ''}`}
-              type='text'
-              value={formValues.email}
-              required
-            />
-          </Form.Control>
-          {errors.email && <Form.Message className='text-red-600'>{errors.email}</Form.Message>}
-        </Form.Field>
-        <Form.Field name='password'>
-          <Flex justify='between' align='center' className='text-base'>
-            <Form.Label className='mb-1.5'></Form.Label>
-          </Flex>
-          <Flex
-            justify='between'
-            align='center'
-            className={`text-base border bg-white outline-none focus-within:border-blue-500 ${errors.password ? 'border-red-500' : ''}`}
-          >
-            <Form.Control
-              asChild
-              onChange={e =>
-                setFormValues(prev => ({
-                  ...prev,
-                  password: e.target.value
-                }))
-              }
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} autoComplete='off'>
+          <FormField
+            control={form.control}
+            name='email'
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className='sr-only'>登录邮箱</FormLabel>
+                <FormControl>
+                  <Input type='email' className='h-12' placeholder='请输入邮箱地址' {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name='password'
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className='sr-only'>登录密码</FormLabel>
+                <Flex
+                  justify='between'
+                  align='center'
+                  className='text-base border rounded-md border-input bg-transparent focus-within:outline-none focus-within:ring-1 focus-within:ring-ring'
+                >
+                  <FormControl>
+                    <Input
+                      type='password'
+                      className='h-12 border-none outline-none focus:border-none focus:outline-none focus-visible:ring-0 focus-visible:border-none focus-visible:outline-none'
+                      placeholder='请输入登录密码'
+                      {...field}
+                    />
+                  </FormControl>
+                  <Link href='/forgot' className='flex-0 text-nowrap bg-transparent text-sm p-2 cursor-pointer'>
+                    忘记密码
+                  </Link>
+                </Flex>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <div className='grid grid-cols-2 gap-5 mt-5'>
+            <Button
+              size='lg'
+              disabled={loading}
+              type='button'
+              variant='outline'
+              className='w-full'
+              onClick={() => onReset('sms')}
             >
-              <input
-                className='h-12 w-full rounded-sm border-none outline-none focus:outline-none p-2 flex-auto bg-transparent'
-                type='password'
-                required
-                value={formValues.password}
-              />
-            </Form.Control>
-            <Link href='/forgot' className='flex-0 text-nowrap bg-transparent text-sm p-2 cursor-pointer'>
-              忘记密码
-            </Link>
-          </Flex>
-          {errors.password && <Form.Message className='text-red-600'>{errors.password}</Form.Message>}
-        </Form.Field>
-
-        <div className='grid grid-cols-2 gap-4 pt-5'>
-          <Button type='button' size='3' variant='outline' color='blue' onClick={() => onReset('sms')}>
-            注册
-          </Button>
-          <Button loading={loading} size='3' color='blue'>
-            登录
-          </Button>
-        </div>
-      </Form.Root>
+              注 册
+            </Button>
+            <Button size='lg' disabled={loading} type='submit' className='w-full'>
+              登 录
+            </Button>
+          </div>
+        </form>
+      </Form>
     </>
   )
 }
