@@ -16,17 +16,74 @@ mutation Signup($input: String!) {
 
 # 获取验证码
 mutation Code($input: String!) {
-    code(payload: $input)
+  code(payload: $input)
 }
 
 # 上传附件 使用 /api/v1/files
 mutation UploadFile($input: Upload!) {
-    uploadFile(file: $input) {
-      file_url
-    }
+  uploadFile(file: $input) {
+    file_url
+  }
 }
 
 # 重设密码
 mutation ResetPassword($input: String!) {
-    resetPassword(payload: $input)
+  resetPassword(payload: $input)
+}
+
+type AccountInput {
+  name: String!
+  app: String!
+  appid: String!
+  app_secret: String!
+  callback_url: String!
+  platform_type: Int!
+}
+
+mutation CreateAccount($input: AccountInput!) {
+  createAccount(input: $input)
+}
+
+mutation UpdateAccount($id: Int!, $input: AccountInput!) {
+    updateAccount(
+        id: $id
+        input: $input
+    )
+}
+
+type FileGroupInput {
+  group_name: String!
+  description: String!
+  parent_id: String!
+}
+
+mutation CreateFileGroup($input: FileGroupInput!) {
+    createFileGroup(input: $input)
+}
+
+type RoleInput {
+  name: String!
+  display_name: String!
+  description: String!
+  is_visible: Boolean!
+  sort_id: Int!
+}
+
+mutation CreateRole($input: RoleInput!) {
+  createRole(input: $input)
+}
+
+mutation UpdateRole($id: Int!, $input: RoleInput!) {
+  updateRole(
+      id: $id
+      input: $input
+  )
+}
+
+mutation DeleteRole($id: Int!) {
+  deleteRole(id: $id)
+}
+
+mutation DeleteAccount($id: Int!) {
+  deleteAccount(id: $id)
 }

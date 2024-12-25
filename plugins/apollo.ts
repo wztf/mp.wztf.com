@@ -24,15 +24,13 @@ const httpLink = new HttpLink({
 // https://www.apollographql.com/docs/react/networking/authentication
 const authLink = setContext((_, { headers }) => {
   const token = useStore.getState().token
-  const app = useStore.getState().app ?? ''
 
   return {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     headers: {
       ...headers,
       Authorization: token ? `Bearer ${token}` : '',
-      Appid: appid,
-      App: app
+      Appid: appid
     }
   }
 })

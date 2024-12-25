@@ -1,3 +1,5 @@
+import type { LucideIcon } from 'lucide-react'
+
 export declare namespace API {
   // 用户资料
   export interface Profile {
@@ -17,5 +19,37 @@ export declare namespace API {
     description: string
     host: string
     registrable: boolean
+  }
+
+  export interface Account {
+    id: number
+    name: string
+    app: string
+    appid: string
+    app_secret?: string | null
+    callback_url?: string | null
+    platform_type: number
+  }
+
+  export interface NavLink {
+    title: string
+    url: string
+  }
+
+  export interface NavItem {
+    title: string
+    url: string
+    icon?: LucideIcon
+    isActive?: boolean
+    items?: NavLink[]
+  }
+
+  export interface Role {
+    id: number
+    name: string
+    display_name: string
+    description: string
+    is_visible: boolean
+    sort_id: number
   }
 }
