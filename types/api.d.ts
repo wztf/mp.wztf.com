@@ -52,4 +52,22 @@ export declare namespace API {
     is_visible: boolean
     sort_id: number
   }
+
+  export interface PermissionType {
+    id: number
+    name: string
+    display_name: string
+    sort_id: number
+    permissions?: Permission[]
+  }
+
+  export interface Permission {
+    id: number
+    name: string
+    display_name: string
+    description: string
+    is_visible: boolean
+    sort_id: number
+    type_id?: number
+  }
 }
