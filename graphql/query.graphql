@@ -16,7 +16,24 @@ query Setting {
     keywords
     description
     host
+    folder
+    file_group_id
+    email_driver
+    email_host
+    email_port
+    email_username
+    email_password
+    email_encryption
+    email_from_address
+    email_from_name
     registrable
+  }
+  fileGroups {
+    id
+    group_name
+    description
+    parent_id
+    sort_id
   }
 }
 
@@ -55,17 +72,39 @@ query PermissionTypes {
     display_name
     sort_id
     permissions {
-        id
-        name
-        display_name
-        description
-        is_visible
-        sort_id
-        type_id
+      id
+      name
+      display_name
+      description
+      is_visible
+      sort_id
+      type_id
     }
   }
 }
 
 query CanIUse($input: String!) {
-    canIUse(url: $input)
+  canIUse(url: $input)
+}
+
+query FileGroups {
+  fileGroups {
+    id
+    group_name
+    description
+    parent_id
+    sort_id
+  }
+}
+
+query Cores {
+  cores {
+    id
+    name
+    display_name
+    description
+    thumb
+    is_visible
+    sort_id
+  }
 }

@@ -54,11 +54,23 @@ mutation UpdateAccount($id: Int!, $input: AccountInput!) {
 type FileGroupInput {
   group_name: String!
   description: String!
-  parent_id: String!
+  parent_id: Int!
+  sort_id: Int!
 }
 
 mutation CreateFileGroup($input: FileGroupInput!) {
   createFileGroup(input: $input)
+}
+
+mutation UpdateFileGroup($id: Int!, $input: FileGroupInput!) {
+  updateFileGroup(
+    id: $id
+    input: $input
+  )
+}
+
+mutation DeleteFileGroup($id: Int!) {
+  deleteFileGroup(id: $id)
 }
 
 type RoleInput {
@@ -120,17 +132,66 @@ type PermissionInput {
 
 mutation CreatePermission($input: PermissionInput!) {
   createPermission(
-      input: $input
+    input: $input
   )
 }
 
 mutation UpdatePermission($id: Int!, $input: PermissionInput!) {
   updatePermission(
-      id: $id
-      input: $input
+    id: $id
+    input: $input
   )
 }
 
 mutation DeletePermission($id: Int!) {
   deletePermission(id: $id)
+}
+
+type SettingInput {
+  title: String!
+  keywords: String!
+  description: String!
+  host: String!
+  file_group_id: Int!
+  email_driver: String!
+  email_host: String!
+  email_port: Int!
+  email_username: String!
+  email_password: String!
+  email_encryption: String!
+  email_from_address: String!
+  email_from_name: String!
+  registrable: Boolean!
+}
+
+mutation UpdateSetting($input: SettingInput!) {
+  updateSetting(
+    input: $input
+  )
+}
+
+type CoreInput {
+  name: String!
+  display_name: String!
+  description: String!
+  thumb: String!
+  is_visible: Boolean!
+  sort_id: Int!
+}
+
+mutation CreateCore($input: CoreInput!) {
+  createCore(
+    input: $input
+  )
+}
+
+mutation UpdateCore($id: Int!, $input: CoreInput!) {
+  updateCore(
+    id: $id
+    input: $input
+  )
+}
+
+mutation DeleteCore($id: Int!) {
+  deleteCore(id: $id)
 }

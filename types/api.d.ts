@@ -15,10 +15,20 @@ export declare namespace API {
   // 系统设置
   export interface Setting {
     title: string
-    keywords: string
-    description: string
-    host: string
-    registrable: boolean
+    keywords?: string
+    description?: string
+    host?: string
+    folder?: string
+    file_group_id?: number
+    email_driver?: string
+    email_host?: string
+    email_port?: number
+    email_username?: string
+    email_password?: string
+    email_encryption?: string
+    email_from_address?: string
+    email_from_name?: string
+    registrable: bool
   }
 
   export interface Account {
@@ -69,5 +79,36 @@ export declare namespace API {
     is_visible: boolean
     sort_id: number
     type_id?: number
+  }
+
+  export interface FileGroup {
+    id: number
+    group_name: string
+    description: string
+    parent_id: number
+    sort_id: number
+    files?: File[]
+  }
+
+  export interface File {
+    id: number
+    file_url: string
+    user_id?: number
+    file_name: string
+    file_size: number
+    file_type: string
+    file_extension: string
+    group_id?: number
+    is_referenced: boolean
+  }
+
+  export interface Core {
+    id: number
+    name: string
+    display_name: string
+    description: string
+    thumb?: string
+    is_visible: boolean
+    sort_id: number
   }
 }

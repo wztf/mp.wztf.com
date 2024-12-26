@@ -36,7 +36,6 @@ const Page = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  // Handle error state
   useEffect(() => {
     if (error) {
       toast.error('An error occurred while fetching roles.')
