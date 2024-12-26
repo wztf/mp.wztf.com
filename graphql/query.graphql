@@ -1,7 +1,3 @@
-query Hello($input: String!) {
-  hello(payload: $input)
-}
-
 query Profile {
   profile {
     id
@@ -43,11 +39,33 @@ query Accounts {
 
 query Roles {
   roles {
-      id
-      name
-      display_name
-      description
-      is_visible
-      sort_id
+    id
+    name
+    display_name
+    description
+    is_visible
+    sort_id
   }
+}
+
+query PermissionTypes {
+  permissionTypes {
+    id
+    name
+    display_name
+    sort_id
+    permissions {
+        id
+        name
+        display_name
+        description
+        is_visible
+        sort_id
+        type_id
+    }
+  }
+}
+
+query CanIUse($input: String!) {
+    canIUse(url: $input)
 }

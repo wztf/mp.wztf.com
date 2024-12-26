@@ -45,10 +45,10 @@ mutation CreateAccount($input: AccountInput!) {
 }
 
 mutation UpdateAccount($id: Int!, $input: AccountInput!) {
-    updateAccount(
-        id: $id
-        input: $input
-    )
+  updateAccount(
+    id: $id
+    input: $input
+  )
 }
 
 type FileGroupInput {
@@ -58,7 +58,7 @@ type FileGroupInput {
 }
 
 mutation CreateFileGroup($input: FileGroupInput!) {
-    createFileGroup(input: $input)
+  createFileGroup(input: $input)
 }
 
 type RoleInput {
@@ -75,8 +75,8 @@ mutation CreateRole($input: RoleInput!) {
 
 mutation UpdateRole($id: Int!, $input: RoleInput!) {
   updateRole(
-      id: $id
-      input: $input
+    id: $id
+    input: $input
   )
 }
 
@@ -86,4 +86,51 @@ mutation DeleteRole($id: Int!) {
 
 mutation DeleteAccount($id: Int!) {
   deleteAccount(id: $id)
+}
+
+type PermissionTypeInput {
+  name: String!
+  display_name: String!
+  sort_id: Int!
+}
+
+mutation CreatePermissionType($input: PermissionTypeInput!) {
+  createPermissionType(input: $input)
+}
+
+mutation UpdatePermissionType($id: Int!, $input: PermissionTypeInput!) {
+  updatePermissionType(
+    id: $id
+    input: $input
+  )
+}
+
+mutation DeletePermissionType($id: Int!) {
+  deletePermissionType(id: $id)
+}
+
+type PermissionInput {
+  name: String!
+  display_name: String!
+  description: String!
+  is_visible: Boolean!
+  sort_id: Int!
+  type_id: Int!
+}
+
+mutation CreatePermission($input: PermissionInput!) {
+  createPermission(
+      input: $input
+  )
+}
+
+mutation UpdatePermission($id: Int!, $input: PermissionInput!) {
+  updatePermission(
+      id: $id
+      input: $input
+  )
+}
+
+mutation DeletePermission($id: Int!) {
+  deletePermission(id: $id)
 }
