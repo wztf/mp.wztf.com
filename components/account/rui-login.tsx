@@ -34,8 +34,8 @@ const formSchema = z.object({
       message: '邮箱至少8位'
     })
     .email('请输入正确的邮箱地址'),
-  password: z.string().min(8, {
-    message: '密码至少8位'
+  password: z.string().min(6, {
+    message: '密码至少6位'
   })
 })
 
