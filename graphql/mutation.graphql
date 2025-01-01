@@ -20,11 +20,11 @@ mutation Code($input: String!) {
 }
 
 # 上传附件 使用 /api/v1/files
-mutation UploadFile($input: Upload!) {
-  uploadFile(file: $input) {
-    file_url
-  }
-}
+# mutation UploadFile($input: Upload!) {
+#   uploadFile(file: $input) {
+#     file_url
+#   }
+# }
 
 # 重设密码
 mutation ResetPassword($input: String!) {
@@ -164,8 +164,9 @@ type SettingInput {
   registrable: Boolean!
 }
 
-mutation UpdateSetting($input: SettingInput!) {
+mutation UpdateSetting($id: Int!, $input: SettingInput!) {
   updateSetting(
+    id: $id,
     input: $input
   )
 }

@@ -6,12 +6,12 @@ query Profile {
     profile_url
     status
     email_verified_at
-    is_admin
   }
 }
 
 query Setting {
   setting {
+    id
     title
     keywords
     description
