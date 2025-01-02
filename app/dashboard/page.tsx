@@ -1,32 +1,14 @@
-'use client'
-
-import Link from 'next/link'
-import { GiBugleCall } from 'react-icons/gi'
-import { IoClose } from 'react-icons/io5'
-
-const Page = () => {
+export default function Page() {
   return (
-    <div>
-      <div className='bg-indigo-600'>
-        <div className='max-w-screen-xl mx-auto px-4 py-3 flex items-start justify-between text-white md:px-8'>
-          <div className='flex gap-x-4'>
-            <div className='w-10 h-10 flex-none rounded-lg bg-indigo-800 flex items-center justify-center'>
-              <GiBugleCall />
-            </div>
-            <p className='py-2 font-medium'>
-              2024年淘宝双12/年终好价节即将开启！情侣小站小编会第一时间更新！
-              <Link href='/articles' className='font-semibold underline duration-150 hover:text-indigo-100'>
-                查看优惠
-              </Link>
-            </p>
-          </div>
-          <button className='p-2 rounded-lg duration-150 hover:bg-indigo-500 ring-offset-2 focus:ring'>
-            <IoClose />
-          </button>
+    <>
+      <div className='flex flex-1 flex-col gap-4 p-4'>
+        <div className='grid auto-rows-min gap-4 md:grid-cols-3'>
+          <div className='aspect-video rounded-xl bg-muted/50' />
+          <div className='aspect-video rounded-xl bg-muted/50' />
+          <div className='aspect-video rounded-xl bg-muted/50' />
         </div>
+        <div className='min-h-[100vh] flex-1 rounded-xl bg-muted/50 md:min-h-min' />
       </div>
-    </div>
+    </>
   )
 }
-
-export default Page

@@ -23,6 +23,7 @@ import { SettingDocument, type SettingInput, UpdateSettingDocument } from '@gene
 import { API } from '/#/api'
 
 const formSchema = z.object({
+  id: z.number().int(),
   title: z.string().min(2, {
     message: 'name must be at least 2 characters.'
   }),
@@ -116,7 +117,7 @@ const Page = () => {
   }, [data])
 
   const [updator] = useMutation(UpdateSettingDocument, {
-    variables: { input: {} as SettingInput },
+    variables: { id: 0, input: {} as SettingInput },
     onError: ({ networkError }: ApolloError) => {
       const { result } = networkError as ServerError
       const { errors } = result as Record<string, { message: string }[]>
@@ -129,9 +130,9 @@ const Page = () => {
   })
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    const { folder, ...params } = values
+    const { id, folder, ...params } = values
     await updator({
-      variables: { input: params }
+      variables: { id: id, input: params }
     })
   }
 

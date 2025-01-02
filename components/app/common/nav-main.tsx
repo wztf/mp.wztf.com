@@ -14,7 +14,7 @@ import {
   SidebarMenuSubItem
 } from '@components/ui/sidebar'
 
-import { API } from '/types/api'
+import { API } from '/#/api'
 
 export function NavMain({ items }: { items: API.NavItem[] }) {
   return (

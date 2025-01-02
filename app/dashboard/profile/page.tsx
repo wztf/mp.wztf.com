@@ -1,18 +1,13 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 'use client'
 
-import { ServerError, useMutation } from '@apollo/client'
-import { ApolloError } from '@apollo/client/errors'
 import * as Tabs from '@radix-ui/react-tabs'
 import { Upload } from 'antd'
 import axios from 'axios'
 import { useState } from 'react'
-import { toast } from 'react-toastify'
 
 import { appid } from '@/config'
 import { useStore } from '@/store'
-
-import { UploadFileDocument } from '@generated/graphql'
 
 import type { UploadFile, UploadProps } from 'antd'
 
@@ -33,37 +28,6 @@ const Page = () => {
   const headers = {
     Authorization: `Bearer ${token}`,
     Appid: appid
-  }
-
-  const [upload, { loading, data }] = useMutation(UploadFileDocument, {
-    variables: { input: null },
-    onError: ({ networkError }: ApolloError) => {
-      const { result } = networkError as ServerError
-      const { errors } = result as Record<string, { message: string }[]>
-      if (errors) {
-        toast.error(errors[0].message)
-      }
-    }
-  })
-
-  // eslint-disable-next-line @typescript-eslint/require-await
-  const uploadImage: UploadProps['customRequest'] = async ({ file, data }) => {
-    const v = new FormData()
-    if (data) {
-      Object.keys(data).forEach(key => v.append(key, data[key] as string))
-    }
-    v.append('file', file as File, 'file')
-    console.log(v, file)
-
-    await upload({
-      variables: { input: data },
-      context: {
-        headers: {
-          ...headers,
-          'Content-Type': 'multipart/form-data'
-        }
-      }
-    })
   }
 
   const onChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -95,14 +59,6 @@ const Page = () => {
       <div style={{ marginTop: 8 }}>Upload</div>
     </button>
   )
-
-  if (data) {
-    console.log(data, 'data')
-  }
-
-  if (loading) {
-    return <>loading</>
-  }
 
   return (
     <div>
@@ -164,13 +120,7 @@ const Page = () => {
         ))}
       </Tabs.Root>
 
-      <Upload
-        listType='picture-card'
-        headers={headers}
-        fileList={fileList}
-        onChange={handleChange}
-        customRequest={uploadImage}
-      >
+      <Upload listType='picture-card' headers={headers} fileList={fileList} onChange={handleChange}>
         {fileList.length >= 8 ? null : uploadButton}
       </Upload>
     </div>

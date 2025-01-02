@@ -1,7 +1,6 @@
 const Page = () => {
   return (
     <div>
-      <h1>articles</h1>
       <div className='bg-gray-50 py-20 flex flex-col items-center justify-center'>
         <div className='xl:w-1/2 w-11/12'>
           <h1

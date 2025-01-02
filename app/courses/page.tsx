@@ -3,10 +3,14 @@ import Link from 'next/link'
 const Page = () => {
   return (
     <div>
-      <h1>articles</h1>
-      <div id='blog' className='bg-gray-100 px-4 xl:px-0 py-12'>
+      <div id='blog' className='bg-gray-50 px-4 xl:px-0 py-20'>
         <div className='mx-auto container'>
-          <h1 className='text-center text-3xl lg:text-5xl tracking-wider text-gray-900'>Latest from our Blog</h1>
+          <div className='flex flex-col items-center justify-center'>
+            <h1 className='text-4xl font-semibold leading-9 text-center text-gray-800'>系统学习如何激发潜能</h1>
+            <p className='text-base leading-normal text-center text-gray-600 mt-4 lg:w-1/2 md:w-10/12 w-11/12'>
+              想要系统地学习如何发现、开发和运用自己的天赋？我们的专业课程涵盖了天赋识别、能力提升、职业规划等多个方面，助你一步步激发潜力，实现自我突破。
+            </p>
+          </div>
           <div className='mt-12 lg:mt-24'>
             <div className='grid sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 gap-8'>
               <div>

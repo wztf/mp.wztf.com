@@ -3,10 +3,14 @@ import Link from 'next/link'
 const Page = () => {
   return (
     <div>
-      <h1>articles</h1>
-      <div id='blog' className='bg-gray-100 px-4 xl:px-0 py-12'>
+      <div id='blog' className='bg-gray-50 px-4 xl:px-0 py-20'>
         <div className='mx-auto container'>
-          <h1 className='text-center text-3xl lg:text-5xl tracking-wider text-gray-900'>Latest from our Blog</h1>
+          <div className='flex flex-col items-center justify-center'>
+            <h1 className='text-4xl font-semibold leading-9 text-center text-gray-800'>深入解读天赋与成长</h1>
+            <p className='text-base leading-normal text-center text-gray-600 mt-4 lg:w-1/2 md:w-10/12 w-11/12'>
+              天赋不仅仅是天生的优势，它也是不断成长的能力！在这里，我们聚焦天赋开发与应用的热门话题，从心理学到职业规划，为你提供深入的知识和实用的建议，帮你更好地挖掘和发挥自己的潜力。
+            </p>
+          </div>
           <div className='mt-12 lg:mt-24'>
             <div className='grid sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 gap-8'>
               <div>
