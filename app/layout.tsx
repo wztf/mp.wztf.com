@@ -1,11 +1,12 @@
+import { cookies } from 'next/headers'
 import React from 'react'
+import { ToastContainer } from 'react-toastify'
 
-import { ApolloWrapper } from '@layouts/ApolloWrapper'
-import DefaultLayout from '@layouts/default'
+import { ApolloWrapper, DefaultLayout, Lockscreen } from '@/layouts'
 
-import type { Metadata } from 'next'
 import '@assets/styles/app.scss'
-import '@assets/styles/radix-ui.css'
+import '@assets/styles/globals.css'
+import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
   title: 'Next',
@@ -17,12 +18,18 @@ type Props = {
 }
 
 export default function RootLayout({ children }: Readonly<Props>) {
+  const lockScreen = cookies().get('screen:state')?.value === 'true'
   return (
     <html lang='en' suppressHydrationWarning>
-      <body>
-        <ApolloWrapper>
-          <DefaultLayout>{children}</DefaultLayout>
-        </ApolloWrapper>
+      <body className='font-sans'>
+        {lockScreen ? (
+          <Lockscreen />
+        ) : (
+          <ApolloWrapper>
+            <DefaultLayout>{children}</DefaultLayout>
+          </ApolloWrapper>
+        )}
+        <ToastContainer position='top-center' autoClose={1000} hideProgressBar={false} draggable={false} />
       </body>
     </html>
   )
