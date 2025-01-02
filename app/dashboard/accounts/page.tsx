@@ -1,8 +1,8 @@
 'use client'
 import { Button } from '@/components/ui/button'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-
 import { AccountDrawer } from '@/components/app/accounts/account-drawer'
+
 import { ServerError, useLazyQuery } from '@apollo/client'
 import { ApolloError } from '@apollo/client/errors'
 import { Plus } from 'lucide-react'
