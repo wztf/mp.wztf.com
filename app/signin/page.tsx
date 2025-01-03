@@ -14,9 +14,9 @@ import { FcGoogle } from 'react-icons/fc'
 import { toast } from 'react-toastify'
 
 import { RuiLogin, RuiRegister, RuiWechat } from '@/components/account'
+import { appid, company, icp, version } from '@/config'
 import { useStore } from '@/store'
 
-import { appid, version } from '@config/index'
 import { LoginDocument } from '@generated/graphql'
 
 const Page = () => {
@@ -149,16 +149,16 @@ const Page = () => {
         </Box>
         <Flex className='my-1 flex items-center justify-center text-sm text-gray-600'>
           <Link
-            href='/'
+            href='http://beian.miit.gov.cn/'
             target='_blank'
             rel='noreferrer nofollow'
             className='mx-0.5 text-blue-500 underline hover:text-blue-700'
           >
-            粤ICP备XXXX号
+            {icp}
           </Link>
           <Separator.Root decorative orientation='vertical' className='mx-2 h-4 w-0.5 bg-gray-200' />
           <Link href='/' className='mx-0.5'>
-            © All rights reserved. Blogs Powered by: blogs
+            &copy; 2024 All rights reserved. King Talent Powered by: {company}
           </Link>
           <Separator.Root decorative orientation='vertical' className='mx-2 h-4 w-0.5 bg-gray-200' />
           <Text>版本: v{version}</Text>
