@@ -111,4 +111,28 @@ export declare namespace API {
     is_visible: boolean
     sort_id: number
   }
+
+  export interface MenuItem {
+    id: number
+    name: string
+    display_name: string
+    description?: string
+    path: string
+    component: string
+    redirect: string
+    meta?: MenuItemMeta | string
+    parent_id: number
+    children?: MenuItem[]
+    sort_id: number
+  }
+
+  export interface MenuItemMeta {
+    hidden?: boolean
+    icon: string
+    title: string
+    affix?: boolean
+    permissions?: string[] | string
+    keepAlive?: boolean
+    frameSrc?: string
+  }
 }

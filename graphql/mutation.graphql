@@ -196,3 +196,29 @@ mutation UpdateCore($id: Int!, $input: CoreInput!) {
 mutation DeleteCore($id: Int!) {
   deleteCore(id: $id)
 }
+
+type MenuInput {
+  name: String!
+  display_name: String!
+  description: String!
+  path: String!
+  redirect: String!
+  component: String!
+  meta: String!
+  parent_id: Int!
+  sort_id: Int!
+}
+
+mutation CreateMenu($input: MenuInput!) {
+  createMenu(
+    input: $input
+  )
+}
+
+mutation UpdateMenu($id: Int!, $input: MenuInput!) {
+  updateMenu(id: $id, input: $input)
+}
+
+mutation DeleteMenu($id: Int!) {
+  deleteMenu(id: $id)
+}

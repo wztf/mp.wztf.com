@@ -108,3 +108,42 @@ query Cores {
     sort_id
   }
 }
+
+query Menus {
+  menus {
+    id
+    name
+    display_name
+    description
+    path
+    component
+    redirect
+    meta
+    parent_id
+    sort_id
+    children {
+      id
+      name
+      display_name
+      description
+      path
+      component
+      redirect
+      meta
+      parent_id
+      sort_id
+      children {
+        id
+        name
+        display_name
+        description
+        path
+        component
+        redirect
+        meta
+        parent_id
+        sort_id
+      }
+    }
+  }
+}
