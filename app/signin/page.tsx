@@ -105,6 +105,7 @@ const Page = () => {
                         target='_self'
                         rel='noreferrer nofollow'
                         onClick={() => setApp('gg')}
+                        prefetch={false}
                       >
                         <FcGoogle className='text-xl' />
                       </Link>
@@ -113,6 +114,7 @@ const Page = () => {
                         target='_self'
                         rel='noreferrer nofollow'
                         onClick={() => setApp('wechat')}
+                        prefetch={false}
                       >
                         <FaWeixin className='text-xl text-green-500' />
                       </Link>
