@@ -2,7 +2,6 @@
 
 import * as Separator from '@radix-ui/react-separator'
 import { Flex, Text } from '@radix-ui/themes'
-import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { BsTwitterX } from 'react-icons/bs'
@@ -66,7 +65,7 @@ const RuiFooter = () => {
           <div className='grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-3 gap-y-8 md:gap-8 py-10 max-w-sm mx-auto sm:max-w-3xl lg:max-w-full'>
             <div className='col-span-full mb-10 lg:col-span-2 lg:mb-0'>
               <Link href='/' className='flex justify-center lg:justify-start'>
-                <Image src={logo} width={120} height={26.25} alt='' />
+                <img src={logo.src} className='w-auto h-auto' alt='' />
               </Link>
               <p className='py-8 text-sm text-gray-500 lg:max-w-xs text-center lg:text-left'>
                 通过简短的测试，我们将帮助你发掘未曾意识到的优势，了解你的学习方式、思维模式以及最佳的工作环境。

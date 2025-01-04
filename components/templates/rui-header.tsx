@@ -1,7 +1,6 @@
 import * as DropdownMenuPrimitive from '@radix-ui/react-dropdown-menu'
 import { Flex, Spinner, Text } from '@radix-ui/themes'
 import { useMount } from 'ahooks'
-import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
@@ -52,7 +51,7 @@ const UriHeader = () => {
   const Brand = () => (
     <div className='flex items-center justify-between py-5 md:block'>
       <Link href='/'>
-        <Image src={logo} width={120} height={50} alt='' />
+        <img src={logo.src} className='w-auto h-auto' alt='' />
       </Link>
       <div className='md:hidden'>
         <button className='menu-btn text-gray-400 hover:text-gray-300 text-3xl' onClick={() => setIsOpen(!isOpen)}>
