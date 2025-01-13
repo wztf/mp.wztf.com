@@ -1,5 +1,6 @@
 'use client'
 
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { ServerError, useMutation } from '@apollo/client'
 import { ApolloError } from '@apollo/client/errors'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -29,6 +30,9 @@ import type { AccountInput } from '@generated/graphql'
 
 import { CreateAccountDocument, DeleteAccountDocument, UpdateAccountDocument } from '@generated/graphql'
 
+import { Textarea } from '@/components/ui/textarea'
+import { PermissionEnum } from '@/enums/permissionEnum'
+import { usePermission } from '@/hooks/user-permission'
 import { API } from '/#/api'
 
 const formSchema = z.object({
@@ -46,19 +50,22 @@ const formSchema = z.object({
     message: 'app secret must be at least 3 characters.'
   }),
   callback_url: z.string().min(3, {
-    message: 'app secret must be at least 3 characters.'
+    message: 'callback url must be at least 3 characters.'
   }),
   platform_type: z.number().int()
 })
 
 type Props = {
+  platformTypes: API.PlatformType[]
   item: API.Account | null
   open: boolean
   setOpen: (open: boolean) => void
   refetch: () => void
 }
 
-export function AccountDrawer({ item, open, setOpen, refetch }: Props) {
+const AccountDrawer = ({ platformTypes, item, open, setOpen, refetch }: Props) => {
+  const { hasPermission } = usePermission()
+
   const [fetch, { loading }] = useMutation(CreateAccountDocument, {
     variables: { input: {} as AccountInput },
     onError: ({ networkError }: ApolloError) => {
@@ -115,12 +122,23 @@ export function AccountDrawer({ item, open, setOpen, refetch }: Props) {
   })
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    if (!hasPermission([PermissionEnum.ACCOUNTS_ACTION_CREATE])) {
+      toast.error('you have no permission')
+      return
+    }
+
     const { id, ...params } = values
     await fetch({ variables: { input: params } })
   }
 
   const onUpdate = async () => {
     if (item === null) return
+
+    if (!hasPermission([PermissionEnum.ACCOUNTS_ACTION_UPDATE])) {
+      toast.error('you have no permission')
+      return
+    }
+
     const { id, ...values } = form.getValues()
     await updator({
       variables: { id: item.id, input: values }
@@ -129,6 +147,12 @@ export function AccountDrawer({ item, open, setOpen, refetch }: Props) {
 
   const onDelete = async () => {
     if (item === null) return
+
+    if (!hasPermission([PermissionEnum.ACCOUNTS_ACTION_DELETE])) {
+      toast.error('you have no permission')
+      return
+    }
+
     await deletor({ variables: { id: item?.id } })
   }
 
@@ -158,40 +182,42 @@ export function AccountDrawer({ item, open, setOpen, refetch }: Props) {
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} autoComplete='off' className='space-y-3'>
-            <FormField
-              control={form.control}
-              name='name'
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>应用名</FormLabel>
-                  <FormControl>
-                    <Input placeholder='请输入应用名' {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name='app'
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>应用名称</FormLabel>
-                  <FormControl>
-                    <Input placeholder='请输入应用名称' {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            <div className='grid grid-cols-2 gap-5'>
+              <FormField
+                control={form.control}
+                name='name'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>应用名称</FormLabel>
+                    <FormControl>
+                      <Input className='h-10 shadow-none' placeholder='请输入应用名称' {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name='app'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>应用标识</FormLabel>
+                    <FormControl>
+                      <Input className='h-10 shadow-none' placeholder='请输入应用标识' {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
             <FormField
               control={form.control}
               name='appid'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Appid</FormLabel>
+                  <FormLabel>应用凭据</FormLabel>
                   <FormControl>
-                    <Input placeholder='请输入appid' {...field} />
+                    <Input className='h-10 shadow-none' placeholder='请输入应用凭据' {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -202,9 +228,9 @@ export function AccountDrawer({ item, open, setOpen, refetch }: Props) {
               name='app_secret'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>App Secret</FormLabel>
+                  <FormLabel>应用密钥</FormLabel>
                   <FormControl>
-                    <Input placeholder='请输入app_secret' {...field} />
+                    <Textarea rows={4} className='h-10 resize-none shadow-none' placeholder='请输入描述' {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -217,7 +243,7 @@ export function AccountDrawer({ item, open, setOpen, refetch }: Props) {
                 <FormItem>
                   <FormLabel>回调地址</FormLabel>
                   <FormControl>
-                    <Input placeholder='请输入回调地址' {...field} />
+                    <Textarea rows={4} className='h-10 resize-none shadow-none' placeholder='请输入描述' {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -230,23 +256,28 @@ export function AccountDrawer({ item, open, setOpen, refetch }: Props) {
                 <FormItem>
                   <FormLabel>应用类型</FormLabel>
                   <FormControl>
-                    <Input
-                      type='number'
-                      placeholder='请输入'
-                      {...field}
-                      className='h-10'
-                      onChange={e => field.onChange(Number(e.target.value))}
-                    />
+                    <Select onValueChange={e => field.onChange(Number(e))} defaultValue={String(field.value)}>
+                      <SelectTrigger className='h-10 shadow-none'>
+                        <SelectValue placeholder='请选择应用类型' />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {platformTypes.map(type => (
+                          <SelectItem key={type.id} value={String(type.id)}>
+                            {type.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
             {item ? (
-              <div className='grid grid-cols-2 gap-5 pt-5'>
+              <div className='flex justify-end items-center gap-5 pt-5'>
                 <AlertDialog>
                   <AlertDialogTrigger asChild>
-                    <Button disabled={deleting} type='button' variant='outline' className='w-full' size='lg'>
+                    <Button disabled={deleting} type='button' variant='outline' size='lg'>
                       删 除
                     </Button>
                   </AlertDialogTrigger>
@@ -263,23 +294,16 @@ export function AccountDrawer({ item, open, setOpen, refetch }: Props) {
                     </AlertDialogFooter>
                   </AlertDialogContent>
                 </AlertDialog>
-                <Button disabled={updating} size='lg' type='button' onClick={() => onUpdate()} className='w-full'>
+                <Button disabled={updating} size='lg' type='button' onClick={() => onUpdate()}>
                   更 新
                 </Button>
               </div>
             ) : (
-              <div className='grid grid-cols-2 gap-5 pt-5'>
-                <Button
-                  disabled={loading}
-                  type='button'
-                  variant='outline'
-                  className='w-full'
-                  size='lg'
-                  onClick={() => setOpen(false)}
-                >
+              <div className='flex justify-end items-center gap-5 pt-5'>
+                <Button disabled={loading} type='button' variant='outline' size='lg' onClick={() => setOpen(false)}>
                   取 消
                 </Button>
-                <Button disabled={loading} size='lg' type='submit' className='w-full'>
+                <Button disabled={loading} size='lg' type='submit'>
                   提 交
                 </Button>
               </div>
@@ -290,3 +314,5 @@ export function AccountDrawer({ item, open, setOpen, refetch }: Props) {
     </Dialog>
   )
 }
+
+export default AccountDrawer

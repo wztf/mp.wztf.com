@@ -54,7 +54,7 @@ type Props = {
   refetch: () => void
 }
 
-export function CoreDrawer({ item, open, setOpen, refetch }: Props) {
+const CoreDrawer = ({ item, open, setOpen, refetch }: Props) => {
   const [fetch, { loading }] = useMutation(CreateCoreDocument, {
     variables: { input: {} as CoreInput },
     onError: ({ networkError }: ApolloError) => {
@@ -97,17 +97,19 @@ export function CoreDrawer({ item, open, setOpen, refetch }: Props) {
     }
   })
 
+  const defaultParams = () => ({
+    id: 0,
+    name: '',
+    display_name: '',
+    description: '',
+    thumb: '',
+    is_visible: true,
+    sort_id: 1
+  })
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      id: 0,
-      name: '',
-      display_name: '',
-      description: '',
-      thumb: '',
-      is_visible: true,
-      sort_id: 1
-    }
+    defaultValues: defaultParams()
   })
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
@@ -132,15 +134,7 @@ export function CoreDrawer({ item, open, setOpen, refetch }: Props) {
     if (item) {
       form.reset({ ...(item as z.infer<typeof formSchema>) })
     } else {
-      form.reset({
-        id: 0,
-        name: '',
-        display_name: '',
-        description: '',
-        thumb: '',
-        is_visible: true,
-        sort_id: 1
-      })
+      form.reset(defaultParams())
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [item, open])
@@ -156,12 +150,12 @@ export function CoreDrawer({ item, open, setOpen, refetch }: Props) {
           <form onSubmit={form.handleSubmit(onSubmit)} autoComplete='off' className='space-y-3'>
             <FormField
               control={form.control}
-              name='name'
+              name='display_name'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>系统名</FormLabel>
+                  <FormLabel>系统名称</FormLabel>
                   <FormControl>
-                    <Input className='h-10' placeholder='请输入系统名' {...field} />
+                    <Input className='h-10' placeholder='请输入系统名称' {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -169,12 +163,12 @@ export function CoreDrawer({ item, open, setOpen, refetch }: Props) {
             />
             <FormField
               control={form.control}
-              name='display_name'
+              name='name'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>显示名称</FormLabel>
+                  <FormLabel>系统标识</FormLabel>
                   <FormControl>
-                    <Input className='h-10' placeholder='请输入显示名称' {...field} />
+                    <Input className='h-10' placeholder='请输入系统标识' {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -234,10 +228,10 @@ export function CoreDrawer({ item, open, setOpen, refetch }: Props) {
               />
             </div>
             {item ? (
-              <div className='grid grid-cols-2 gap-5 pt-5'>
+              <div className='flex justify-end items-center gap-5 pt-5'>
                 <AlertDialog>
                   <AlertDialogTrigger asChild>
-                    <Button disabled={deleting} type='button' variant='outline' className='w-full' size='lg'>
+                    <Button disabled={deleting} type='button' variant='outline' size='lg'>
                       删 除
                     </Button>
                   </AlertDialogTrigger>
@@ -254,23 +248,16 @@ export function CoreDrawer({ item, open, setOpen, refetch }: Props) {
                     </AlertDialogFooter>
                   </AlertDialogContent>
                 </AlertDialog>
-                <Button disabled={updating} size='lg' type='button' onClick={() => onUpdate()} className='w-full'>
+                <Button disabled={updating} size='lg' type='button' onClick={() => onUpdate()}>
                   更 新
                 </Button>
               </div>
             ) : (
-              <div className='grid grid-cols-2 gap-5 pt-5'>
-                <Button
-                  disabled={loading}
-                  type='button'
-                  variant='outline'
-                  className='w-full'
-                  size='lg'
-                  onClick={() => setOpen(false)}
-                >
+              <div className='flex justify-end items-center gap-5 pt-5'>
+                <Button disabled={loading} type='button' variant='outline' size='lg' onClick={() => setOpen(false)}>
                   取 消
                 </Button>
-                <Button disabled={loading} size='lg' type='submit' className='w-full'>
+                <Button disabled={loading} size='lg' type='submit'>
                   提 交
                 </Button>
               </div>
@@ -281,3 +268,5 @@ export function CoreDrawer({ item, open, setOpen, refetch }: Props) {
     </Dialog>
   )
 }
+
+export default CoreDrawer

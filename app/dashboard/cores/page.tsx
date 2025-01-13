@@ -1,5 +1,5 @@
 'use client'
-import { CoreDrawer } from '@/components/app/cores/core-drawer'
+import { CoreDrawer } from '@/components/app/cores'
 
 import { ServerError, useLazyQuery } from '@apollo/client'
 import { ApolloError } from '@apollo/client/errors'
@@ -76,8 +76,8 @@ const Page = () => {
             <TableHeader>
               <TableRow>
                 <TableHead className='w-[100px]'>ID</TableHead>
-                <TableHead>系统名</TableHead>
                 <TableHead>系统名称</TableHead>
+                <TableHead>系统标识</TableHead>
                 <TableHead>系统描述</TableHead>
                 <TableHead>是否显示</TableHead>
                 <TableHead>排序值</TableHead>
@@ -106,8 +106,8 @@ const Page = () => {
                 cores.map(core => (
                   <TableRow key={core.id}>
                     <TableCell className='font-medium'>{core.id}</TableCell>
-                    <TableCell>{core.name}</TableCell>
                     <TableCell>{core.display_name}</TableCell>
+                    <TableCell>{core.name}</TableCell>
                     <TableCell>{core.description}</TableCell>
                     <TableCell>
                       <Switch checked={core.is_visible} aria-readonly='true' />

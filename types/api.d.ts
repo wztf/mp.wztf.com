@@ -1,15 +1,35 @@
 import type { LucideIcon } from 'lucide-react'
 
 export declare namespace API {
-  // 用户资料
-  export interface Profile {
+  export interface Permission {
     id: number
     name: string
+    display_name: string
+    is_visible: boolean
+    sort_id: number
+    type_id: number
+    description: string
+  }
+
+  export interface PermissionType {
+    id: number
+    name: string
+    display_name: string
+    sort_id: number
+    permissions?: Permission[]
+    checkboxDisabled?: boolean
+  }
+
+  export interface Profile {
+    id?: number
     email: string
-    email_verified_at: string
-    created_at: string
-    updated_at: string
+    name: string
+    username: string
     profile_url: string
+    email_verified_at?: string // 邮箱验证日期
+    status: string
+    permissions?: string[]
+    role?: Role
   }
 
   // 系统设置
@@ -41,6 +61,11 @@ export declare namespace API {
     platform_type: number
   }
 
+  export interface PlatformType {
+    id: number
+    name: string
+  }
+
   export interface NavLink {
     title: string
     url: string
@@ -54,31 +79,20 @@ export declare namespace API {
     items?: NavLink[]
   }
 
+  export interface RoleMenuObject {
+    selected_keys?: number[]
+    indeterminate_keys?: number[]
+  }
+
   export interface Role {
     id: number
     name: string
     display_name: string
-    description: string
     is_visible: boolean
     sort_id: number
-  }
-
-  export interface PermissionType {
-    id: number
-    name: string
-    display_name: string
-    sort_id: number
-    permissions?: Permission[]
-  }
-
-  export interface Permission {
-    id: number
-    name: string
-    display_name: string
     description: string
-    is_visible: boolean
-    sort_id: number
-    type_id?: number
+    permission_ids?: number[]
+    menu_ids?: RoleMenuObject
   }
 
   export interface FileGroup {
@@ -110,5 +124,41 @@ export declare namespace API {
     thumb?: string
     is_visible: boolean
     sort_id: number
+  }
+
+  export interface Menu {
+    id: number
+    name?: string
+    display_name: string
+    path?: string
+    component?: string
+    redirect?: string
+    meta: MenuMeta
+    parent_id?: number
+    children?: Menu[]
+    sort_id?: number
+  }
+
+  export interface MenuMeta {
+    hidden?: boolean
+    icon: string
+    title: string
+    affix?: boolean
+    permissions?: string
+    keep_alive?: boolean
+  }
+
+  export interface Page<T = any> {
+    total: number
+    current_page: number
+    last_page: number
+    per_page: number
+    data: T[]
+  }
+
+  export interface Response<T = any> {
+    code?: number
+    message?: string
+    data: T
   }
 }

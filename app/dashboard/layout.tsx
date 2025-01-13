@@ -16,6 +16,7 @@ export default function Page({ children }: Readonly<Props>) {
   if (!token) {
     redirect('/signin')
   }
+
   const defaultOpen = cookies().get('sidebar:state')?.value === 'true'
 
   return (

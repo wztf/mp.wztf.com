@@ -10,6 +10,7 @@ import a622005f3e84f0ba2f1e09c346b5e16 from '@/assets/images/a622005f3e84f0ba2f1
 import a632a0fc79d46a69d2505b975d19fc7 from '@/assets/images/a632a0fc79d46a69d2505b975d19fc7.jpg'
 import a79d45453ff42b88e8e3ae95cb4a999 from '@/assets/images/a79d45453ff42b88e8e3ae95cb4a999.jpg'
 import a8c63a6f81b74cacac2052b0d786d757 from '@/assets/images/a8c63a6f81b74cacac2052b0d786d757.jpg'
+import ab6c58052fe24da09baf2beabe29ac79 from '@/assets/images/ab6c58052fe24da09baf2beabe29ac79.jpg'
 import ab6d7d46ae24fa7942588d0d71fa08b from '@/assets/images/ab6d7d46ae24fa7942588d0d71fa08b.jpg'
 import abb51f9e2224edcaccb7d8b918d2d2b from '@/assets/images/abb51f9e2224edcaccb7d8b918d2d2b.jpg'
 import b2db93a6ae4a44fd8ee56828b97b6e3e from '@/assets/images/b2db93a6ae4a44fd8ee56828b97b6e3e.jpg'
@@ -17,6 +18,7 @@ import b354efdb62004db2b930dce9714e92b5 from '@/assets/images/b354efdb62004db2b9
 import cd83a30f76d646ef8e84e0aca75887ed from '@/assets/images/cd83a30f76d646ef8e84e0aca75887ed.jpg'
 import ce4bd1342ae43318f727dcd2132d9f9 from '@/assets/images/ce4bd1342ae43318f727dcd2132d9f9.jpg'
 import da6086f145ac49acabb375a3b4a5c384 from '@/assets/images/da6086f145ac49acabb375a3b4a5c384.jpg'
+import dac96d1d797f444f98a4768f8729c820 from '@/assets/images/dac96d1d797f444f98a4768f8729c820.jpg'
 import e558a4f9384942b70de5052e0168aa from '@/assets/images/e558a4f9384942b70de5052e0168aa.jpg'
 import e8ea85f268e34a6c90714384b56f99d5 from '@/assets/images/e8ea85f268e34a6c90714384b56f99d5.jpg'
 import e96c5d5bb104887b8da6d9a13b23fd8 from '@/assets/images/e96c5d5bb104887b8da6d9a13b23fd8.jpg'
@@ -24,6 +26,7 @@ import f27602cb3e5142ada2a987c975c3dbc5 from '@/assets/images/f27602cb3e5142ada2
 import f2c40b103ff450da5879766e14f25f6 from '@/assets/images/f2c40b103ff450da5879766e14f25f6.jpg'
 import f6d6855ae4e94b17aa9a03b55205f34a from '@/assets/images/f6d6855ae4e94b17aa9a03b55205f34a.jpg'
 import f79c9c707114edabf7bc31cbe5fd5a2 from '@/assets/images/f79c9c707114edabf7bc31cbe5fd5a2.jpg'
+import f9faf3cd17e143489eba220f00435b51 from '@/assets/images/f9faf3cd17e143489eba220f00435b51.jpg'
 import fb190c34beb54a2eaaa09b24d3972912 from '@/assets/images/fb190c34beb54a2eaaa09b24d3972912.jpg'
 import fc8ad0e763154a8f8b827bbce4efedde from '@/assets/images/fc8ad0e763154a8f8b827bbce4efedde.jpg'
 
@@ -92,10 +95,10 @@ export default function Home() {
               <img className='rounded-lg shadow' src={ce4bd1342ae43318f727dcd2132d9f9.src} alt='儿童阶段2' />
             </div>
             <div className='bg-gray-50 cursor-pointer'>
-              <img className='rounded-lg shadow' src={fadb5c968a406ead6755dc3461754a.src} alt='儿童阶段2' />
+              <img className='rounded-lg shadow' src={ab6c58052fe24da09baf2beabe29ac79.src} alt='儿童阶段2' />
             </div>
             <div className='bg-gray-50 cursor-pointer'>
-              <img className='rounded-lg shadow' src={ce4bd1342ae43318f727dcd2132d9f9.src} alt='儿童阶段2' />
+              <img className='rounded-lg shadow' src={f9faf3cd17e143489eba220f00435b51.src} alt='儿童阶段2' />
             </div>
           </div>
 
@@ -107,7 +110,7 @@ export default function Home() {
               <img className='rounded-lg shadow' src={a79d45453ff42b88e8e3ae95cb4a999.src} alt='' />
             </div>
             <div className='bg-gray-50'>
-              <img className='rounded-lg shadow' src={fc8ad0e763154a8f8b827bbce4efedde.src} alt='' />
+              <img className='rounded-lg shadow' src={dac96d1d797f444f98a4768f8729c820.src} alt='' />
             </div>
           </div>
         </div>

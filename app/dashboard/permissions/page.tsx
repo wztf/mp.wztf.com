@@ -1,25 +1,26 @@
 'use client'
-import { Separator } from '@/components/ui/separator'
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 
 import { ServerError, useLazyQuery } from '@apollo/client'
 import { ApolloError } from '@apollo/client/errors'
+import { Flex, Spinner, Text } from '@radix-ui/themes'
+import { Plus } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
 
-import { PermissionTypesDocument } from '@generated/graphql'
-
-import { Flex, Spinner, Text } from '@radix-ui/themes'
-
-import { Button } from '@/components/ui/button'
-
-import { Plus } from 'lucide-react'
-
 import { PermissionDrawer, TypeDrawer } from '@/components/app/permissions'
+import { Button } from '@/components/ui/button'
+import { Separator } from '@/components/ui/separator'
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 
 import { API } from '/#/api'
 
+import { PermissionEnum } from '@/enums/permissionEnum'
+import { usePermission } from '@/hooks/user-permission'
+
+import { PermissionTypesDocument } from '@generated/graphql'
+
 const Page = () => {
+  const { hasPermission } = usePermission()
   const [loading, setLoading] = useState<boolean>(true)
   const [open, setOpen] = useState(false)
   const [fetch, { data, error, refetch }] = useLazyQuery(PermissionTypesDocument, {
@@ -52,6 +53,10 @@ const Page = () => {
 
   const [permission, setPermission] = useState<API.Permission | null>(null)
   const onSelect = (item: API.Permission | null) => {
+    if (!hasPermission([PermissionEnum.PERMISSIONS_ACTION_UPDATE, PermissionEnum.PERMISSIONS_ACTION_DELETE])) {
+      return
+    }
+
     setPermission(item)
     setOpen(true)
   }
@@ -67,8 +72,10 @@ const Page = () => {
             </p>
           </div>
           <div className='space-x-1.5'>
-            <TypeDrawer refetch={refetch} types={types} />
-            {types.length > 0 && (
+            {hasPermission([PermissionEnum.PERMISSIONS_ACTION_CREATE]) && (
+              <TypeDrawer refetch={refetch} types={types} />
+            )}
+            {types.length > 0 && hasPermission([PermissionEnum.PERMISSIONS_ACTION_CREATE]) && (
               <Button variant='outline' size='sm' onClick={() => onSelect(null)}>
                 <Plus />
                 <Text>创建权限</Text>
@@ -105,7 +112,7 @@ const Page = () => {
               ) : (
                 types.map(role => (
                   <TableRow key={role.id}>
-                    <TableCell>{role.name}</TableCell>
+                    <TableCell>{role.display_name}</TableCell>
                     <TableCell className='space-x-1.5'>
                       {role?.permissions &&
                         role?.permissions.map(permission => (
@@ -116,7 +123,7 @@ const Page = () => {
                             className={`shadow-none ${permission.is_visible ? '' : 'border-red-500 text-red-500 hover:text-red-600'}`}
                             onClick={() => onSelect(permission)}
                           >
-                            {permission.name}
+                            {permission.display_name}
                           </Button>
                         ))}
                     </TableCell>

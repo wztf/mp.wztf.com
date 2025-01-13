@@ -47,7 +47,9 @@ const RuiRegister = ({ onReset }: Props) => {
     onError: ({ networkError }: ApolloError) => {
       const { result } = networkError as ServerError
       const { errors } = result as Record<string, { message: string }[]>
-      toast.error(errors[0].message)
+      if (errors) {
+        toast.error(errors[0].message)
+      }
     }
   })
 

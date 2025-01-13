@@ -25,6 +25,7 @@ interface Actions {
   login: (token: string) => Promise<void>
   logout: () => void
   getProfile: () => Promise<void>
+  getPermissions: () => string[]
   setApp: (app: string) => void
   getSetting: () => Promise<API.Setting>
   toggleLockScreen: (status?: boolean) => void
@@ -60,6 +61,9 @@ export const useStore = create<Store>()(
         if (data && data.profile) {
           set({ profile: data.profile as unknown as API.Profile })
         }
+      },
+      getPermissions: () => {
+        return get().profile?.permissions || []
       },
       getSetting: async () => {
         if (get().setting === null) {

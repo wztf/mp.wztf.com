@@ -12,6 +12,7 @@ import { PiYoutubeLogo } from 'react-icons/pi'
 import { SiKnowledgebase } from 'react-icons/si'
 
 import logo from '@/assets/images/logo@black.png'
+import { company } from '@/config'
 import { useStore } from '@/store'
 
 import RuiBacktop from '@components/rui-backtop'
@@ -172,7 +173,7 @@ const RuiFooter = () => {
                 <Link href='/' className='uppercase mx-0.5'>
                   King Talent
                 </Link>
-                2024 All rights reserved.
+                2024 All rights reserved. {company}
               </Text>
               <Separator.Root decorative orientation='vertical' className='mx-2 h-4 w-0.5 bg-gray-200' />
               <Link href='/terms' className={`hover:underline ${pathname ? 'text-gray-700' : 'text-gray-500'}`}>
