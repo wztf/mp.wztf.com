@@ -30,6 +30,8 @@
       "@plugins/*": ["./plugins/*"],
       "@store/*": ["./store/*"],
       "@generated/*": ["./generated/*"],
+      "@enums/*": ["./enums/*"],
+      "@hooks/*": ["./hooks/*"],
       "/#/*": ["types/*"]
     }
   },
