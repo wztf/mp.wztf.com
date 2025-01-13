@@ -1,11 +1,141 @@
-query Profile {
-  profile {
+query Roles($input: String!) {
+  roles {
     id
-    email
     name
-    profile_url
-    status
-    email_verified_at
+    display_name
+    description
+    is_visible
+    sort_id
+    permission_ids
+    menu_ids {
+      selected_keys
+      indeterminate_keys
+    }
+  }
+  permissionTypes {
+    id
+    name
+    display_name
+    sort_id
+    permissions {
+      id
+      name
+      display_name
+      description
+      is_visible
+      sort_id
+      type_id
+    }
+  }
+  menus(input: $input) {
+    id
+    name
+    display_name
+    path
+    component
+    redirect
+    parent_id
+    sort_id
+    meta {
+      hidden
+      icon
+      title
+      affix
+      permissions
+      keep_alive
+    }
+    children {
+      id
+      name
+      display_name
+      path
+      component
+      redirect
+      parent_id
+      sort_id
+      meta {
+        hidden
+        icon
+        title
+        affix
+        permissions
+        keep_alive
+      }
+      children {
+        id
+        name
+        display_name
+        path
+        component
+        redirect
+        parent_id
+        sort_id
+        meta {
+          hidden
+          icon
+          title
+          affix
+          permissions
+          keep_alive
+        }
+        children {
+          id
+          name
+          display_name
+          path
+          component
+          redirect
+          parent_id
+          sort_id
+        }
+      }
+    }
+  }
+}
+
+query Cores {
+  cores {
+    id
+    name
+    display_name
+    description
+    thumb
+    is_visible
+    sort_id
+  }
+}
+
+query PermissionTypes {
+  permissionTypes {
+    id
+    name
+    display_name
+    sort_id
+    permissions {
+      id
+      name
+      display_name
+      description
+      is_visible
+      sort_id
+      type_id
+    }
+  }
+}
+
+query Accounts {
+  accounts {
+    id
+    name
+    app
+    appid
+    app_secret
+    callback_url
+    platform_type
+  }
+  platformTypes {
+    id
+    name
   }
 }
 
@@ -37,56 +167,6 @@ query Setting {
   }
 }
 
-# 判断token是否有效
-query Auth {
-  auth
-}
-
-query Accounts {
-  accounts {
-    id
-    name
-    app
-    appid
-    app_secret
-    callback_url
-    platform_type
-  }
-}
-
-query Roles {
-  roles {
-    id
-    name
-    display_name
-    description
-    is_visible
-    sort_id
-  }
-}
-
-query PermissionTypes {
-  permissionTypes {
-    id
-    name
-    display_name
-    sort_id
-    permissions {
-      id
-      name
-      display_name
-      description
-      is_visible
-      sort_id
-      type_id
-    }
-  }
-}
-
-query CanIUse($input: String!) {
-  canIUse(url: $input)
-}
-
 query FileGroups {
   fileGroups {
     id
@@ -97,14 +177,94 @@ query FileGroups {
   }
 }
 
-query Cores {
-  cores {
+query CanIUse($url: String!) {
+  canIUse(url: $url)
+}
+
+query Auth {
+  auth
+}
+
+query Profile {
+  profile {
+    id
+    email
+    name
+    profile_url
+    status
+    email_verified_at
+    permissions
+    role {
+      id
+      name
+      display_name
+    }
+  }
+}
+
+query Menus($input: String!) {
+  menus(input: $input) {
     id
     name
     display_name
-    description
-    thumb
-    is_visible
+    path
+    component
+    redirect
+    parent_id
     sort_id
+    meta {
+      hidden
+      icon
+      title
+      affix
+      permissions
+      keep_alive
+    }
+    children {
+      id
+      name
+      display_name
+      path
+      component
+      redirect
+      parent_id
+      sort_id
+      meta {
+        hidden
+        icon
+        title
+        affix
+        permissions
+        keep_alive
+      }
+      children {
+        id
+        name
+        display_name
+        path
+        component
+        redirect
+        parent_id
+        sort_id
+        meta {
+          hidden
+          icon
+          title
+          affix
+          permissions
+          keep_alive
+        }
+        children {
+          id
+          name
+          display_name
+          path
+          component
+          redirect
+          parent_id
+          sort_id
+        }
+      }
+    }
   }
 }
