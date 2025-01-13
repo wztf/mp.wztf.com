@@ -14,7 +14,9 @@ import { toast } from 'react-toastify'
 import { UpdateRolePermissionsDocument } from '@generated/graphql'
 
 import { useStore } from '@/store'
+
 import { useEffect, useState } from 'react'
+
 import { API } from '/#/api'
 
 type Props = {
@@ -50,6 +52,7 @@ const RoleDrawer = ({ permissionTypes, item, open, setOpen, refetch }: Props) =>
   useEffect(() => {
     const results = permissionTypes.map(item => (item?.permissions ? item?.permissions.map(item => item.id) : []))
     setSelectAll(selectIds.length === results.flatMap(item => item).length)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectIds])
 
   const onSubmit = async () => {
