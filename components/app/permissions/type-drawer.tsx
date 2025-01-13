@@ -217,8 +217,8 @@ const TypeDrawer = ({ types, refetch }: Props) => {
                   types.map(item => (
                     <TableRow key={item.id}>
                       <TableCell>{item.id}</TableCell>
-                      <TableCell>{item.name}</TableCell>
                       <TableCell>{item.display_name}</TableCell>
+                      <TableCell>{item.name}</TableCell>
                       <TableCell>{item.sort_id}</TableCell>
                       <TableCell className='text-right'>
                         <Button variant='outline' size='sm' onClick={() => onSelect(item)}>
@@ -235,7 +235,7 @@ const TypeDrawer = ({ types, refetch }: Props) => {
               <form onSubmit={form.handleSubmit(onSubmit)} autoComplete='off' className='space-y-3'>
                 <FormField
                   control={form.control}
-                  name='name'
+                  name='display_name'
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>分类名</FormLabel>
@@ -248,7 +248,7 @@ const TypeDrawer = ({ types, refetch }: Props) => {
                 />
                 <FormField
                   control={form.control}
-                  name='display_name'
+                  name='name'
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>分类标识</FormLabel>
@@ -284,10 +284,10 @@ const TypeDrawer = ({ types, refetch }: Props) => {
                   />
                 </div>
                 {item ? (
-                  <div className='grid grid-cols-2 gap-5 pt-5'>
+                  <div className='flex justify-end items-center gap-5 pt-5'>
                     <AlertDialog>
                       <AlertDialogTrigger asChild>
-                        <Button disabled={deleting} type='button' variant='outline' className='w-full' size='lg'>
+                        <Button disabled={deleting} type='button' variant='outline' size='lg'>
                           删 除
                         </Button>
                       </AlertDialogTrigger>
@@ -304,16 +304,16 @@ const TypeDrawer = ({ types, refetch }: Props) => {
                         </AlertDialogFooter>
                       </AlertDialogContent>
                     </AlertDialog>
-                    <Button disabled={updating} size='lg' type='button' onClick={() => onUpdate()} className='w-full'>
+                    <Button disabled={updating} size='lg' type='button' onClick={() => onUpdate()}>
                       更 新
                     </Button>
                   </div>
                 ) : (
-                  <div className='grid grid-cols-2 gap-5 pt-5'>
-                    <Button type='button' variant='outline' className='w-full' size='lg' onClick={() => onSelect(null)}>
+                  <div className='flex justify-end items-center gap-5 pt-5'>
+                    <Button type='button' variant='outline' size='lg' onClick={() => onSelect(null)}>
                       取 消
                     </Button>
-                    <Button size='lg' type='submit' className='w-full'>
+                    <Button size='lg' type='submit'>
                       提 交
                     </Button>
                   </div>

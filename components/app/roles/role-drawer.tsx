@@ -1,5 +1,9 @@
 'use client'
 
+import { ServerError, useMutation } from '@apollo/client'
+import { ApolloError } from '@apollo/client/errors'
+import { zodResolver } from '@hookform/resolvers/zod'
+
 import {
   AlertDialog,
   AlertDialogAction,
@@ -18,16 +22,16 @@ import { Input } from '@/components/ui/input'
 import { Switch } from '@/components/ui/switch'
 import { Textarea } from '@/components/ui/textarea'
 
-import { ServerError, useMutation } from '@apollo/client'
-import { ApolloError } from '@apollo/client/errors'
-import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
 import { z } from 'zod'
 
-import type { RoleInput } from '@generated/graphql'
+import { PermissionEnum } from '@/enums/permissionEnum'
+import { usePermission } from '@/hooks/user-permission'
 
 import { CreateRoleDocument, DeleteRoleDocument, UpdateRoleDocument } from '@generated/graphql'
+
+import type { RoleInput } from '@generated/graphql'
 
 import { useEffect } from 'react'
 
@@ -55,7 +59,18 @@ type Props = {
   refetch: () => void
 }
 
-export function RoleDrawer({ item, open, setOpen, refetch }: Props) {
+const RoleDrawer = ({ item, open, setOpen, refetch }: Props) => {
+  const { hasPermission } = usePermission()
+
+  const defaultParams = () => ({
+    id: 0,
+    name: '',
+    display_name: '',
+    description: '',
+    is_visible: true,
+    sort_id: 1
+  })
+
   const [fetch, { loading }] = useMutation(CreateRoleDocument, {
     variables: { input: {} as RoleInput },
     onError: ({ networkError }: ApolloError) => {
@@ -100,31 +115,52 @@ export function RoleDrawer({ item, open, setOpen, refetch }: Props) {
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      id: 0,
-      name: '',
-      display_name: '',
-      description: '',
-      is_visible: true,
-      sort_id: 1
-    }
+    defaultValues: defaultParams()
   })
 
-  const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    const { id, ...params } = values
+  const onSubmit = async (input: z.infer<typeof formSchema>) => {
+    const { id, ...values } = input
+    const params = {
+      name: values.name,
+      display_name: values.display_name,
+      description: values.description,
+      is_visible: values.is_visible,
+      sort_id: values.sort_id
+    }
+
     await fetch({ variables: { input: params } })
   }
 
   const onUpdate = async () => {
     if (item === null) return
+
+    if (!hasPermission([PermissionEnum.PERMISSIONS_ACTION_UPDATE])) {
+      toast.error('you have no permission')
+      return
+    }
+
     const { id, ...values } = form.getValues()
+    const params = {
+      name: values.name,
+      display_name: values.display_name,
+      description: values.description,
+      is_visible: values.is_visible,
+      sort_id: values.sort_id
+    }
+
     await updator({
-      variables: { id: item.id, input: values }
+      variables: { id: item.id, input: params }
     })
   }
 
   const onDelete = async () => {
     if (item === null) return
+
+    if (!hasPermission([PermissionEnum.PERMISSIONS_ACTION_DELETE])) {
+      toast.error('you have no permission')
+      return
+    }
+
     await deletor({ variables: { id: item.id } })
   }
 
@@ -132,14 +168,7 @@ export function RoleDrawer({ item, open, setOpen, refetch }: Props) {
     if (item) {
       form.reset({ ...(item as z.infer<typeof formSchema>) })
     } else {
-      form.reset({
-        id: 0,
-        name: '',
-        display_name: '',
-        description: '',
-        is_visible: true,
-        sort_id: 1
-      })
+      form.reset(defaultParams())
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [item, open])
@@ -155,12 +184,12 @@ export function RoleDrawer({ item, open, setOpen, refetch }: Props) {
           <form onSubmit={form.handleSubmit(onSubmit)} autoComplete='off' className='space-y-3'>
             <FormField
               control={form.control}
-              name='name'
+              name='display_name'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>角色名</FormLabel>
+                  <FormLabel>角色名称</FormLabel>
                   <FormControl>
-                    <Input className='h-10' placeholder='请输入角色名' {...field} />
+                    <Input className='h-10' placeholder='请输入角色名称' {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -168,12 +197,12 @@ export function RoleDrawer({ item, open, setOpen, refetch }: Props) {
             />
             <FormField
               control={form.control}
-              name='display_name'
+              name='name'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>显示名称</FormLabel>
+                  <FormLabel>角色标识</FormLabel>
                   <FormControl>
-                    <Input className='h-10' placeholder='请输入显示名称' {...field} />
+                    <Input className='h-10' placeholder='请输入角色标识' {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -233,10 +262,10 @@ export function RoleDrawer({ item, open, setOpen, refetch }: Props) {
               />
             </div>
             {item ? (
-              <div className='grid grid-cols-2 gap-5 pt-5'>
+              <div className='flex justify-end items-center gap-5 pt-5'>
                 <AlertDialog>
                   <AlertDialogTrigger asChild>
-                    <Button disabled={deleting} type='button' variant='outline' className='w-full' size='lg'>
+                    <Button disabled={deleting} type='button' variant='outline' size='lg'>
                       删 除
                     </Button>
                   </AlertDialogTrigger>
@@ -253,23 +282,16 @@ export function RoleDrawer({ item, open, setOpen, refetch }: Props) {
                     </AlertDialogFooter>
                   </AlertDialogContent>
                 </AlertDialog>
-                <Button disabled={updating} size='lg' type='button' onClick={() => onUpdate()} className='w-full'>
+                <Button disabled={updating} size='lg' type='button' onClick={() => onUpdate()}>
                   更 新
                 </Button>
               </div>
             ) : (
-              <div className='grid grid-cols-2 gap-5 pt-5'>
-                <Button
-                  disabled={loading}
-                  type='button'
-                  variant='outline'
-                  className='w-full'
-                  size='lg'
-                  onClick={() => setOpen(false)}
-                >
+              <div className='flex justify-end items-center gap-5 pt-5'>
+                <Button disabled={loading} type='button' variant='outline' size='lg' onClick={() => setOpen(false)}>
                   取 消
                 </Button>
-                <Button disabled={loading} size='lg' type='submit' className='w-full'>
+                <Button disabled={loading} size='lg' type='submit'>
                   提 交
                 </Button>
               </div>
@@ -280,3 +302,5 @@ export function RoleDrawer({ item, open, setOpen, refetch }: Props) {
     </Dialog>
   )
 }
+
+export default RoleDrawer

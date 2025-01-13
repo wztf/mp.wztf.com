@@ -16,7 +16,6 @@ import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, For
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Switch } from '@/components/ui/switch'
-import { Textarea } from '@/components/ui/textarea'
 
 import { ServerError, useMutation } from '@apollo/client'
 import { ApolloError } from '@apollo/client/errors'
@@ -30,6 +29,9 @@ import type { PermissionInput } from '@generated/graphql'
 import { CreatePermissionDocument, DeletePermissionDocument, UpdatePermissionDocument } from '@generated/graphql'
 
 import { useEffect } from 'react'
+
+import { PermissionEnum } from '@/enums/permissionEnum'
+import { usePermission } from '@/hooks/user-permission'
 
 import { API } from '/#/api'
 
@@ -62,6 +64,18 @@ type Props = {
 }
 
 const PermissionDrawer = ({ permission, open, setOpen, refetch, types }: Props) => {
+  const { hasPermission } = usePermission()
+
+  const defaultParams = () => ({
+    id: 0,
+    name: '',
+    display_name: '',
+    description: '',
+    is_visible: true,
+    sort_id: 1,
+    type_id: 0
+  })
+
   const [fetch, { loading }] = useMutation(CreatePermissionDocument, {
     variables: { input: {} as PermissionInput },
     onError: ({ networkError }: ApolloError) => {
@@ -106,32 +120,64 @@ const PermissionDrawer = ({ permission, open, setOpen, refetch, types }: Props) 
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      id: 0,
-      name: '',
-      display_name: '',
-      description: '',
-      is_visible: true,
-      sort_id: 1,
-      type_id: 0
-    }
+    defaultValues: defaultParams()
   })
 
-  const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    const { id, ...params } = values
+  // 在 name 改变时更新 description
+  useEffect(() => {
+    const name = form.getValues('name')
+    form.setValue('description', name.toUpperCase().replace(/\./g, '_'))
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [form.watch('name')])
+
+  const onSubmit = async (input: z.infer<typeof formSchema>) => {
+    if (!hasPermission([PermissionEnum.PERMISSIONS_ACTION_CREATE])) {
+      toast.error('you have no permission')
+      return
+    }
+
+    const { id, ...values } = input
+    const params = {
+      name: values.name,
+      display_name: values.display_name,
+      description: values.description,
+      is_visible: values.is_visible,
+      sort_id: values.sort_id,
+      type_id: values.type_id
+    }
     await fetch({ variables: { input: params } })
   }
 
   const onUpdate = async () => {
     if (permission === null) return
+
+    if (!hasPermission([PermissionEnum.PERMISSIONS_ACTION_UPDATE])) {
+      toast.error('you have no permission')
+      return
+    }
+
     const { id, ...values } = form.getValues()
+    const params = {
+      name: values.name,
+      display_name: values.display_name,
+      description: values.description,
+      is_visible: values.is_visible,
+      sort_id: values.sort_id,
+      type_id: values.type_id
+    }
     await updator({
-      variables: { id: permission.id, input: values }
+      variables: { id: permission.id, input: params }
     })
   }
 
   const onDelete = async () => {
     if (permission === null) return
+
+    if (!hasPermission([PermissionEnum.PERMISSIONS_ACTION_DELETE])) {
+      toast.error('you have no permission')
+      return
+    }
+
     await deletor({ variables: { id: permission.id } })
   }
 
@@ -139,15 +185,7 @@ const PermissionDrawer = ({ permission, open, setOpen, refetch, types }: Props) 
     if (permission) {
       form.reset({ ...(permission as z.infer<typeof formSchema>) })
     } else {
-      form.reset({
-        id: 0,
-        name: '',
-        display_name: '',
-        description: '',
-        is_visible: true,
-        sort_id: 1,
-        type_id: 0
-      })
+      form.reset(defaultParams())
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [permission, open])
@@ -163,7 +201,36 @@ const PermissionDrawer = ({ permission, open, setOpen, refetch, types }: Props) 
           <form onSubmit={form.handleSubmit(onSubmit)} autoComplete='off' className='space-y-3'>
             <FormField
               control={form.control}
-              name='name'
+              name='type_id'
+              render={({ field }) => (
+                <>
+                  <FormItem className='flex flex-row items-center justify-between rounded-lg border p-3 col-span-2'>
+                    <div className='space-y-0.5'>
+                      <FormLabel>所属类型</FormLabel>
+                      <FormDescription>对应类型</FormDescription>
+                    </div>
+                    <FormControl>
+                      <Select onValueChange={e => field.onChange(Number(e))} defaultValue={String(field.value)}>
+                        <SelectTrigger className='h-10 w-1/2 shadow-none'>
+                          <SelectValue placeholder='请选择类型' />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {types.map(type => (
+                            <SelectItem key={type.id} value={String(type.id)}>
+                              {type.display_name}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </FormControl>
+                  </FormItem>
+                  <FormMessage />
+                </>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name='display_name'
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>权限名</FormLabel>
@@ -176,25 +243,12 @@ const PermissionDrawer = ({ permission, open, setOpen, refetch, types }: Props) 
             />
             <FormField
               control={form.control}
-              name='display_name'
+              name='name'
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>权限标识</FormLabel>
                   <FormControl>
                     <Input className='h-10' placeholder='请输入权限标识' {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name='description'
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>权限描述</FormLabel>
-                  <FormControl>
-                    <Textarea className='resize-none' placeholder='请输入权限描述' {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -239,41 +293,12 @@ const PermissionDrawer = ({ permission, open, setOpen, refetch, types }: Props) 
                   </FormItem>
                 )}
               />
-              <FormField
-                control={form.control}
-                name='type_id'
-                render={({ field }) => (
-                  <>
-                    <FormItem className='flex flex-row items-center justify-between rounded-lg border p-3 col-span-2'>
-                      <div className='space-y-0.5'>
-                        <FormLabel>所属类型</FormLabel>
-                        <FormDescription>对应类型</FormDescription>
-                      </div>
-                      <FormControl>
-                        <Select onValueChange={e => field.onChange(Number(e))} defaultValue={String(field.value)}>
-                          <SelectTrigger className='h-10 w-1/2 shadow-none'>
-                            <SelectValue placeholder='请选择类型' />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {types.map(type => (
-                              <SelectItem key={type.id} value={String(type.id)}>
-                                {type.name}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      </FormControl>
-                    </FormItem>
-                    <FormMessage />
-                  </>
-                )}
-              />
             </div>
             {permission ? (
-              <div className='grid grid-cols-2 gap-5 pt-5'>
+              <div className='flex justify-end items-center gap-5 pt-5'>
                 <AlertDialog>
                   <AlertDialogTrigger asChild>
-                    <Button disabled={deleting} type='button' variant='outline' className='w-full' size='lg'>
+                    <Button disabled={deleting} type='button' variant='outline' size='lg'>
                       删 除
                     </Button>
                   </AlertDialogTrigger>
@@ -290,23 +315,16 @@ const PermissionDrawer = ({ permission, open, setOpen, refetch, types }: Props) 
                     </AlertDialogFooter>
                   </AlertDialogContent>
                 </AlertDialog>
-                <Button disabled={updating} size='lg' type='button' onClick={() => onUpdate()} className='w-full'>
+                <Button disabled={updating} size='lg' type='button' onClick={() => onUpdate()}>
                   更 新
                 </Button>
               </div>
             ) : (
-              <div className='grid grid-cols-2 gap-5 pt-5'>
-                <Button
-                  disabled={loading}
-                  type='button'
-                  variant='outline'
-                  className='w-full'
-                  size='lg'
-                  onClick={() => setOpen(false)}
-                >
+              <div className='flex justify-end items-center gap-5 pt-5'>
+                <Button disabled={loading} type='button' variant='outline' size='lg' onClick={() => setOpen(false)}>
                   取 消
                 </Button>
-                <Button disabled={loading} size='lg' type='submit' className='w-full'>
+                <Button disabled={loading} size='lg' type='submit'>
                   提 交
                 </Button>
               </div>
