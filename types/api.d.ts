@@ -133,7 +133,7 @@ export declare namespace API {
     path?: string
     component?: string
     redirect?: string
-    meta: MenuMeta
+    meta?: MenuMeta
     parent_id?: number
     children?: Menu[]
     sort_id?: number
@@ -141,7 +141,7 @@ export declare namespace API {
 
   export interface MenuMeta {
     hidden?: boolean
-    icon: string
+    icon?: string
     title: string
     affix?: boolean
     permissions?: string

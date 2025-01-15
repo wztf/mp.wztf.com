@@ -2,7 +2,7 @@ import { isDev, version } from '@config/index'
 
 import { makeClient } from '@/plugins/apollo'
 
-import { ProfileDocument, SettingDocument } from '@generated/graphql'
+import { MenusDocument, ProfileDocument, SettingDocument } from '@generated/graphql'
 
 import Cookies from 'js-cookie'
 import { create } from 'zustand'
@@ -19,6 +19,7 @@ export interface States {
   profile: API.Profile | null
   setting: API.Setting | null
   lockScreen: boolean
+  menus: API.Menu[]
 }
 
 interface Actions {
@@ -29,6 +30,7 @@ interface Actions {
   setApp: (app: string) => void
   getSetting: () => Promise<API.Setting>
   toggleLockScreen: (status?: boolean) => void
+  getMenus: () => Promise<API.Menu[]>
 }
 
 export type Store = States & Actions
@@ -42,6 +44,7 @@ export const useStore = create<Store>()(
       profile: null,
       setting: null,
       lockScreen: false,
+      menus: [],
       login: async (token: string) => {
         Cookies.set('token', token, { path: '/' })
         set({ loggedIn: true, token })
@@ -80,6 +83,17 @@ export const useStore = create<Store>()(
       toggleLockScreen: (status: boolean = true) => {
         document.cookie = `${SCREEN_COOKIE_NAME}=${status ? 'true' : 'false'}; path=/`
         set({ lockScreen: status })
+      },
+      getMenus: async () => {
+        if (get().menus.length === 0) {
+          const { data } = await makeClient().query({ query: MenusDocument, variables: { input: '' } })
+          if (data && data.menus) {
+            if (isDev) console.log(data.menus)
+            set({ menus: data.menus as unknown as API.Menu[] })
+          }
+        }
+
+        return get().menus
       }
     }),
     {

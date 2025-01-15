@@ -2,6 +2,8 @@
 
 import { ChevronRight } from 'lucide-react'
 
+import { useStore } from '@/store'
+
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@components/ui/collapsible'
 import {
   SidebarGroup,
@@ -14,31 +16,46 @@ import {
   SidebarMenuSubItem
 } from '@components/ui/sidebar'
 
+import Link from 'next/link'
+import { useEffect, useState } from 'react'
+
 import { API } from '/#/api'
 
-export function NavMain({ items }: { items: API.NavItem[] }) {
+export function NavMain() {
+  const [menus, setMenus] = useState<API.Menu[]>([])
+  const getMenus = useStore(state => state.getMenus)
+  useEffect(() => {
+    try {
+      getMenus().then(menus => {
+        setMenus(menus)
+      })
+    } catch (error) {
+      console.log(error)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
   return (
     <SidebarGroup>
       <SidebarGroupLabel>Platform</SidebarGroupLabel>
       <SidebarMenu>
-        {items.map(item => (
-          <Collapsible key={item.title} asChild defaultOpen={item.isActive} className='group/collapsible'>
+        {menus.map(item => (
+          <Collapsible key={item.id} asChild defaultOpen={false} className='group/collapsible'>
             <SidebarMenuItem>
               <CollapsibleTrigger asChild>
-                <SidebarMenuButton tooltip={item.title}>
-                  {item.icon && <item.icon />}
-                  <span>{item.title}</span>
+                <SidebarMenuButton tooltip={item.display_name}>
+                  {/* {item?.meta?.icon && constantRouterIcon[item?.meta?.icon]} */}
+                  <span>{item.display_name}</span>
                   <ChevronRight className='ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90' />
                 </SidebarMenuButton>
               </CollapsibleTrigger>
               <CollapsibleContent>
                 <SidebarMenuSub>
-                  {item.items?.map(subItem => (
-                    <SidebarMenuSubItem key={subItem.title}>
+                  {item.children?.map(children => (
+                    <SidebarMenuSubItem key={children.id}>
                       <SidebarMenuSubButton asChild>
-                        <a href={subItem.url}>
-                          <span>{subItem.title}</span>
-                        </a>
+                        <Link href={children?.path ?? ''}>
+                          <span>{children.display_name}</span>
+                        </Link>
                       </SidebarMenuSubButton>
                     </SidebarMenuSubItem>
                   ))}

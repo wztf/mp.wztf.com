@@ -148,12 +148,12 @@ const MenuDrawer = ({ item, open, menus, setOpen, refetch }: Props) => {
       component: values.component,
       redirect: values.redirect,
       meta: {
-        hidden: values.meta.hidden,
-        icon: values.meta.icon,
-        title: values.meta.title,
-        affix: values.meta.affix,
-        permissions: values.meta.permissions,
-        keep_alive: values.meta.keep_alive
+        hidden: values.meta?.hidden ?? false,
+        icon: values.meta.icon ?? '',
+        title: values.meta.title ?? '',
+        affix: values.meta.affix ?? false,
+        permissions: values.meta.permissions ?? '',
+        keep_alive: values.meta.keep_alive ?? false
       },
       parent_id: values.parent_id,
       sort_id: values.sort_id
@@ -177,12 +177,12 @@ const MenuDrawer = ({ item, open, menus, setOpen, refetch }: Props) => {
       component: values.component,
       redirect: values.redirect,
       meta: {
-        hidden: values.meta.hidden,
-        icon: values.meta.icon,
-        title: values.meta.title,
-        affix: values.meta.affix,
-        permissions: values.meta.permissions,
-        keep_alive: values.meta.keep_alive
+        hidden: values.meta?.hidden ?? false,
+        icon: values.meta.icon ?? '',
+        title: values.meta.title ?? '',
+        affix: values.meta.affix ?? false,
+        permissions: values.meta.permissions ?? '',
+        keep_alive: values.meta.keep_alive ?? false
       },
       parent_id: values.parent_id,
       sort_id: values.sort_id
