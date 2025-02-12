@@ -199,7 +199,7 @@ mutation DeleteMenu($id: Int!) {
 }
 
 mutation Signup($input: String!) {
-  signup(payload: $input)
+  signup(input: $input)
 }
 
 mutation ResetPassword($input: String!) {
@@ -211,5 +211,28 @@ mutation ResetPassword($input: String!) {
 }
 
 mutation Login($input: String!) {
-  login(payload: $input)
+  login(input: $input)
+}
+
+type PackageInput {
+  avg: Int!
+  total: Int!
+  randomizable: Boolean!
+  sort_id: Int!
+  is_visible: Boolean!
+  thumb: String!
+  name: String!
+}
+mutation CreatePackage($input: PackageInput!) {
+    createPackage(
+        input: $input
+    )
+}
+
+mutation UpdatePackage($id: Int!, $input: PackageInput!) {
+    updatePackage(id: $id, input: $input)
+}
+
+mutation DeletePackage($id: Int!) {
+    deletePackage(id: $id)
 }

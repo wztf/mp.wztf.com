@@ -268,3 +268,16 @@ query Menus($input: String!) {
     }
   }
 }
+
+query Packages {
+    packages {
+        id
+        name
+        thumb
+        is_visible
+        sort_id
+        randomizable
+        total
+        avg
+    }
+}

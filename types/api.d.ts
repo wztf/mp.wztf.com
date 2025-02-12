@@ -161,4 +161,15 @@ export declare namespace API {
     message?: string
     data: T
   }
+
+  export interface Package {
+    id: number
+    name: string
+    thumb?: string
+    is_visible: boolean
+    sort_id: number
+    randomizable: boolean
+    total: number
+    avg: number
+  }
 }
