@@ -141,7 +141,7 @@ const CoreDrawer = ({ item, open, setOpen, refetch }: Props) => {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent className='max-w-screen-sm w-full'>
+      <DialogContent className='md:max-w-(--breakpoint-sm) w-full'>
         <DialogHeader>
           <DialogTitle>{item ? '编辑系统' : '创建系统'}</DialogTitle>
           <DialogDescription>新增加的系统需要重新赋予权限跟菜单，才能生效.</DialogDescription>

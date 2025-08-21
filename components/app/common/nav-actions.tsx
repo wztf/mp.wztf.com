@@ -89,7 +89,7 @@ export function NavActions() {
   return (
     <div className='flex items-center gap-2 text-sm'>
       <DropdownMenu>
-        <DropdownMenuTrigger className='outline-none'>
+        <DropdownMenuTrigger className='outline-hidden'>
           <Button variant='ghost' size='icon' className='h-7 w-7'>
             <HiMiniLanguage />
           </Button>
@@ -122,7 +122,7 @@ export function NavActions() {
       </Button>
 
       <DropdownMenu>
-        <DropdownMenuTrigger className='outline-none'>
+        <DropdownMenuTrigger className='outline-hidden'>
           <Avatar className='h-7 w-7'>
             <AvatarImage src={profile?.profile_url} />
             <AvatarFallback>U</AvatarFallback>

@@ -106,7 +106,7 @@ const RoleDrawer = ({ menus, item, open, setOpen, refetch }: Props) => {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent className='max-w-screen-lg w-full'>
+      <DialogContent className='md:max-w-(--breakpoint-lg) w-full'>
         <DialogHeader>
           <DialogTitle>菜单管理</DialogTitle>
           <DialogDescription className='flex justify-between items-center'>

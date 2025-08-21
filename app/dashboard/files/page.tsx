@@ -92,7 +92,7 @@ const Page = () => {
                   <Separator />
                   <h2 className='my-2 px-4 text-lg font-bold tracking-tight'>所有图片</h2>
                   <div className='space-y-1'>
-                    <button className='inline-flex items-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80 h-9 px-4 py-2 w-full justify-start'>
+                    <button className='inline-flex items-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 bg-secondary text-secondary-foreground shadow-xs hover:bg-secondary/80 h-9 px-4 py-2 w-full justify-start'>
                       <svg
                         xmlns='http://www.w3.org/2000/svg'
                         viewBox='0 0 24 24'
@@ -111,7 +111,7 @@ const Page = () => {
                     {fileGroups.map(fileGroup => (
                       <button
                         key={fileGroup.id}
-                        className='inline-flex items-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 hover:bg-accent hover:text-accent-foreground h-9 px-4 py-2 w-full justify-start'
+                        className='inline-flex items-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 hover:bg-accent hover:text-accent-foreground h-9 px-4 py-2 w-full justify-start'
                         onClick={() => onSelect(fileGroup)}
                       >
                         {fileGroup.group_name}
@@ -138,7 +138,7 @@ const Page = () => {
                         aria-controls='radix-:r3tm:-content-music'
                         data-state='active'
                         id='radix-:r3tm:-trigger-music'
-                        className='inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-1 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow relative'
+                        className='inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-1 text-sm font-medium ring-offset-background transition-all focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm relative'
                         data-orientation='horizontal'
                         data-radix-collection-item=''
                       >
@@ -151,7 +151,7 @@ const Page = () => {
                         aria-controls='radix-:r3tm:-content-podcasts'
                         data-state='inactive'
                         id='radix-:r3tm:-trigger-podcasts'
-                        className='inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-1 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow'
+                        className='inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-1 text-sm font-medium ring-offset-background transition-all focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm'
                         data-orientation='horizontal'
                         data-radix-collection-item=''
                       >
@@ -165,7 +165,7 @@ const Page = () => {
                         data-state='inactive'
                         data-disabled=''
                         id='radix-:r3tm:-trigger-live'
-                        className='inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-1 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow'
+                        className='inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-1 text-sm font-medium ring-offset-background transition-all focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm'
                         data-orientation='horizontal'
                         data-radix-collection-item=''
                       >
@@ -214,7 +214,7 @@ const Page = () => {
                     role='tabpanel'
                     aria-labelledby='radix-:r3tm:-trigger-music'
                     id='radix-:r3tm:-content-music'
-                    className='mt-2 ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 border-none p-0 outline-none'
+                    className='mt-2 ring-offset-background focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 border-none p-0 outline-hidden'
                   >
                     <div className='flex items-center justify-between'>
                       <div className='space-y-1'>
@@ -229,7 +229,7 @@ const Page = () => {
                     <div
                       data-orientation='horizontal'
                       role='none'
-                      className='shrink-0 bg-border h-[1px] w-full my-4'
+                      className='shrink-0 bg-border h-px w-full my-4'
                     ></div>
                     <div className='relative'>
                       <div dir='ltr' className='relative overflow-hidden'>
@@ -246,7 +246,7 @@ const Page = () => {
                                       height='330'
                                       decoding='async'
                                       data-nimg='1'
-                                      className='h-auto w-auto object-cover transition-all hover:scale-105 aspect-[3/4]'
+                                      className='h-auto w-auto object-cover transition-all hover:scale-105 aspect-3/4'
                                       src='https://ui.shadcn.com/_next/image?url=https%3A%2F%2Fimages.unsplash.com%2Fphoto-1611348586804-61bf6c080437%3Fw%3D300%26dpr%3D2%26q%3D80&w=640&q=75'
                                     />
                                   </div>
@@ -266,7 +266,7 @@ const Page = () => {
                                       height='330'
                                       decoding='async'
                                       data-nimg='1'
-                                      className='h-auto w-auto object-cover transition-all hover:scale-105 aspect-[3/4]'
+                                      className='h-auto w-auto object-cover transition-all hover:scale-105 aspect-3/4'
                                       src='https://ui.shadcn.com/_next/image?url=https%3A%2F%2Fimages.unsplash.com%2Fphoto-1611348586804-61bf6c080437%3Fw%3D300%26dpr%3D2%26q%3D80&w=640&q=75'
                                     />
                                   </div>
@@ -286,7 +286,7 @@ const Page = () => {
                                       height='330'
                                       decoding='async'
                                       data-nimg='1'
-                                      className='h-auto w-auto object-cover transition-all hover:scale-105 aspect-[3/4]'
+                                      className='h-auto w-auto object-cover transition-all hover:scale-105 aspect-3/4'
                                       src='https://ui.shadcn.com/_next/image?url=https%3A%2F%2Fimages.unsplash.com%2Fphoto-1611348586804-61bf6c080437%3Fw%3D300%26dpr%3D2%26q%3D80&w=640&q=75'
                                     />
                                   </div>
@@ -306,7 +306,7 @@ const Page = () => {
                                       height='330'
                                       decoding='async'
                                       data-nimg='1'
-                                      className='h-auto w-auto object-cover transition-all hover:scale-105 aspect-[3/4]'
+                                      className='h-auto w-auto object-cover transition-all hover:scale-105 aspect-3/4'
                                       src='https://ui.shadcn.com/_next/image?url=https%3A%2F%2Fimages.unsplash.com%2Fphoto-1611348586804-61bf6c080437%3Fw%3D300%26dpr%3D2%26q%3D80&w=640&q=75'
                                     />
                                   </div>
@@ -328,7 +328,7 @@ const Page = () => {
                     <div
                       data-orientation='horizontal'
                       role='none'
-                      className='shrink-0 bg-border h-[1px] w-full my-4'
+                      className='shrink-0 bg-border h-px w-full my-4'
                     ></div>
                     <div className='relative'>
                       <div dir='ltr' className='relative overflow-hidden'>
@@ -467,7 +467,7 @@ const Page = () => {
                     role='tabpanel'
                     aria-labelledby='radix-:r3tm:-trigger-podcasts'
                     id='radix-:r3tm:-content-podcasts'
-                    className='mt-2 ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 h-full flex-col border-none p-0 data-[state=active]:flex'
+                    className='mt-2 ring-offset-background focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 h-full flex-col border-none p-0 data-[state=active]:flex'
                   ></div>
                 </div>
 

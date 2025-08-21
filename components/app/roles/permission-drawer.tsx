@@ -99,7 +99,7 @@ const RoleDrawer = ({ permissionTypes, item, open, setOpen, refetch }: Props) =>
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent className='max-w-screen-lg w-full'>
+      <DialogContent className='md:max-w-(--breakpoint-lg) w-full'>
         <DialogHeader>
           <DialogTitle>权限管理</DialogTitle>
           <DialogDescription>

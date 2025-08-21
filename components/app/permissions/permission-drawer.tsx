@@ -192,7 +192,7 @@ const PermissionDrawer = ({ permission, open, setOpen, refetch, types }: Props) 
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent className='max-w-screen-sm w-full'>
+      <DialogContent className='md:max-w-(--breakpoint-sm) w-full'>
         <DialogHeader>
           <DialogTitle>{permission ? '编辑权限' : '创建权限'}</DialogTitle>
           <DialogDescription>新增加的权限需要重新赋予权限跟菜单，才能生效.</DialogDescription>

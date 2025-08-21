@@ -126,7 +126,7 @@ const Page = () => {
       <Flex justify='between' className='h-screen w-screen flex-col bg-gray-50'>
         <Flex className='invisible text-center'>TODO</Flex>
         <Box>
-          <Container size='1' className='mx-auto max-w-screen-sm rounded-md sm:w-11/12'>
+          <Container size='1' className='mx-auto md:max-w-(--breakpoint-sm) rounded-md sm:w-11/12'>
             <Card size='3' variant='ghost' className='shadow bg-white'>
               <Flex justify='between' align='center' className='mb-2.5 border-b pb-2.5'>
                 <Heading as='h2' className='text-lg text-gray-700 font-bold leading-none'>
@@ -171,12 +171,12 @@ const Page = () => {
                           <Flex
                             justify='between'
                             align='center'
-                            className='text-base border rounded-md border-input bg-transparent focus-within:outline-none focus-within:ring-1 focus-within:ring-ring'
+                            className='text-base border rounded-md border-input bg-transparent focus-within:outline-hidden focus-within:ring-1 focus-within:ring-ring'
                           >
                             <FormControl>
                               <Input
                                 type='password'
-                                className='h-12 border-none outline-none focus:border-none focus:outline-none focus-visible:ring-0 focus-visible:border-none focus-visible:outline-none'
+                                className='h-12 border-none outline-hidden focus:border-none focus:outline-hidden focus-visible:ring-0 focus-visible:border-none focus-visible:outline-hidden'
                                 placeholder='请输入验证码'
                                 {...field}
                               />

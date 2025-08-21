@@ -103,12 +103,12 @@ const RuiRegister = ({ onReset }: Props) => {
                 <Flex
                   justify='between'
                   align='center'
-                  className='text-base border rounded-md border-input bg-transparent focus-within:outline-none focus-within:ring-1 focus-within:ring-ring'
+                  className='text-base border rounded-md border-input bg-transparent focus-within:outline-hidden focus-within:ring-1 focus-within:ring-ring'
                 >
                   <FormControl>
                     <Input
                       type='password'
-                      className='h-12 border-none outline-none focus:border-none focus:outline-none focus-visible:ring-0 focus-visible:border-none focus-visible:outline-none'
+                      className='h-12 border-none outline-hidden focus:border-none focus:outline-hidden focus-visible:ring-0 focus-visible:border-none focus-visible:outline-hidden'
                       placeholder='请输入登录密码'
                       {...field}
                     />

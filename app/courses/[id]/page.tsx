@@ -46,7 +46,7 @@ const Page = () => {
                 tabIndex={0}
                 src='https://i.ibb.co/fnNqJrx/Rectangle-7.png'
                 alt='guy with glasses'
-                className='w-20 h-20 rounded-lg ml-6 flex-shrink-0 object-cover object-fit'
+                className='w-20 h-20 rounded-lg ml-6 shrink-0 object-cover object-fit'
               />
             </div>
           </div>

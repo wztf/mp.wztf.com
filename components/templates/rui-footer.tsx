@@ -73,7 +73,7 @@ const RuiFooter = () => {
               </p>
               <Link
                 href='/assessments'
-                className='py-2.5 px-5 h-9 block w-fit bg-indigo-600 rounded-full shadow-sm text-xs text-white mx-auto transition-all  duration-500 hover:bg-indigo-700 lg:mx-0'
+                className='py-2.5 px-5 h-9 block w-fit bg-indigo-600 rounded-full shadow-xs text-xs text-white mx-auto transition-all  duration-500 hover:bg-indigo-700 lg:mx-0'
               >
                 开始测试
               </Link>
@@ -198,7 +198,7 @@ const RuiFooter = () => {
                 <Flex
                   justify='center'
                   align='center'
-                  className='w-8 h-8 rounded-full transition-all duration-500 bg-[linear-gradient(45deg,#FEE411_6.9%,#FEDB16_10.98%,#FEC125_17.77%,#FE983D_26.42%,#FE5F5E_36.5%,#FE2181_46.24%,#9000DC_85.57%)]  hover:bg-gradient-to-b from-gray-900 to-gray-900
+                  className='w-8 h-8 rounded-full transition-all duration-500 bg-[linear-gradient(45deg,#FEE411_6.9%,#FEDB16_10.98%,#FEC125_17.77%,#FE983D_26.42%,#FE5F5E_36.5%,#FE2181_46.24%,#9000DC_85.57%)]  hover:bg-linear-to-b from-gray-900 to-gray-900
                         '
                 >
                   <FaInstagram className='text-white' />

@@ -83,7 +83,7 @@ const Page = () => {
       <Flex justify='between' className='h-screen w-screen flex-col bg-gray-50'>
         <Flex className='invisible text-center'>TODO</Flex>
         <Box>
-          <Container className='w-[90vw] mx-auto max-w-screen-sm rounded-md sm:w-11/12'>
+          <Container className='w-[90vw] mx-auto md:max-w-(--breakpoint-sm) rounded-md sm:w-11/12'>
             <Card size='3' variant='ghost' className='shadow bg-white'>
               <Flex justify='between' align='center' className='mb-2.5 border-b pb-2.5'>
                 <Heading as='h2' className='text-lg text-gray-700 font-bold leading-none'>

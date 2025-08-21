@@ -97,7 +97,7 @@ const Lockscreen = () => {
           <div className='flex justify-center gap-3 sm:gap-8'>
             <div className='flex flex-col gap-5 relative'>
               <div className='h-16 w-16 sm:w-32 sm:h-32 lg:w-40 lg:h-40 flex justify-between items-center bg-[#343650] rounded-lg'>
-                <div className='relative h-2.5 w-2.5 sm:h-3 sm:w-3 !-left-[6px] rounded-full bg-gray-900'></div>
+                <div className='relative h-2.5 w-2.5 sm:h-3 sm:w-3 -left-[6px]! rounded-full bg-gray-900'></div>
                 <span className='lg:text-7xl sm:text-6xl text-3xl font-semibold text-[#a5b4fc]'>
                   {currentTime?.days}
                 </span>
@@ -107,7 +107,7 @@ const Lockscreen = () => {
             </div>
             <div className='flex flex-col gap-5 relative'>
               <div className='h-16 w-16 sm:w-32 sm:h-32 lg:w-40 lg:h-40 flex justify-between items-center bg-[#343650] rounded-lg'>
-                <div className='relative h-2.5 w-2.5 sm:h-3 sm:w-3 !-left-[6px] rounded-full bg-gray-900'></div>
+                <div className='relative h-2.5 w-2.5 sm:h-3 sm:w-3 -left-[6px]! rounded-full bg-gray-900'></div>
                 <span className='lg:text-7xl sm:text-6xl text-3xl font-semibold text-[#a5b4fc]'>
                   {currentTime?.hours}
                 </span>
@@ -117,7 +117,7 @@ const Lockscreen = () => {
             </div>
             <div className='flex flex-col gap-5 relative'>
               <div className='h-16 w-16 sm:w-32 sm:h-32 lg:w-40 lg:h-40 flex justify-between items-center bg-[#343650] rounded-lg'>
-                <div className='relative h-2.5 w-2.5 sm:h-3 sm:w-3 !-left-[6px] rounded-full bg-gray-900'></div>
+                <div className='relative h-2.5 w-2.5 sm:h-3 sm:w-3 -left-[6px]! rounded-full bg-gray-900'></div>
                 <span className='lg:text-7xl sm:text-6xl text-3xl font-semibold text-[#a5b4fc]'>
                   {currentTime?.minutes}
                 </span>
@@ -127,7 +127,7 @@ const Lockscreen = () => {
             </div>
             <div className='flex flex-col gap-5 relative'>
               <div className='h-16 w-16 sm:w-32 sm:h-32 lg:w-40 lg:h-40 flex justify-between items-center bg-[#343650] rounded-lg'>
-                <div className='relative h-2.5 w-2.5 sm:h-3 sm:w-3 !-left-[6px] rounded-full bg-gray-900'></div>
+                <div className='relative h-2.5 w-2.5 sm:h-3 sm:w-3 -left-[6px]! rounded-full bg-gray-900'></div>
                 <span className='lg:text-7xl sm:text-6xl text-3xl font-semibold text-[#a5b4fc]'>
                   {currentTime?.seconds}
                 </span>

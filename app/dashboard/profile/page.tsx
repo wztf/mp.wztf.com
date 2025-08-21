@@ -65,7 +65,7 @@ const Page = () => {
       <h1>Profile</h1>
       <input type='file' name='file' onChange={onChange} />
       <Tabs.Root
-        className='max-w-screen-xl mx-auto mt-4 px-4 md:px-8'
+        className='max-w-(--breakpoint-xl) mx-auto mt-4 px-4 md:px-8'
         value={selectedTab}
         onValueChange={val => setSelectedTab(val)}
         orientation='vertical'
@@ -77,7 +77,7 @@ const Page = () => {
           {tabItems.map((item, idx) => (
             <Tabs.Trigger
               key={idx}
-              className='group outline-none px-1.5 border-l-2 border-white text-gray-500 data-[state=active]:border-indigo-600 data-[state=active]:text-indigo-600'
+              className='group outline-hidden px-1.5 border-l-2 border-white text-gray-500 data-[state=active]:border-indigo-600 data-[state=active]:text-indigo-600'
               value={item}
             >
               <div className='py-1.5 px-3 rounded-lg duration-150 group-hover:text-indigo-600 group-hover:bg-gray-100 font-medium'>
@@ -101,7 +101,7 @@ const Page = () => {
           </svg>
           <select
             value={selectedTab}
-            className='py-2 px-3 w-full bg-transparent appearance-none outline-none border rounded-lg shadow-sm focus:border-indigo-600 text-sm'
+            className='py-2 px-3 w-full bg-transparent appearance-none outline-hidden border rounded-lg shadow-xs focus:border-indigo-600 text-sm'
             onChange={e => setSelectedTab(e.target.value)}
           >
             {tabItems.map((item, idx) => (

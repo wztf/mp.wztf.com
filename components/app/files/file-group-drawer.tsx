@@ -146,7 +146,7 @@ const FileGroupDrawer = ({ fileGroup, open, setOpen, refetch, fileGroups }: Prop
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent className='max-w-screen-sm w-full'>
+      <DialogContent className='md:max-w-(--breakpoint-sm) w-full'>
         <DialogHeader>
           <DialogTitle>{fileGroup ? '编辑分组' : '创建分组'}</DialogTitle>
           <DialogDescription>新增加的分组需要重新赋予分组跟菜单，才能生效.</DialogDescription>

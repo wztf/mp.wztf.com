@@ -23,7 +23,7 @@ const RuiBacktop = () => {
   if (!visible) return null
 
   return (
-    <div className='fixed bottom-24 md:bottom-8 right-4 z-[99]'>
+    <div className='fixed bottom-24 md:bottom-8 right-4 z-99'>
       <Flex
         justify='center'
         align='center'

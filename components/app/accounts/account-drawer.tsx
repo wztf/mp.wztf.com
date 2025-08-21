@@ -177,7 +177,7 @@ const AccountDrawer = ({ platformTypes, item, open, setOpen, refetch }: Props) =
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent className='max-w-screen-sm w-full'>
+      <DialogContent className='md:max-w-(--breakpoint-sm) w-full'>
         <DialogHeader>
           <DialogTitle>{item ? '编辑表单' : '创建表单'}</DialogTitle>
           <DialogDescription>这里有你想知道的一切.</DialogDescription>

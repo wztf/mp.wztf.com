@@ -180,7 +180,7 @@ const TypeDrawer = ({ types, refetch }: Props) => {
           <Text>权限分类</Text>
         </Button>
       </DialogTrigger>
-      <DialogContent className={`w-full ${tabKey === 0 ? 'max-w-screen-lg' : 'max-w-[520px]'}`}>
+      <DialogContent className={`w-full ${tabKey === 0 ? 'md:max-w-(--breakpoint-lg)' : 'max-w-[520px]'}`}>
         <DialogHeader>
           <DialogTitle>权限分类</DialogTitle>
           <DialogDescription className='flex justify-between items-center'>
