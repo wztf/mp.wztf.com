@@ -1,5 +1,4 @@
 'use client'
-
 import {
   AudioWaveform,
   BookOpen,
@@ -9,8 +8,7 @@ import {
   GalleryVerticalEnd,
   Map,
   PieChart,
-  Settings2,
-  SquareTerminal
+  Settings2
 } from 'lucide-react'
 import * as React from 'react'
 
@@ -20,6 +18,7 @@ import { NavProjects } from '@components/app/common/nav-projects'
 import { NavUser } from '@components/app/common/nav-user'
 import { TeamSwitcher } from '@components/app/common/team-switcher'
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarRail } from '@components/ui/sidebar'
+
 // This is sample data.
 const data = {
   user: {
@@ -48,7 +47,7 @@ const data = {
     {
       title: '用户管理',
       url: '#',
-      icon: SquareTerminal,
+      icon: Settings2,
       isActive: true,
       items: [
         {
@@ -232,7 +231,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <TeamSwitcher teams={data.teams} />
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={data.navMain} />
+        <NavMain />
         <NavProjects projects={data.projects} />
       </SidebarContent>
       <SidebarFooter>
