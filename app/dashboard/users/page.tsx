@@ -2,6 +2,9 @@ import { Text } from '@radix-ui/themes'
 import { CloudUpload, FolderPlus } from 'lucide-react'
 import { SiPandora } from 'react-icons/si'
 
+import { Button } from '@components/ui/button'
+import { Separator } from '@components/ui/separator'
+
 import {
   Pagination,
   PaginationContent,
@@ -11,9 +14,6 @@ import {
   PaginationNext,
   PaginationPrevious
 } from '@/components/ui/pagination'
-
-import { Button } from '@components/ui/button'
-import { Separator } from '@components/ui/separator'
 
 const Page = () => {
   return (

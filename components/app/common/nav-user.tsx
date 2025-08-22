@@ -5,8 +5,6 @@ import { BadgeCheck, Bell, ChevronsUpDown, CreditCard, LogOut, Sparkles } from '
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 
-import { useStore } from '@/store'
-
 import { Avatar, AvatarFallback, AvatarImage } from '@components/ui/avatar'
 import {
   DropdownMenu,
@@ -18,6 +16,8 @@ import {
   DropdownMenuTrigger
 } from '@components/ui/dropdown-menu'
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from '@components/ui/sidebar'
+
+import { useStore } from '@/store'
 
 export function NavUser() {
   const { isMobile } = useSidebar()

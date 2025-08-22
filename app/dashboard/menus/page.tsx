@@ -3,23 +3,22 @@
 import { ServerError, useLazyQuery } from '@apollo/client'
 import { ApolloError } from '@apollo/client/errors'
 import { Flex, Spinner, Text } from '@radix-ui/themes'
-
-import type { TreeDataNode, TreeProps } from 'antd'
-
 import { Tree } from 'antd'
 import { Plus } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
 
-import { MenuDrawer } from '@/components/app/menus'
-
 import { Button } from '@components/ui/button'
+
 import { MenusDocument } from '@generated/graphql'
 
+import { MenuDrawer } from '@/components/app/menus'
 import { PermissionEnum } from '@/enums/permissionEnum'
 import { usePermission } from '@/hooks/user-permission'
 
 import { API } from '/#/api'
+
+import type { TreeDataNode, TreeProps } from 'antd'
 
 const Page = () => {
   const { hasPermission } = usePermission()

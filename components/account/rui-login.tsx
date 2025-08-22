@@ -12,13 +12,14 @@ import { useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
 import { z } from 'zod'
 
+import { appid } from '@config/index'
+
+import { LoginDocument } from '@generated/graphql'
+
 import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { useStore } from '@/store'
-
-import { appid } from '@config/index'
-import { LoginDocument } from '@generated/graphql'
 
 type Props = {
   onReset: (method: 'sms' | 'password') => void

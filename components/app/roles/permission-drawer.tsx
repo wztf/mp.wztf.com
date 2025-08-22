@@ -1,21 +1,17 @@
 'use client'
 
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-
 import { ServerError, useMutation } from '@apollo/client'
 import { ApolloError } from '@apollo/client/errors'
-
-import { Button } from '@/components/ui/button'
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
-
 import { Checkbox } from 'antd'
+import { useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
 
 import { UpdateRolePermissionsDocument } from '@generated/graphql'
 
+import { Button } from '@/components/ui/button'
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { useStore } from '@/store'
-
-import { useEffect, useState } from 'react'
 
 import { API } from '/#/api'
 

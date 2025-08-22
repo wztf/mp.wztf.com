@@ -7,6 +7,12 @@ import { CloudUpload, FolderPlus } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
 
+import { FileGroupDrawer } from '@components/app/files'
+import { Button } from '@components/ui/button'
+import { Separator } from '@components/ui/separator'
+
+import { FileGroupsDocument } from '@generated/graphql'
+
 import {
   Dialog,
   DialogContent,
@@ -27,11 +33,6 @@ import {
   PaginationNext,
   PaginationPrevious
 } from '@/components/ui/pagination'
-
-import { FileGroupDrawer } from '@components/app/files'
-import { Button } from '@components/ui/button'
-import { Separator } from '@components/ui/separator'
-import { FileGroupsDocument } from '@generated/graphql'
 
 import { API } from '/#/api'
 

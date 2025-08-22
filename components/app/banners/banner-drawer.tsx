@@ -27,8 +27,8 @@ import { Input } from '@components/ui/input'
 import { Switch } from '@components/ui/switch'
 import { Textarea } from '@components/ui/textarea'
 
-import type { BannerInput } from '@generated/graphql'
 import { CreateBannerDocument, DeleteBannerDocument, UpdateBannerDocument } from '@generated/graphql'
+import type { BannerInput } from '@generated/graphql'
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { appid, baseUrl } from '@/config'

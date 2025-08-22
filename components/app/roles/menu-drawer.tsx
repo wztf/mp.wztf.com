@@ -1,25 +1,21 @@
 'use client'
 
-import { Button } from '@/components/ui/button'
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
-
 import { ServerError, useMutation } from '@apollo/client'
 import { ApolloError } from '@apollo/client/errors'
-
-import type { TreeDataNode, TreeProps } from 'antd'
-
 import { Checkbox, Tree } from 'antd'
+import { useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
 
 import type { RoleMenuInput } from '@generated/graphql'
-
 import { UpdateRoleMenusDocument } from '@generated/graphql'
 
+import { Button } from '@/components/ui/button'
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { useStore } from '@/store'
 
-import { useEffect, useState } from 'react'
-
 import { API } from '/#/api'
+
+import type { TreeDataNode, TreeProps } from 'antd'
 
 type Props = {
   menus: API.Menu[]

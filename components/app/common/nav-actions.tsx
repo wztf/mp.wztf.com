@@ -10,8 +10,6 @@ import { HiMiniLanguage } from 'react-icons/hi2'
 import { IoSettingsOutline } from 'react-icons/io5'
 import { SlSizeFullscreen } from 'react-icons/sl'
 
-import { useStore } from '@/store'
-
 import {
   AlertDialog,
   AlertDialogAction,
@@ -46,6 +44,8 @@ import {
   SheetTrigger
 } from '@components/ui/sheet'
 import { Switch } from '@components/ui/switch'
+
+import { useStore } from '@/store'
 
 const DropdownMenuArrow = DropdownMenuPrimitive.Arrow
 

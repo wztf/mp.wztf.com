@@ -2,10 +2,10 @@ import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 import React from 'react'
 
-import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar'
-
 import { AppSidebar } from '@components/app/common/app-sidebar'
 import { NavHeader } from '@components/app/common/nav-header'
+
+import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar'
 
 type Props = {
   children: React.ReactNode
