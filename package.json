@@ -134,6 +134,7 @@
     "js-cookie": "^3.0.5",
     "postcss": "^8.4.47",
     "preact": "^10.25.4",
+    "preact-compat": "^3.19.0",
     "pure-react-carousel": "^1.32.0",
     "react-device-detect": "^2.2.3",
     "react-scroll": "^1.9.0",
