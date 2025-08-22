@@ -22,8 +22,11 @@ export type AccountInput = {
   app_secret?: InputMaybe<Scalars['String']['input']>;
   appid: Scalars['String']['input'];
   callback_url?: InputMaybe<Scalars['String']['input']>;
+  encoding_aes_key?: InputMaybe<Scalars['String']['input']>;
+  gh_id?: InputMaybe<Scalars['String']['input']>;
   name: Scalars['String']['input'];
   platform_type: Scalars['Int']['input'];
+  token?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type AccountObject = {
@@ -31,9 +34,71 @@ export type AccountObject = {
   app_secret?: Maybe<Scalars['String']['output']>;
   appid: Scalars['String']['output'];
   callback_url?: Maybe<Scalars['String']['output']>;
+  encoding_aes_key?: Maybe<Scalars['String']['output']>;
+  gh_id?: Maybe<Scalars['String']['output']>;
   id: Scalars['Int']['output'];
   name: Scalars['String']['output'];
   platform_type: Scalars['Int']['output'];
+  token?: Maybe<Scalars['String']['output']>;
+};
+
+export type BannerInput = {
+  cover_image?: InputMaybe<Scalars['String']['input']>;
+  expired_at?: InputMaybe<Scalars['Int']['input']>;
+  hit_count: Scalars['Int']['input'];
+  is_link: Scalars['Boolean']['input'];
+  is_video: Scalars['Boolean']['input'];
+  is_visible: Scalars['Boolean']['input'];
+  link_url?: InputMaybe<Scalars['String']['input']>;
+  sort_id: Scalars['Int']['input'];
+  status: Scalars['Int']['input'];
+  title?: InputMaybe<Scalars['String']['input']>;
+  video_url?: InputMaybe<Scalars['String']['input']>;
+  view_type: Scalars['Int']['input'];
+  views_count: Scalars['Int']['input'];
+};
+
+export type BannerObject = {
+  cover_image?: Maybe<Scalars['String']['output']>;
+  expired_at?: Maybe<Scalars['Int']['output']>;
+  hit_count: Scalars['Int']['output'];
+  id: Scalars['Int']['output'];
+  is_link: Scalars['Boolean']['output'];
+  is_video: Scalars['Boolean']['output'];
+  is_visible: Scalars['Boolean']['output'];
+  link_url?: Maybe<Scalars['String']['output']>;
+  sort_id: Scalars['Int']['output'];
+  status: Scalars['Int']['output'];
+  title: Scalars['String']['output'];
+  video_url?: Maybe<Scalars['String']['output']>;
+  view_type: Scalars['Int']['output'];
+  views_count: Scalars['Int']['output'];
+};
+
+export type CategoryInput = {
+  core_id: Scalars['Int']['input'];
+  description: Scalars['String']['input'];
+  is_visible: Scalars['Boolean']['input'];
+  keywords: Scalars['String']['input'];
+  parent_id: Scalars['Int']['input'];
+  slug?: InputMaybe<Scalars['String']['input']>;
+  sort_id: Scalars['Int']['input'];
+  thumb?: InputMaybe<Scalars['String']['input']>;
+  title: Scalars['String']['input'];
+};
+
+export type CategoryObject = {
+  children?: Maybe<Array<CategoryObject>>;
+  core_id: Scalars['Int']['output'];
+  description: Scalars['String']['output'];
+  id: Scalars['Int']['output'];
+  is_visible: Scalars['Boolean']['output'];
+  keywords: Scalars['String']['output'];
+  parent_id: Scalars['Int']['output'];
+  slug?: Maybe<Scalars['String']['output']>;
+  sort_id: Scalars['Int']['output'];
+  thumb?: Maybe<Scalars['String']['output']>;
+  title: Scalars['String']['output'];
 };
 
 export type CoreInput = {
@@ -133,6 +198,52 @@ export type Mutation = {
    * account was created successfully, or an error if the operation fails.
    */
   createAccount: Scalars['String']['output'];
+  /**
+   * Creates a new banner in the database.
+   *
+   * This asynchronous function constructs a `Banner` object from the provided
+   * `BannerInput` and stores it in the database. All fields are initialized
+   * from the input, with optional fields defaulting to zero or `None` as applicable.
+   *
+   * # Arguments
+   *
+   * * `ctx` - The GraphQL context, used to access application state.
+   * * `input` - A `BannerInput` object containing the details of the banner to be created.
+   *
+   * # Returns
+   *
+   * A `Result` which is:
+   * * `Ok(String)` - A success message if the banner is created successfully.
+   * * `Err(Error)` - An error message if the banner creation fails.
+   *
+   * # Errors
+   *
+   * Returns an error if the banner creation operation fails due to database issues.
+   */
+  createBanner: Scalars['String']['output'];
+  /**
+   * Creates a new category in the database.
+   *
+   * This asynchronous function constructs a `Category` object from the provided
+   * `CategoryInput` and stores it in the database. All fields are initialized
+   * from the input, with optional fields defaulting to zero or `None` as applicable.
+   *
+   * # Arguments
+   *
+   * * `ctx` - The GraphQL context, used to access the application state.
+   * * `input` - A `CategoryInput` object containing the details of the category to be created.
+   *
+   * # Returns
+   *
+   * A `Result` which is:
+   * * `Ok(String)` - A success message if the category is created successfully.
+   * * `Err(Error)` - An error message if the category creation fails.
+   *
+   * # Errors
+   *
+   * Returns an error if the category creation operation fails due to database issues.
+   */
+  createCategory: Scalars['String']['output'];
   /**
    * Creates a new core in the database.
    *
@@ -284,6 +395,52 @@ export type Mutation = {
    * during the deletion process.
    */
   deleteAccount: Scalars['String']['output'];
+  /**
+   * Deletes an existing banner by its unique identifier.
+   *
+   * This asynchronous method deletes a banner from the database based
+   * on the provided `id`. It first attempts to retrieve the banner
+   * to ensure it exists before proceeding with the deletion process.
+   *
+   * # Arguments
+   *
+   * * `ctx` - The GraphQL context containing shared data, including the application state.
+   * * `id` - The unique identifier of the banner to be deleted.
+   *
+   * # Returns
+   *
+   * Returns a `Result` containing a string with the value `"ok"` if the
+   * banner was deleted successfully, or an error if the operation fails.
+   *
+   * # Errors
+   *
+   * Returns an error if the banner is not found or if there is a failure
+   * during the deletion process.
+   */
+  deleteBanner: Scalars['String']['output'];
+  /**
+   * Deletes an existing category by its unique identifier.
+   *
+   * This asynchronous method deletes a category from the database based
+   * on the provided `id`. It first attempts to retrieve the category
+   * to ensure it exists before proceeding with the deletion process.
+   *
+   * # Arguments
+   *
+   * * `ctx` - The GraphQL context containing shared data, including the application state.
+   * * `id` - The unique identifier of the category to be deleted.
+   *
+   * # Returns
+   *
+   * Returns a `Result` containing a string with the value `"ok"` if the
+   * category was deleted successfully, or an error if the operation fails.
+   *
+   * # Errors
+   *
+   * Returns an error if the category is not found or if there is a failure
+   * during the deletion process.
+   */
+  deleteCategory: Scalars['String']['output'];
   /**
    * Deletes an existing core by its unique identifier.
    *
@@ -458,6 +615,36 @@ export type Mutation = {
    * in the database operation.
    */
   deleteSetting: Scalars['String']['output'];
+  /**
+   * Authenticates a user and generates a JWT token.
+   *
+   * This asynchronous function processes user login by decrypting the input
+   * payload, verifying the signature, and retrieving user information. If
+   * the user is authenticated successfully, a JWT token is generated and
+   * returned.
+   *
+   * # Arguments
+   *
+   * * `ctx` - The GraphQL context containing shared data, including the
+   * application state.
+   * * `input` - A string containing encrypted user information.
+   *
+   * # Returns
+   *
+   * Returns a `Result` containing a JWT token as a string if the login is
+   * successful, or an error if the operation fails.
+   *
+   * # Errors
+   *
+   * Returns an error if:
+   * * The input cannot be decrypted.
+   * * The signature is invalid.
+   * * The code or app is not found in the input.
+   * * The account cannot be retrieved.
+   * * The Google user information cannot be obtained.
+   * * The user cannot be found or stored.
+   * * A token cannot be generated.
+   */
   login: Scalars['String']['output'];
   /**
    * Logs out the current user from the system.
@@ -485,7 +672,36 @@ export type Mutation = {
    */
   logout: Scalars['String']['output'];
   resetPassword: Scalars['String']['output'];
-  signup: Scalars['String']['output'];
+  /**
+   * Registers a new user or logs in an existing user.
+   *
+   * This asynchronous function handles the signup process, which involves
+   * verifying the input signature, timestamp, and user credentials. If the
+   * provided information is valid and the user is authenticated, a JWT token
+   * is generated and returned.
+   *
+   * # Arguments
+   *
+   * * `ctx` - The GraphQL context containing shared data, including the
+   * application state.
+   * * `input` - A string containing encrypted user information.
+   *
+   * # Returns
+   *
+   * Returns a `Result` containing a JWT token as a string if the signup or
+   * login is successful, or an error if the operation fails.
+   *
+   * # Errors
+   *
+   * Returns an error if:
+   * * The input cannot be decrypted.
+   * * The signature is invalid.
+   * * The timestamp is invalid or expired.
+   * * The email or password is not found in the input.
+   * * The user cannot be found or the password is incorrect.
+   * * A token cannot be generated.
+   */
+  signin: Scalars['String']['output'];
   /**
    * Updates an existing account with the given parameters.
    *
@@ -512,6 +728,30 @@ export type Mutation = {
    */
   updateAccount: Scalars['String']['output'];
   /**
+   * Updates an existing banner in the database.
+   *
+   * This asynchronous function fetches the current banner record by its `id` and updates
+   * its fields based on the values provided in the `input`. If a field in the `input` is `None`,
+   * the function retains the current value from the existing record.
+   *
+   * # Arguments
+   *
+   * * `ctx` - The GraphQL context containing application data.
+   * * `id` - The unique identifier of the banner to be updated.
+   * * `input` - A `BannerInput` object containing the updated banner details.
+   *
+   * # Returns
+   *
+   * Returns a `Result` containing a string with the value `"ok"` if the banner is updated
+   * successfully, or an error if the operation fails.
+   *
+   * # Errors
+   *
+   * Returns an error if the banner is not found, or if there is a failure during the update process.
+   */
+  updateBanner: Scalars['String']['output'];
+  updateCategory: Scalars['String']['output'];
+  /**
    * Updates an existing core in the database.
    *
    * This asynchronous function fetches the current core record by its `id` and updates
@@ -534,6 +774,28 @@ export type Mutation = {
    * Returns an error if the core is not found, or if there is a failure during the update process.
    */
   updateCore: Scalars['String']['output'];
+  /**
+   * Updates a file by uploading it to the server and storing it in a specified directory.
+   *
+   * This asynchronous function retrieves the file upload directory from the application settings,
+   * generates a unique filename with an appropriate extension, and writes the file's content to
+   * the server's filesystem. The final file path is returned upon successful completion.
+   *
+   * # Arguments
+   *
+   * * `ctx` - The GraphQL context containing application data.
+   * * `file` - An `Upload` object representing the file to be updated.
+   *
+   * # Returns
+   *
+   * Returns a `Result` containing a string with the file path if the upload is successful,
+   * or an error if the operation fails.
+   *
+   * # Errors
+   *
+   * Returns an error if there is a failure in retrieving application settings or if the file
+   * cannot be written to the specified path.
+   */
   updateFile: Scalars['String']['output'];
   /**
    * Updates an existing file group in the database.
@@ -755,6 +1017,16 @@ export type MutationCreateAccountArgs = {
 };
 
 
+export type MutationCreateBannerArgs = {
+  input: BannerInput;
+};
+
+
+export type MutationCreateCategoryArgs = {
+  input: CategoryInput;
+};
+
+
 export type MutationCreateCoreArgs = {
   input: CoreInput;
 };
@@ -796,6 +1068,16 @@ export type MutationCreateSettingArgs = {
 
 
 export type MutationDeleteAccountArgs = {
+  id: Scalars['Int']['input'];
+};
+
+
+export type MutationDeleteBannerArgs = {
+  id: Scalars['Int']['input'];
+};
+
+
+export type MutationDeleteCategoryArgs = {
   id: Scalars['Int']['input'];
 };
 
@@ -855,7 +1137,7 @@ export type MutationResetPasswordArgs = {
 };
 
 
-export type MutationSignupArgs = {
+export type MutationSigninArgs = {
   input: Scalars['String']['input'];
 };
 
@@ -863,6 +1145,18 @@ export type MutationSignupArgs = {
 export type MutationUpdateAccountArgs = {
   id: Scalars['Int']['input'];
   input: AccountInput;
+};
+
+
+export type MutationUpdateBannerArgs = {
+  id: Scalars['Int']['input'];
+  input: BannerInput;
+};
+
+
+export type MutationUpdateCategoryArgs = {
+  id: Scalars['Int']['input'];
+  input: CategoryInput;
 };
 
 
@@ -1019,7 +1313,30 @@ export type Query = {
    */
   accounts: Array<AccountObject>;
   auth: Scalars['Boolean']['output'];
+  /**
+   * Retrieves a list of all banners from the database.
+   *
+   * This asynchronous function fetches all non-deleted banners, converts them
+   * into `BannerObject` instances, sorts them by `sort_id` in ascending order,
+   * and returns them as a vector.
+   *
+   * # Arguments
+   *
+   * * `ctx` - The GraphQL context containing shared data, including the application state.
+   * * `_input` - A placeholder input string, not utilized in the current implementation.
+   *
+   * # Returns
+   *
+   * Returns a `Result` containing a vector of `BannerObject`s on success,
+   * or an `Error` if the operation fails.
+   *
+   * # Errors
+   *
+   * Returns an error if there is a failure in retrieving the list of banners from the database.
+   */
+  banners: Array<BannerObject>;
   canIUse: Array<Scalars['String']['output']>;
+  categories: Array<CategoryObject>;
   /**
    * Retrieves a list of all cores from the database.
    *
@@ -1096,6 +1413,17 @@ export type Query = {
    * if successful, or an error if the operation fails.
    */
   platformTypes: Array<PlatformTypeObject>;
+  /**
+   * Returns the current user's information.
+   *
+   * # Errors
+   *
+   * If the user is not logged in, an error is returned.
+   *
+   * # Returns
+   *
+   * The current user's information is returned as a `UserObject`.
+   */
   profile: UserObject;
   /**
    * Retrieves a list of all roles from the database.
@@ -1152,8 +1480,18 @@ export type Query = {
 };
 
 
+export type QueryBannersArgs = {
+  input: Scalars['String']['input'];
+};
+
+
 export type QueryCanIUseArgs = {
   url: Scalars['String']['input'];
+};
+
+
+export type QueryCategoriesArgs = {
+  input: Scalars['String']['input'];
 };
 
 
@@ -1463,12 +1801,12 @@ export type DeleteMenuMutationVariables = Exact<{
 
 export type DeleteMenuMutation = { deleteMenu: string };
 
-export type SignupMutationVariables = Exact<{
+export type SigninMutationVariables = Exact<{
   input: Scalars['String']['input'];
 }>;
 
 
-export type SignupMutation = { signup: string };
+export type SigninMutation = { signin: string };
 
 export type ResetPasswordMutationVariables = Exact<{
   input: Scalars['String']['input'];
@@ -1484,27 +1822,49 @@ export type LoginMutationVariables = Exact<{
 
 export type LoginMutation = { login: string };
 
-export type CreatePackageMutationVariables = Exact<{
-  input: PackageInput;
+export type CreateCategoryMutationVariables = Exact<{
+  input: CategoryInput;
 }>;
 
 
-export type CreatePackageMutation = { createPackage: string };
+export type CreateCategoryMutation = { createCategory: string };
 
-export type UpdatePackageMutationVariables = Exact<{
+export type UpdateCategoryMutationVariables = Exact<{
   id: Scalars['Int']['input'];
-  input: PackageInput;
+  input: CategoryInput;
 }>;
 
 
-export type UpdatePackageMutation = { updatePackage: string };
+export type UpdateCategoryMutation = { updateCategory: string };
 
-export type DeletePackageMutationVariables = Exact<{
+export type DeleteCategoryMutationVariables = Exact<{
   id: Scalars['Int']['input'];
 }>;
 
 
-export type DeletePackageMutation = { deletePackage: string };
+export type DeleteCategoryMutation = { deleteCategory: string };
+
+export type CreateBannerMutationVariables = Exact<{
+  input: BannerInput;
+}>;
+
+
+export type CreateBannerMutation = { createBanner: string };
+
+export type UpdateBannerMutationVariables = Exact<{
+  id: Scalars['Int']['input'];
+  input: BannerInput;
+}>;
+
+
+export type UpdateBannerMutation = { updateBanner: string };
+
+export type DeleteBannerMutationVariables = Exact<{
+  id: Scalars['Int']['input'];
+}>;
+
+
+export type DeleteBannerMutation = { deleteBanner: string };
 
 export type RolesQueryVariables = Exact<{
   input: Scalars['String']['input'];
@@ -1562,10 +1922,19 @@ export type MenusQueryVariables = Exact<{
 
 export type MenusQuery = { menus: Array<{ id: number, name: string, display_name: string, path?: string | null, component?: string | null, redirect?: string | null, parent_id: number, sort_id: number, meta?: { hidden: boolean, icon: string, title: string, affix: boolean, permissions: string, keep_alive: boolean } | null, children?: Array<{ id: number, name: string, display_name: string, path?: string | null, component?: string | null, redirect?: string | null, parent_id: number, sort_id: number, meta?: { hidden: boolean, icon: string, title: string, affix: boolean, permissions: string, keep_alive: boolean } | null, children?: Array<{ id: number, name: string, display_name: string, path?: string | null, component?: string | null, redirect?: string | null, parent_id: number, sort_id: number, meta?: { hidden: boolean, icon: string, title: string, affix: boolean, permissions: string, keep_alive: boolean } | null, children?: Array<{ id: number, name: string, display_name: string, path?: string | null, component?: string | null, redirect?: string | null, parent_id: number, sort_id: number }> | null }> | null }> | null }> };
 
-export type PackagesQueryVariables = Exact<{ [key: string]: never; }>;
+export type CategoriesQueryVariables = Exact<{
+  input: Scalars['String']['input'];
+}>;
 
 
-export type PackagesQuery = { packages: Array<{ id: number, name: string, thumb: string, is_visible: boolean, sort_id: number, randomizable: boolean, total: number, avg: number }> };
+export type CategoriesQuery = { categories: Array<{ id: number, title: string, keywords: string, description: string, thumb?: string | null, parent_id: number, is_visible: boolean, sort_id: number, slug?: string | null, core_id: number, children?: Array<{ id: number, title: string, keywords: string, description: string, thumb?: string | null, parent_id: number, is_visible: boolean, sort_id: number, slug?: string | null, children?: Array<{ id: number, title: string, keywords: string, description: string, thumb?: string | null, parent_id: number, is_visible: boolean, sort_id: number, slug?: string | null }> | null }> | null }> };
+
+export type BannersQueryVariables = Exact<{
+  input: Scalars['String']['input'];
+}>;
+
+
+export type BannersQuery = { banners: Array<{ id: number, status: number, is_visible: boolean, expired_at?: number | null, is_link: boolean, link_url?: string | null, is_video: boolean, video_url?: string | null, cover_image?: string | null, sort_id: number, hit_count: number, views_count: number, title: string, view_type: number }> };
 
 
 export const CreateRoleDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateRole"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"RoleInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createRole"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}]}]}}]} as unknown as DocumentNode<CreateRoleMutation, CreateRoleMutationVariables>;
@@ -1596,12 +1965,15 @@ export const CodeDocument = {"kind":"Document","definitions":[{"kind":"Operation
 export const CreateMenuDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateMenu"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"MenuInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createMenu"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}]}]}}]} as unknown as DocumentNode<CreateMenuMutation, CreateMenuMutationVariables>;
 export const UpdateMenuDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UpdateMenu"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"MenuInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateMenu"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}},{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}]}]}}]} as unknown as DocumentNode<UpdateMenuMutation, UpdateMenuMutationVariables>;
 export const DeleteMenuDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"DeleteMenu"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"deleteMenu"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}]}]}}]} as unknown as DocumentNode<DeleteMenuMutation, DeleteMenuMutationVariables>;
-export const SignupDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"Signup"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"signup"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}]}]}}]} as unknown as DocumentNode<SignupMutation, SignupMutationVariables>;
+export const SigninDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"Signin"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"signin"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}]}]}}]} as unknown as DocumentNode<SigninMutation, SigninMutationVariables>;
 export const ResetPasswordDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"ResetPassword"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"resetPassword"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"payload"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}]}]}}]} as unknown as DocumentNode<ResetPasswordMutation, ResetPasswordMutationVariables>;
 export const LoginDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"Login"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"login"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}]}]}}]} as unknown as DocumentNode<LoginMutation, LoginMutationVariables>;
-export const CreatePackageDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreatePackage"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"PackageInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createPackage"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}]}]}}]} as unknown as DocumentNode<CreatePackageMutation, CreatePackageMutationVariables>;
-export const UpdatePackageDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UpdatePackage"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"PackageInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updatePackage"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}},{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}]}]}}]} as unknown as DocumentNode<UpdatePackageMutation, UpdatePackageMutationVariables>;
-export const DeletePackageDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"DeletePackage"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"deletePackage"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}]}]}}]} as unknown as DocumentNode<DeletePackageMutation, DeletePackageMutationVariables>;
+export const CreateCategoryDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateCategory"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"CategoryInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createCategory"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}]}]}}]} as unknown as DocumentNode<CreateCategoryMutation, CreateCategoryMutationVariables>;
+export const UpdateCategoryDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UpdateCategory"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"CategoryInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateCategory"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}},{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}]}]}}]} as unknown as DocumentNode<UpdateCategoryMutation, UpdateCategoryMutationVariables>;
+export const DeleteCategoryDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"DeleteCategory"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"deleteCategory"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}]}]}}]} as unknown as DocumentNode<DeleteCategoryMutation, DeleteCategoryMutationVariables>;
+export const CreateBannerDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateBanner"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"BannerInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createBanner"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}]}]}}]} as unknown as DocumentNode<CreateBannerMutation, CreateBannerMutationVariables>;
+export const UpdateBannerDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UpdateBanner"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"BannerInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateBanner"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}},{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}]}]}}]} as unknown as DocumentNode<UpdateBannerMutation, UpdateBannerMutationVariables>;
+export const DeleteBannerDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"DeleteBanner"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"deleteBanner"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}]}]}}]} as unknown as DocumentNode<DeleteBannerMutation, DeleteBannerMutationVariables>;
 export const RolesDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Roles"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"roles"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"display_name"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"is_visible"}},{"kind":"Field","name":{"kind":"Name","value":"sort_id"}},{"kind":"Field","name":{"kind":"Name","value":"permission_ids"}},{"kind":"Field","name":{"kind":"Name","value":"menu_ids"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"selected_keys"}},{"kind":"Field","name":{"kind":"Name","value":"indeterminate_keys"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"permissionTypes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"display_name"}},{"kind":"Field","name":{"kind":"Name","value":"sort_id"}},{"kind":"Field","name":{"kind":"Name","value":"permissions"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"display_name"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"is_visible"}},{"kind":"Field","name":{"kind":"Name","value":"sort_id"}},{"kind":"Field","name":{"kind":"Name","value":"type_id"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"menus"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"display_name"}},{"kind":"Field","name":{"kind":"Name","value":"path"}},{"kind":"Field","name":{"kind":"Name","value":"component"}},{"kind":"Field","name":{"kind":"Name","value":"redirect"}},{"kind":"Field","name":{"kind":"Name","value":"parent_id"}},{"kind":"Field","name":{"kind":"Name","value":"sort_id"}},{"kind":"Field","name":{"kind":"Name","value":"meta"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"hidden"}},{"kind":"Field","name":{"kind":"Name","value":"icon"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"affix"}},{"kind":"Field","name":{"kind":"Name","value":"permissions"}},{"kind":"Field","name":{"kind":"Name","value":"keep_alive"}}]}},{"kind":"Field","name":{"kind":"Name","value":"children"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"display_name"}},{"kind":"Field","name":{"kind":"Name","value":"path"}},{"kind":"Field","name":{"kind":"Name","value":"component"}},{"kind":"Field","name":{"kind":"Name","value":"redirect"}},{"kind":"Field","name":{"kind":"Name","value":"parent_id"}},{"kind":"Field","name":{"kind":"Name","value":"sort_id"}},{"kind":"Field","name":{"kind":"Name","value":"meta"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"hidden"}},{"kind":"Field","name":{"kind":"Name","value":"icon"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"affix"}},{"kind":"Field","name":{"kind":"Name","value":"permissions"}},{"kind":"Field","name":{"kind":"Name","value":"keep_alive"}}]}},{"kind":"Field","name":{"kind":"Name","value":"children"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"display_name"}},{"kind":"Field","name":{"kind":"Name","value":"path"}},{"kind":"Field","name":{"kind":"Name","value":"component"}},{"kind":"Field","name":{"kind":"Name","value":"redirect"}},{"kind":"Field","name":{"kind":"Name","value":"parent_id"}},{"kind":"Field","name":{"kind":"Name","value":"sort_id"}},{"kind":"Field","name":{"kind":"Name","value":"meta"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"hidden"}},{"kind":"Field","name":{"kind":"Name","value":"icon"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"affix"}},{"kind":"Field","name":{"kind":"Name","value":"permissions"}},{"kind":"Field","name":{"kind":"Name","value":"keep_alive"}}]}},{"kind":"Field","name":{"kind":"Name","value":"children"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"display_name"}},{"kind":"Field","name":{"kind":"Name","value":"path"}},{"kind":"Field","name":{"kind":"Name","value":"component"}},{"kind":"Field","name":{"kind":"Name","value":"redirect"}},{"kind":"Field","name":{"kind":"Name","value":"parent_id"}},{"kind":"Field","name":{"kind":"Name","value":"sort_id"}}]}}]}}]}}]}}]}}]} as unknown as DocumentNode<RolesQuery, RolesQueryVariables>;
 export const CoresDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Cores"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"cores"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"display_name"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"thumb"}},{"kind":"Field","name":{"kind":"Name","value":"is_visible"}},{"kind":"Field","name":{"kind":"Name","value":"sort_id"}}]}}]}}]} as unknown as DocumentNode<CoresQuery, CoresQueryVariables>;
 export const PermissionTypesDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"PermissionTypes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"permissionTypes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"display_name"}},{"kind":"Field","name":{"kind":"Name","value":"sort_id"}},{"kind":"Field","name":{"kind":"Name","value":"permissions"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"display_name"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"is_visible"}},{"kind":"Field","name":{"kind":"Name","value":"sort_id"}},{"kind":"Field","name":{"kind":"Name","value":"type_id"}}]}}]}}]}}]} as unknown as DocumentNode<PermissionTypesQuery, PermissionTypesQueryVariables>;
@@ -1612,4 +1984,5 @@ export const CanIUseDocument = {"kind":"Document","definitions":[{"kind":"Operat
 export const AuthDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Auth"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"auth"}}]}}]} as unknown as DocumentNode<AuthQuery, AuthQueryVariables>;
 export const ProfileDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Profile"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"profile"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"profile_url"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"email_verified_at"}},{"kind":"Field","name":{"kind":"Name","value":"permissions"}},{"kind":"Field","name":{"kind":"Name","value":"role"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"display_name"}}]}}]}}]}}]} as unknown as DocumentNode<ProfileQuery, ProfileQueryVariables>;
 export const MenusDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Menus"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"menus"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"display_name"}},{"kind":"Field","name":{"kind":"Name","value":"path"}},{"kind":"Field","name":{"kind":"Name","value":"component"}},{"kind":"Field","name":{"kind":"Name","value":"redirect"}},{"kind":"Field","name":{"kind":"Name","value":"parent_id"}},{"kind":"Field","name":{"kind":"Name","value":"sort_id"}},{"kind":"Field","name":{"kind":"Name","value":"meta"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"hidden"}},{"kind":"Field","name":{"kind":"Name","value":"icon"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"affix"}},{"kind":"Field","name":{"kind":"Name","value":"permissions"}},{"kind":"Field","name":{"kind":"Name","value":"keep_alive"}}]}},{"kind":"Field","name":{"kind":"Name","value":"children"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"display_name"}},{"kind":"Field","name":{"kind":"Name","value":"path"}},{"kind":"Field","name":{"kind":"Name","value":"component"}},{"kind":"Field","name":{"kind":"Name","value":"redirect"}},{"kind":"Field","name":{"kind":"Name","value":"parent_id"}},{"kind":"Field","name":{"kind":"Name","value":"sort_id"}},{"kind":"Field","name":{"kind":"Name","value":"meta"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"hidden"}},{"kind":"Field","name":{"kind":"Name","value":"icon"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"affix"}},{"kind":"Field","name":{"kind":"Name","value":"permissions"}},{"kind":"Field","name":{"kind":"Name","value":"keep_alive"}}]}},{"kind":"Field","name":{"kind":"Name","value":"children"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"display_name"}},{"kind":"Field","name":{"kind":"Name","value":"path"}},{"kind":"Field","name":{"kind":"Name","value":"component"}},{"kind":"Field","name":{"kind":"Name","value":"redirect"}},{"kind":"Field","name":{"kind":"Name","value":"parent_id"}},{"kind":"Field","name":{"kind":"Name","value":"sort_id"}},{"kind":"Field","name":{"kind":"Name","value":"meta"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"hidden"}},{"kind":"Field","name":{"kind":"Name","value":"icon"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"affix"}},{"kind":"Field","name":{"kind":"Name","value":"permissions"}},{"kind":"Field","name":{"kind":"Name","value":"keep_alive"}}]}},{"kind":"Field","name":{"kind":"Name","value":"children"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"display_name"}},{"kind":"Field","name":{"kind":"Name","value":"path"}},{"kind":"Field","name":{"kind":"Name","value":"component"}},{"kind":"Field","name":{"kind":"Name","value":"redirect"}},{"kind":"Field","name":{"kind":"Name","value":"parent_id"}},{"kind":"Field","name":{"kind":"Name","value":"sort_id"}}]}}]}}]}}]}}]}}]} as unknown as DocumentNode<MenusQuery, MenusQueryVariables>;
-export const PackagesDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Packages"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"packages"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"thumb"}},{"kind":"Field","name":{"kind":"Name","value":"is_visible"}},{"kind":"Field","name":{"kind":"Name","value":"sort_id"}},{"kind":"Field","name":{"kind":"Name","value":"randomizable"}},{"kind":"Field","name":{"kind":"Name","value":"total"}},{"kind":"Field","name":{"kind":"Name","value":"avg"}}]}}]}}]} as unknown as DocumentNode<PackagesQuery, PackagesQueryVariables>;
+export const CategoriesDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Categories"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"categories"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"keywords"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"thumb"}},{"kind":"Field","name":{"kind":"Name","value":"parent_id"}},{"kind":"Field","name":{"kind":"Name","value":"is_visible"}},{"kind":"Field","name":{"kind":"Name","value":"sort_id"}},{"kind":"Field","name":{"kind":"Name","value":"slug"}},{"kind":"Field","name":{"kind":"Name","value":"core_id"}},{"kind":"Field","name":{"kind":"Name","value":"children"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"keywords"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"thumb"}},{"kind":"Field","name":{"kind":"Name","value":"parent_id"}},{"kind":"Field","name":{"kind":"Name","value":"is_visible"}},{"kind":"Field","name":{"kind":"Name","value":"sort_id"}},{"kind":"Field","name":{"kind":"Name","value":"slug"}},{"kind":"Field","name":{"kind":"Name","value":"children"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"keywords"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"thumb"}},{"kind":"Field","name":{"kind":"Name","value":"parent_id"}},{"kind":"Field","name":{"kind":"Name","value":"is_visible"}},{"kind":"Field","name":{"kind":"Name","value":"sort_id"}},{"kind":"Field","name":{"kind":"Name","value":"slug"}}]}}]}}]}}]}}]} as unknown as DocumentNode<CategoriesQuery, CategoriesQueryVariables>;
+export const BannersDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Banners"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"banners"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"is_visible"}},{"kind":"Field","name":{"kind":"Name","value":"expired_at"}},{"kind":"Field","name":{"kind":"Name","value":"is_link"}},{"kind":"Field","name":{"kind":"Name","value":"link_url"}},{"kind":"Field","name":{"kind":"Name","value":"is_video"}},{"kind":"Field","name":{"kind":"Name","value":"video_url"}},{"kind":"Field","name":{"kind":"Name","value":"cover_image"}},{"kind":"Field","name":{"kind":"Name","value":"sort_id"}},{"kind":"Field","name":{"kind":"Name","value":"hit_count"}},{"kind":"Field","name":{"kind":"Name","value":"views_count"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"view_type"}}]}}]}}]} as unknown as DocumentNode<BannersQuery, BannersQueryVariables>;

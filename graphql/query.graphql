@@ -269,15 +269,58 @@ query Menus($input: String!) {
   }
 }
 
-query Packages {
-    packages {
+query Categories($input: String!) {
+  categories(input: $input) {
+    id
+    title
+    keywords
+    description
+    thumb
+    parent_id
+    is_visible
+    sort_id
+    slug
+    core_id
+    children {
+      id
+      title
+      keywords
+      description
+      thumb
+      parent_id
+      is_visible
+      sort_id
+      slug
+      children {
         id
-        name
+        title
+        keywords
+        description
         thumb
+        parent_id
         is_visible
         sort_id
-        randomizable
-        total
-        avg
+        slug
+      }
     }
+  }
+}
+
+query Banners($input: String!) {
+  banners(input: $input) {
+    id
+    status
+    is_visible
+    expired_at
+    is_link
+    link_url
+    is_video
+    video_url
+    cover_image
+    sort_id
+    hit_count
+    views_count
+    title
+    view_type
+  }
 }
