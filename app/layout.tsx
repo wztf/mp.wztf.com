@@ -4,7 +4,6 @@ import { ToastContainer } from 'react-toastify'
 
 import { ApolloWrapper, DefaultLayout, Lockscreen } from '@/layouts'
 
-import '@assets/styles/app.scss'
 import '@assets/styles/globals.css'
 import type { Metadata } from 'next'
 

@@ -101,7 +101,6 @@
     "react-resizable-panels": "^2.1.7",
     "react-ssr-prepass": "npm:preact-ssr-prepass@^1.2.2",
     "recharts": "2.15.4",
-    "sass": "^1.79.4",
     "sonner": "^1.7.1",
     "stylelint": "^16.9.0",
     "stylelint-config-prettier-scss": "^1.0.0",
