@@ -13,13 +13,14 @@ import { useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
 import { z } from 'zod'
 
+import { appid } from '@config/index'
+
+import { CodeDocument, SigninDocument } from '@generated/graphql'
+
 import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { useStore } from '@/store'
-
-import { appid } from '@config/index'
-import { CodeDocument, SignupDocument } from '@generated/graphql'
 
 const formSchema = z.object({
   email: z
@@ -87,7 +88,7 @@ const RuiLogin = () => {
     await fetchCode({ variables: { input: payload } })
   }
 
-  const [fetch, { loading, data }] = useMutation(SignupDocument, {
+  const [fetch, { loading, data }] = useMutation(SigninDocument, {
     variables: { input: '' },
     onError: ({ networkError }: ApolloError) => {
       const { result } = networkError as ServerError
@@ -104,7 +105,7 @@ const RuiLogin = () => {
   const login = useStore(state => state.login)
   if (data) {
     toast.success('登录成功')
-    login(data.signup)
+    login(data.signin)
     // NOTE: 获取用户信息
     return redirect('/')
   }
@@ -115,13 +116,15 @@ const RuiLogin = () => {
         验证码登录 / 注册
       </Heading>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} autoComplete='off'>
+        <form onSubmit={form.handleSubmit(onSubmit)} autoComplete='off' className='space-y-5'>
           <FormField
             control={form.control}
             name='email'
             render={({ field }) => (
               <FormItem>
-                <FormLabel className='sr-only'>登录邮箱</FormLabel>
+                <FormLabel>
+                  <span className='text-red-500'>*</span>邮箱
+                </FormLabel>
                 <FormControl>
                   <Input type='email' className='h-12' placeholder='请输入邮箱地址' {...field} />
                 </FormControl>
@@ -134,7 +137,9 @@ const RuiLogin = () => {
             name='security_code'
             render={({ field }) => (
               <FormItem>
-                <FormLabel className='sr-only'>验证码</FormLabel>
+                <FormLabel>
+                  <span className='text-red-500'>*</span>验证码
+                </FormLabel>
                 <Flex
                   justify='between'
                   align='center'

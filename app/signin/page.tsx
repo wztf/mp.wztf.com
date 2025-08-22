@@ -13,11 +13,11 @@ import { FaWeixin } from 'react-icons/fa'
 import { FcGoogle } from 'react-icons/fc'
 import { toast } from 'react-toastify'
 
+import { LoginDocument } from '@generated/graphql'
+
 import { RuiLogin, RuiRegister, RuiWechat } from '@/components/account'
 import { appid, company, icp, version } from '@/config'
 import { useStore } from '@/store'
-
-import { LoginDocument } from '@generated/graphql'
 
 const Page = () => {
   const setApp = useStore(state => state.setApp)

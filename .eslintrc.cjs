@@ -49,12 +49,70 @@ module.exports = {
     'import/order': [
       'error',
       {
-        groups: ['builtin', 'external', 'internal', ['sibling', 'parent'], 'index', 'object', 'type'],
+        groups: [
+          'builtin', // Node.js 核心模块
+          'external', // 第三方库，如 react, lodash
+          'internal', // 内部模块（别名路径如 @/）
+          ['parent', 'sibling'], // 父目录和同级目录
+          'index', // 当前目录（index.js/ts）
+          'object', // 对象导入（import log = console.log）
+          'type' // TypeScript 的类型导入
+        ],
         pathGroups: [
+          {
+            pattern: '@components/**',
+            group: 'internal',
+            position: 'after'
+          },
+          {
+            pattern: '@layouts/**',
+            group: 'internal',
+            position: 'after'
+          },
+          {
+            pattern: '@config/**',
+            group: 'internal',
+            position: 'after'
+          },
+          {
+            pattern: '@assets/**',
+            group: 'internal',
+            position: 'after'
+          },
+          {
+            pattern: '@plugins/**',
+            group: 'internal',
+            position: 'after'
+          },
+          {
+            pattern: '@store/**',
+            group: 'internal',
+            position: 'after'
+          },
+          {
+            pattern: '@generated/**',
+            group: 'internal',
+            position: 'after'
+          },
+          {
+            pattern: '@enums/**',
+            group: 'internal',
+            position: 'after'
+          },
+          {
+            pattern: '@hooks/**',
+            group: 'internal',
+            position: 'after'
+          },
           {
             pattern: '@/**',
             group: 'internal',
-            position: 'before'
+            position: 'after'
+          },
+          {
+            pattern: '/#/**',
+            group: 'internal',
+            position: 'after'
           }
         ],
         pathGroupsExcludedImportTypes: ['builtin'],

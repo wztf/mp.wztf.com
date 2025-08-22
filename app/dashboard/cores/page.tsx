@@ -1,20 +1,20 @@
 'use client'
-import { CoreDrawer } from '@/components/app/cores'
 
 import { ServerError, useLazyQuery } from '@apollo/client'
 import { ApolloError } from '@apollo/client/errors'
 import { Flex, Spinner, Text } from '@radix-ui/themes'
 import { Plus } from 'lucide-react'
 import { useEffect, useState } from 'react'
-
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
+import { toast } from 'react-toastify'
 
 import { Button } from '@components/ui/button'
 import { Separator } from '@components/ui/separator'
 import { Switch } from '@components/ui/switch'
+
 import { CoresDocument } from '@generated/graphql'
 
-import { toast } from 'react-toastify'
+import { CoreDrawer } from '@/components/app/cores'
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 
 import { API } from '/#/api'
 

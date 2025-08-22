@@ -10,6 +10,15 @@ import { useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
 import { z } from 'zod'
 
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@components/ui/form'
+
+import {
+  CreatePermissionTypeDocument,
+  DeletePermissionTypeDocument,
+  PermissionTypeInput,
+  UpdatePermissionTypeDocument
+} from '@generated/graphql'
+
 import {
   AlertDialog,
   AlertDialogAction,
@@ -34,14 +43,6 @@ import { Input } from '@/components/ui/input'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 
 import { API } from '/#/api'
-
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@components/ui/form'
-import {
-  CreatePermissionTypeDocument,
-  DeletePermissionTypeDocument,
-  PermissionTypeInput,
-  UpdatePermissionTypeDocument
-} from '@generated/graphql'
 
 type TabKey = 0 | 1
 

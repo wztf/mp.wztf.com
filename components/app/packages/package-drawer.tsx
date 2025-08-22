@@ -5,18 +5,8 @@ import { ApolloError } from '@apollo/client/errors'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
-
-import { Button } from '@/components/ui/button'
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
-import { Input } from '@/components/ui/input'
-
 import { toast } from 'react-toastify'
 import { z } from 'zod'
-
-import { Switch } from '@/components/ui/switch'
-import { PermissionEnum } from '@/enums/permissionEnum'
-import { usePermission } from '@/hooks/user-permission'
 
 import {
   AlertDialog,
@@ -29,9 +19,17 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger
 } from '@components/ui/alert-dialog'
-import { CreatePackageDocument, DeletePackageDocument, UpdatePackageDocument } from '@generated/graphql'
 
 import type { PackageInput } from '@generated/graphql'
+import { CreatePackageDocument, DeletePackageDocument, UpdatePackageDocument } from '@generated/graphql'
+
+import { Button } from '@/components/ui/button'
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
+import { Switch } from '@/components/ui/switch'
+import { PermissionEnum } from '@/enums/permissionEnum'
+import { usePermission } from '@/hooks/user-permission'
 
 import { API } from '/#/api'
 

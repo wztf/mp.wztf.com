@@ -11,11 +11,11 @@ import { GrTest } from 'react-icons/gr'
 import { PiYoutubeLogo } from 'react-icons/pi'
 import { SiKnowledgebase } from 'react-icons/si'
 
+import RuiBacktop from '@components/rui-backtop'
+
 import logo from '@/assets/images/logo@black.png'
 import { company } from '@/config'
 import { useStore } from '@/store'
-
-import RuiBacktop from '@components/rui-backtop'
 
 const RuiFooter = () => {
   const router = useRouter()

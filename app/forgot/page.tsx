@@ -13,13 +13,14 @@ import { useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
 import { z } from 'zod'
 
+import { appid, version } from '@config/index'
+
+import { CodeDocument, ResetPasswordDocument } from '@generated/graphql'
+
 import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { useStore } from '@/store'
-
-import { appid, version } from '@config/index'
-import { CodeDocument, ResetPasswordDocument } from '@generated/graphql'
 
 const formSchema = z.object({
   email: z

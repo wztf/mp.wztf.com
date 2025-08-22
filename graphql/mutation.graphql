@@ -198,8 +198,8 @@ mutation DeleteMenu($id: Int!) {
   deleteMenu(id: $id)
 }
 
-mutation Signup($input: String!) {
-  signup(input: $input)
+mutation Signin($input: String!) {
+  signin(input: $input)
 }
 
 mutation ResetPassword($input: String!) {
@@ -214,25 +214,83 @@ mutation Login($input: String!) {
   login(input: $input)
 }
 
-type PackageInput {
-  avg: Int!
-  total: Int!
-  randomizable: Boolean!
-  sort_id: Int!
+type CategoryInput {
+  title: String!
+  keywords: String!
+  description: String!
+  thumb: String
+  parent_id: Int!
   is_visible: Boolean!
-  thumb: String!
-  name: String!
+  sort_id: Int!
+  slug: String
+  core_id: Int!
 }
+
+mutation CreateCategory($input: CategoryInput!) {
+  createCategory(input: $input)
+}
+
+mutation UpdateCategory($id: Int!, $input: CategoryInput!) {
+  updateCategory(id: $id, input: $input)
+}
+
+mutation DeleteCategory($id: Int!) {
+  deleteCategory(id: $id)
+}
+
+type BannerInput {
+  status: Int!
+  is_visible: Boolean!
+  expired_at: Int
+  is_link: Boolean!
+  link_url: String
+  is_video: Boolean!
+  video_url: String
+  cover_image: String
+  sort_id: Int!
+  hit_count: Int!
+  views_count: Int!
+  title: String
+  view_type: Int!
+}
+
+mutation CreateBanner($input: BannerInput!) {
+  createBanner(
+    input: $input
+  )
+}
+
+mutation UpdateBanner($id: Int!, $input: BannerInput!) {
+  updateBanner(
+    id: $id,
+    input: $input
+  )
+}
+
+mutation DeleteBanner($id: Int!) {
+  deleteBanner(id: $id)
+}
+
+type PackageInput {
+  name: String!
+  thumb: String!
+  is_visible: Boolean!
+  sort_id: Int!
+  randomizable: Boolean!
+  total: Int!
+  avg: Int!
+}
+
 mutation CreatePackage($input: PackageInput!) {
-    createPackage(
-        input: $input
-    )
+  createPackage(
+    input: $input
+  )
 }
 
 mutation UpdatePackage($id: Int!, $input: PackageInput!) {
-    updatePackage(id: $id, input: $input)
+  updatePackage(id: $id, input: $input)
 }
 
 mutation DeletePackage($id: Int!) {
-    deletePackage(id: $id)
+  deletePackage(id: $id)
 }
