@@ -1,22 +1,18 @@
 'use client'
-import { PackageDrawer } from '@/components/app/packages'
-import { Separator } from '@/components/ui/separator'
-import { Switch } from '@/components/ui/switch'
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-
 import { ServerError, useLazyQuery } from '@apollo/client'
 import { ApolloError } from '@apollo/client/errors'
+import { Flex, Spinner, Text } from '@radix-ui/themes'
+import { Plus } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
 
 import { PackagesDocument } from '@generated/graphql'
 
-import { Flex, Spinner, Text } from '@radix-ui/themes'
-
+import { PackageDrawer } from '@/components/app/packages'
 import { Button } from '@/components/ui/button'
-
-import { Plus } from 'lucide-react'
-
+import { Separator } from '@/components/ui/separator'
+import { Switch } from '@/components/ui/switch'
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { PermissionEnum } from '@/enums/permissionEnum'
 import { usePermission } from '@/hooks/user-permission'
 

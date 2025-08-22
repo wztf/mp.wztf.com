@@ -324,3 +324,16 @@ query Banners($input: String!) {
     view_type
   }
 }
+
+query Packages {
+  packages {
+    id
+    name
+    thumb
+    is_visible
+    sort_id
+    randomizable
+    total
+    avg
+  }
+}
