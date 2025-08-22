@@ -172,4 +172,46 @@ export declare namespace API {
     total: number
     avg: number
   }
+
+  export interface Category {
+    id: number
+    title: string
+    keywords: string
+    description: string
+    slug: string
+    thumb: string
+    parent_id: number
+    is_visible: boolean
+    sort_id: number
+    core_id: number
+    children?: Category[]
+  }
+
+  export interface Banner {
+    id: number
+    title: string
+    status: number
+    expired_at: string
+    is_visible: boolean
+    is_link: boolean
+    link_url: string
+    is_video: boolean
+    video_url: string
+    cover_image: string
+    sort_id: number
+    hit_count: number
+    views_count: number
+    view_type: number
+  }
+
+  export interface Client {
+    ip?: string // eg:210.0.158.253
+    city?: string // eg:Hong Kong
+    country?: string // eg: HK"
+    loc?: string // eg: 22.2783,114.1747
+    org?: string // eg: AS9304 HGC Global Communications Limited
+    readme?: string
+    region?: string // eg: Hong Kong
+    timezone: string // eg: Asia/Hong_Kong"
+  }
 }
