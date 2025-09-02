@@ -214,4 +214,27 @@ export declare namespace API {
     region?: string // eg: Hong Kong
     timezone: string // eg: Asia/Hong_Kong"
   }
+
+  export interface RegionOption {
+    country_code: string
+    state_code: string
+    value: string
+    label: string
+  }
+
+  export interface Chart {
+    hd_authority: string
+    hd_cross: string
+    hd_definition: string
+    hd_profile: string
+    hd_profile_cht: string
+    hd_strategy: string
+    hd_theme: string
+    hd_type: string
+    birthday: string
+    country: string
+    city: string
+    province: number
+    thumb: string
+  }
 }

@@ -8,8 +8,9 @@ const loginURL = process.env.NEXT_PUBLIC_LOGIN_URI
 
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL
 
+const token = process.env.NEXT_PUBLIC_GRAPHQL_TOKEN || ''
 const company = '广州缘分平台信息科技有限公司'
 
 const icp = '粤ICP备2020116257号'
 
-export { appid, baseUrl, company, email, graphqlUri, icp, isDev, loginURL, tel, version }
+export { appid, baseUrl, company, email, graphqlUri, icp, isDev, loginURL, tel, token, version }

@@ -270,11 +270,11 @@ export default function Home() {
             </div>
           </div>
           <div className='xl:w-1/2 lg:w-7/12 relative w-full lg:mt-0 mt-12 md:px-8' role='list'>
-            <img
+            {/* <img
               src='https://i.ibb.co/0n6DSS3/bgimg.png'
               className='absolute w-full -ml-12 mt-24'
               alt='background circle images'
-            />
+            /> */}
             <div role='listitem' className='bg-white cursor-pointer shadow-sm rounded-lg-lg p-8 relative z-30'>
               <div className='md:flex items-center justify-between'>
                 <h2 className='text-2xl font-semibold leading-6 text-gray-800'>职业定位：确定你的发展方向</h2>

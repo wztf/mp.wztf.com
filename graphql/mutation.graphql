@@ -294,3 +294,28 @@ mutation UpdatePackage($id: Int!, $input: PackageInput!) {
 mutation DeletePackage($id: Int!) {
   deletePackage(id: $id)
 }
+
+type ChartInput {
+  birthday: String!
+  country: String!
+  city: String!
+  province: Int
+}
+
+mutation CreateChart($input: ChartInput!) {
+    createChart(input: $input) {
+        hd_authority
+        hd_cross
+        hd_definition
+        hd_profile
+        hd_profile_cht
+        hd_strategy
+        hd_theme
+        hd_type
+        birthday
+        country
+        city
+        province
+        thumb
+    }
+}

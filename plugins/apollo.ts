@@ -6,9 +6,9 @@ import { removeTypenameFromVariables } from '@apollo/client/link/remove-typename
 import { ApolloClient, InMemoryCache } from '@apollo/experimental-nextjs-app-support'
 import createUploadLink from 'apollo-upload-client/createUploadLink.mjs'
 
-import { useStore } from '@/store'
-
 import { appid, isDev } from '@config/index'
+
+import { useStore } from '@/store'
 
 if (isDev) {
   loadDevMessages()
@@ -46,7 +46,7 @@ const removeTypenameLink = removeTypenameFromVariables()
 const errorLink = onError(({ graphQLErrors, networkError }) => {
   if (graphQLErrors)
     graphQLErrors.forEach(({ message, locations, path }) =>
-      // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+      // eslint-disable-next-line @typescript-eslint/restrict-template-expressions,@typescript-eslint/no-base-to-string
       console.log(`[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`)
     )
 
