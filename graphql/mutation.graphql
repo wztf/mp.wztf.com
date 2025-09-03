@@ -214,6 +214,10 @@ mutation Login($input: String!) {
   login(input: $input)
 }
 
+mutation Logout($input: String!) {
+  logout(input: $input)
+}
+
 type CategoryInput {
   title: String!
   keywords: String!
@@ -303,19 +307,19 @@ type ChartInput {
 }
 
 mutation CreateChart($input: ChartInput!) {
-    createChart(input: $input) {
-        hd_authority
-        hd_cross
-        hd_definition
-        hd_profile
-        hd_profile_cht
-        hd_strategy
-        hd_theme
-        hd_type
-        birthday
-        country
-        city
-        province
-        thumb
-    }
+  createChart(input: $input) {
+    hd_authority
+    hd_cross
+    hd_definition
+    hd_profile
+    hd_profile_cht
+    hd_strategy
+    hd_theme
+    hd_type
+    birthday
+    country
+    city
+    province
+    thumb
+  }
 }

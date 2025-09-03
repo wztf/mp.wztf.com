@@ -4601,7 +4601,7 @@
           },
           {
             "name": "auth",
-            "description": null,
+            "description": "Checks if the user is authenticated and has a valid status.\n\n# Arguments\n\n* `ctx` - The context containing the user information.\n\n# Returns\n\nIf the user is authenticated and has a valid status, `true` is returned.\nIf the user is not authenticated, or the status is not valid, an error is returned.",
             "args": [],
             "type": {
               "kind": "NON_NULL",
@@ -4658,7 +4658,7 @@
           },
           {
             "name": "canIUse",
-            "description": null,
+            "description": "Checks if the user has the given permission.\n\n# Arguments\n\n* `_ctx` - The context containing the user information.\n* `_url` - The URL to check the permission for.\n\n# Returns\n\nIf the user has the permission, an empty vector is returned.\nIf the user does not have the permission, an error is returned.",
             "args": [
               {
                 "name": "url",

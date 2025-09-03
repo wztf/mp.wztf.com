@@ -21,35 +21,42 @@ import type { NextRequest } from 'next/server'
 export async function middleware(request: NextRequest) {
   try {
     const token = request.cookies.get('token')?.value
-    if (!token) {
+
+    // 未登录且访问需要保护的路径才重定向
+    const protectedPaths = ['/dashboard', '/assessments']
+    const isProtected = protectedPaths.some(path => request.nextUrl.pathname.startsWith(path))
+    if (!token && isProtected) {
+      console.log('No token, redirecting to /signin')
       return NextResponse.redirect(new URL('/signin', request.url))
     }
 
-    // 判断用户 token 是否过期
-    try {
-      await makeClient().query({
-        query: AuthDocument,
-        fetchPolicy: 'no-cache',
-        context: {
-          headers: {
-            Authorization: `Bearer ${token}`
+    if (token) {
+      // 判断用户 token 是否过期
+      try {
+        await makeClient().query({
+          query: AuthDocument,
+          fetchPolicy: 'no-cache',
+          context: {
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
           }
+        })
+      } catch (error) {
+        const { networkError } = error as ApolloError
+        const { result } = networkError as ServerError
+        const { errors } = result as Record<string, { message: string }[]>
+        if (errors) {
+          console.log(errors[0].message)
         }
-      })
-    } catch (error) {
-      const { networkError } = error as ApolloError
-      const { result } = networkError as ServerError
-      const { errors } = result as Record<string, { message: string }[]>
-      if (errors) {
-        console.log(errors[0].message)
+
+        request.cookies.delete('token')
+        return NextResponse.redirect(new URL('/signin', request.url))
       }
 
-      request.cookies.delete('token')
-      return NextResponse.redirect(new URL('/signin', request.url))
+      // TODO: 用户菜单等
+      // https://blog.openreplay.com/how-to--authentication-middleware-in-nextjs/
     }
-
-    // TODO: 用户菜单等
-    // https://blog.openreplay.com/how-to--authentication-middleware-in-nextjs/
 
     return NextResponse.next()
   } catch (error) {

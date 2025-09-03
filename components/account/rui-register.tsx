@@ -3,23 +3,21 @@
 
 import { ServerError, useMutation } from '@apollo/client'
 import { ApolloError } from '@apollo/client/errors'
-import { Signatory } from '@cakioe/kit.js'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Flex, Heading, Text } from '@radix-ui/themes'
 import { useCountDown, useUnmount } from 'ahooks'
-import { redirect } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
 import { z } from 'zod'
 
-import { appid } from '@config/index'
-
-import { CodeDocument, SigninDocument } from '@generated/graphql'
+import { CodeDocument } from '@generated/graphql'
 
 import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
+import { signer } from '@/lib/signer'
 import { useStore } from '@/store'
 
 const formSchema = z.object({
@@ -38,8 +36,12 @@ const formSchema = z.object({
 })
 
 const RuiLogin = () => {
-  const app = useStore(state => state.app)
-  const signer = new Signatory(appid)
+  const router = useRouter()
+
+  const { app, signin } = useStore(state => ({
+    app: state.app,
+    signin: state.signin // 使用邮箱密码登录
+  }))
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -88,26 +90,24 @@ const RuiLogin = () => {
     await fetchCode({ variables: { input: payload } })
   }
 
-  const [fetch, { loading, data }] = useMutation(SigninDocument, {
-    variables: { input: '' },
-    onError: ({ networkError }: ApolloError) => {
+  const [loading, setLoading] = useState<boolean>(false)
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    if (loading) return
+    setLoading(true)
+
+    try {
+      await signin({ app: app, ...values, method: 'sms' })
+      router.replace('/dashboard')
+    } catch (error) {
+      const { networkError } = error as ApolloError
       const { result } = networkError as ServerError
       const { errors } = result as Record<string, { message: string }[]>
-      toast.error(errors[0].message)
+      if (errors) {
+        toast.error(errors[0].message)
+      }
+    } finally {
+      setLoading(false)
     }
-  })
-
-  const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    const payload = signer.toBase64String({ app: app, ...values, method: 'sms' })
-    await fetch({ variables: { input: payload } })
-  }
-
-  const login = useStore(state => state.login)
-  if (data) {
-    toast.success('登录成功')
-    login(data.signin)
-    // NOTE: 获取用户信息
-    return redirect('/')
   }
 
   return (

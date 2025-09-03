@@ -2,7 +2,12 @@
 import { Heading, Text } from '@radix-ui/themes'
 
 import { email, tel } from '@/config'
+import { useAuthGuard } from '@/hooks/use-auth-guard'
+import { authCheck, logAccess } from '@/middlewares/auth'
+import { useStore } from '@/store'
 const Page = () => {
+  useAuthGuard(useStore(), [authCheck, logAccess])
+
   return (
     <>
       <div className='bg-white text-black dark:bg-black dark:text-white py-20'>

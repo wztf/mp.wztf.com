@@ -1,20 +1,16 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 'use client'
 
-import { ServerError, useMutation } from '@apollo/client'
+import { ServerError } from '@apollo/client'
 import { ApolloError } from '@apollo/client/errors'
-import { Signatory } from '@cakioe/kit.js'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Flex, Heading } from '@radix-ui/themes'
 import Link from 'next/link'
-import { redirect } from 'next/navigation'
+import { useRouter } from 'next/navigation'
+import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
 import { z } from 'zod'
-
-import { appid } from '@config/index'
-
-import { LoginDocument } from '@generated/graphql'
 
 import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
@@ -41,18 +37,12 @@ const formSchema = z.object({
 })
 
 const RuiRegister = ({ onReset }: Props) => {
-  const app = useStore(state => state.app)
-  const signer = new Signatory(appid)
-  const [fetch, { loading, data }] = useMutation(LoginDocument, {
-    variables: { input: '' },
-    onError: ({ networkError }: ApolloError) => {
-      const { result } = networkError as ServerError
-      const { errors } = result as Record<string, { message: string }[]>
-      if (errors) {
-        toast.error(errors[0].message)
-      }
-    }
-  })
+  const router = useRouter()
+
+  const { app, signin } = useStore(state => ({
+    app: state.app,
+    signin: state.signin // 使用邮箱密码登录
+  }))
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -62,17 +52,25 @@ const RuiRegister = ({ onReset }: Props) => {
     }
   })
 
+  const [loading, setLoading] = useState<boolean>(false)
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    const payload = signer.toBase64String({ app: app, ...values, method: 'password' })
-    await fetch({ variables: { input: payload } })
-  }
+    if (loading) return
+    setLoading(true)
 
-  const login = useStore(state => state.login)
-  if (data) {
-    toast.success('登录成功')
-    login(data.login)
-    // NOTE: 获取用户信息
-    return redirect('/')
+    try {
+      await signin({ app: app, ...values, method: 'password' })
+      router.replace('/dashboard')
+    } catch (error) {
+      console.log(error, 'error')
+      const { networkError } = error as ApolloError
+      const { result } = networkError as ServerError
+      const { errors } = result as Record<string, { message: string }[]>
+      if (errors) {
+        toast.error(errors[0].message)
+      }
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -81,7 +79,7 @@ const RuiRegister = ({ onReset }: Props) => {
         密码登录
       </Heading>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} autoComplete='off'>
+        <form onSubmit={form.handleSubmit(onSubmit)} autoComplete='off' className='space-y-5'>
           <FormField
             control={form.control}
             name='email'

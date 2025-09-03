@@ -1,82 +1,75 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 'use client'
 
-import { ServerError, useMutation } from '@apollo/client'
-import { ApolloError } from '@apollo/client/errors'
-import { Signatory } from '@cakioe/kit.js'
 import * as Separator from '@radix-ui/react-separator'
 import { Box, Card, Container, Flex, Heading, Text } from '@radix-ui/themes'
+import { useAsyncEffect } from 'ahooks'
+import Cookies from 'js-cookie'
 import Link from 'next/link'
-import { redirect, useSearchParams } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { FaWeixin } from 'react-icons/fa'
 import { FcGoogle } from 'react-icons/fc'
-import { toast } from 'react-toastify'
-
-import { LoginDocument } from '@generated/graphql'
 
 import { RuiLogin, RuiRegister, RuiWechat } from '@/components/account'
-import { appid, company, icp, version } from '@/config'
+import { company, icp, version } from '@/config'
 import { useStore } from '@/store'
 
 const Page = () => {
-  const setApp = useStore(state => state.setApp)
+  const router = useRouter()
   const params = useSearchParams()
 
   const code = params.get('code') || ''
   const state = params.get('state') || ''
-  const app = params.get('app') || 'gg'
-  useEffect(() => {
-    setApp(app)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [app])
+
+  const { login, loggedIn, token, setApp, client, initClient } = useStore(state => ({
+    login: state.login,
+    loggedIn: state.loggedIn,
+    token: state.token,
+    setApp: state.setApp,
+    client: state.client,
+    initClient: state.initClient
+  }))
+
+  // 获取登录信息
+  useAsyncEffect(async () => {
+    if (client === null) {
+      await initClient()
+    }
+  }, [client])
 
   const [method, setMethod] = useState<'sms' | 'password'>('sms')
-
-  const signer = new Signatory(appid)
-  const [fetch, { data }] = useMutation(LoginDocument, {
-    variables: { input: '' },
-    onError: ({ networkError }: ApolloError) => {
-      const { result } = networkError as ServerError
-      const { errors } = result as Record<string, { message: string }[]>
-      toast.error(errors[0].message)
+  const app = params.get('app') || 'gg'
+  useAsyncEffect(async () => {
+    setApp(app)
+    if (code === '') {
+      return
     }
-  })
 
-  const login = useStore(state => state.login)
-  const loggedIn = useStore(state => state.loggedIn)
-
-  useEffect(() => {
-    const auth = async () => {
-      const payload = signer.toBase64String({ app: app, code: code, state: state })
-      try {
-        const res = await fetch({ variables: { input: payload } })
-        console.log(res)
-      } catch (error) {
-        console.log(error)
-      }
-    }
-    if (code && state) {
-      auth().catch(console.error)
+    try {
+      await login({ app: app, code: code, state: state })
+    } catch (error) {
+      console.log(error)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [code])
+  }, [code, app])
+
+  useEffect(() => {
+    if (token) {
+      Cookies.set('token', token, { path: '/' })
+    }
+  }, [token])
 
   const onReset = (method: 'sms' | 'password' = 'sms') => {
     setMethod(method)
   }
 
-  // 已经登录的跳转回首页
-  if (loggedIn) {
-    return redirect('/')
-  }
-
-  if (data) {
-    toast.success('登录成功')
-    login(data.login)
-    // NOTE: 获取用户信息
-    return redirect('/')
-  }
+  // 登录后跳转
+  useEffect(() => {
+    if (loggedIn) {
+      router.replace('/dashboard')
+    }
+  }, [loggedIn, router])
 
   return (
     <>
