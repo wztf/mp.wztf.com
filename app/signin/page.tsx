@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 'use client'
 
+import { ApolloError, ServerError } from '@apollo/client'
 import * as Separator from '@radix-ui/react-separator'
 import { Box, Card, Container, Flex, Heading, Text } from '@radix-ui/themes'
 import { useAsyncEffect } from 'ahooks'
@@ -10,6 +11,7 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { FaWeixin } from 'react-icons/fa'
 import { FcGoogle } from 'react-icons/fc'
+import { toast } from 'react-toastify'
 
 import { RuiLogin, RuiRegister, RuiWechat } from '@/components/account'
 import { company, icp, version } from '@/config'
@@ -49,20 +51,25 @@ const Page = () => {
     try {
       await login({ app: app, code: code, state: state })
     } catch (error) {
-      console.log(error)
+      const { networkError } = error as ApolloError
+      const { result } = networkError as ServerError
+      const { errors } = result as Record<string, { message: string }[]>
+      if (errors) {
+        toast.error(errors[0].message)
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [code, app])
+
+  const onReset = (method: 'sms' | 'password' = 'sms') => {
+    setMethod(method)
+  }
 
   useEffect(() => {
     if (token) {
       Cookies.set('token', token, { path: '/' })
     }
   }, [token])
-
-  const onReset = (method: 'sms' | 'password' = 'sms') => {
-    setMethod(method)
-  }
 
   // 登录后跳转
   useEffect(() => {

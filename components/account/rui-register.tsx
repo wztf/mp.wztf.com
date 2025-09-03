@@ -7,7 +7,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { Flex, Heading, Text } from '@radix-ui/themes'
 import { useCountDown, useUnmount } from 'ahooks'
 import { useRouter } from 'next/navigation'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
 import { z } from 'zod'
@@ -38,8 +38,9 @@ const formSchema = z.object({
 const RuiLogin = () => {
   const router = useRouter()
 
-  const { app, signin } = useStore(state => ({
+  const { app, loggedIn, signin } = useStore(state => ({
     app: state.app,
+    loggedIn: state.loggedIn,
     signin: state.signin // 使用邮箱密码登录
   }))
 
@@ -97,7 +98,6 @@ const RuiLogin = () => {
 
     try {
       await signin({ app: app, ...values, method: 'sms' })
-      router.replace('/dashboard')
     } catch (error) {
       const { networkError } = error as ApolloError
       const { result } = networkError as ServerError
@@ -109,6 +109,13 @@ const RuiLogin = () => {
       setLoading(false)
     }
   }
+
+  // 登录后跳转
+  useEffect(() => {
+    if (loggedIn) {
+      router.replace('/dashboard')
+    }
+  }, [loggedIn, router])
 
   return (
     <>
