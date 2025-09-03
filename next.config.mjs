@@ -1,21 +1,18 @@
 import withBundleAnalyzer from '@next/bundle-analyzer'
 
+const isDev = process.env.NODE_ENV === 'development'
+
 const bundleAnalyzer = withBundleAnalyzer({
   enabled: process.env.ANALYZE === 'true'
 })
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  webpack: (config, { dev, isServer }) => {
-    // Only apply Preact aliases for production builds and client-side bundles
-    if (!dev && !isServer) {
-      Object.assign(config.resolve.alias, {
-        'react/jsx-runtime.js': 'preact/compat/jsx-runtime',
-        react: 'preact/compat',
-        'react-dom/test-utils': 'preact/test-utils',
-        'react-dom': 'preact/compat'
-      })
+  webpack: (config, { isServer }) => {
+    if (!isServer) {
+      config.cache = false
     }
+
     return config
   },
   reactStrictMode: true,
@@ -30,7 +27,9 @@ const nextConfig = {
         hostname: '*.svgrepo.com'
       }
     ]
-  }
+  },
+  productionBrowserSourceMaps: true, // 开启生产环境的浏览器源映射
+  swcMinify: !isDev // 关闭swc压缩
 }
 
 export default bundleAnalyzer(nextConfig)
