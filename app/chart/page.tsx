@@ -4,7 +4,7 @@
 import { ServerError, useMutation } from '@apollo/client'
 import { ApolloError } from '@apollo/client/errors'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { DatePicker, Select } from 'antd'
+import { DatePicker, Select, Spin } from 'antd'
 import dayjs, { Dayjs } from 'dayjs'
 import { useEffect, useState } from 'react'
 import { useForm, useWatch } from 'react-hook-form'
@@ -63,8 +63,10 @@ const Page = () => {
       const { result } = networkError as ServerError
       const { errors } = result as Record<string, { message: string }[]>
       if (errors) {
-        toast.error(errors[0].message)
+        console.log(errors[0].message)
+        toast.error('获取人类图出错，请重试')
       }
+      setLoading(false)
     }
   })
 
@@ -156,81 +158,83 @@ const Page = () => {
         </div>
       ) : (
         <div className='p-5'>
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} autoComplete='off' className='space-y-5'>
-              <FormField
-                control={form.control}
-                name='birthday'
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel htmlFor='date-picker'>
-                      <span className='text-red-500'>*</span>出生日期
-                    </FormLabel>
-                    <FormControl>
-                      <div className=''>
-                        <DatePicker
-                          id='date-picker'
-                          className='h-10 w-full'
+          <Spin spinning={loading}>
+            <Form {...form}>
+              <form onSubmit={form.handleSubmit(onSubmit)} autoComplete='off' className='space-y-5'>
+                <FormField
+                  control={form.control}
+                  name='birthday'
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel htmlFor='date-picker'>
+                        <span className='text-red-500'>*</span>出生日期
+                      </FormLabel>
+                      <FormControl>
+                        <div className=''>
+                          <DatePicker
+                            id='date-picker'
+                            className='h-10 w-full'
+                            value={field.value}
+                            showTime
+                            onChange={field.onChange}
+                            format='YYYY-MM-DD HH:mm:ss'
+                          />
+                        </div>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name='country'
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>
+                        <span className='text-red-500'>*</span>省
+                      </FormLabel>
+                      <FormControl>
+                        <Select
+                          className='w-full'
                           value={field.value}
-                          showTime
+                          options={provinces}
                           onChange={field.onChange}
-                          format='YYYY-MM-DD HH:mm:ss'
+                          size='large'
                         />
-                      </div>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name='country'
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>
-                      <span className='text-red-500'>*</span>省
-                    </FormLabel>
-                    <FormControl>
-                      <Select
-                        className='w-full'
-                        value={field.value}
-                        options={provinces}
-                        onChange={field.onChange}
-                        size='large'
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name='city'
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>
-                      <span className='text-red-500'>*</span>市
-                    </FormLabel>
-                    <FormControl>
-                      <Select
-                        className='w-full'
-                        value={field.value}
-                        options={citiesOptions}
-                        onChange={field.onChange}
-                        size='large'
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <div className='mt-20'>
-                <Button size='lg' disabled={loading} type='submit' className='w-full h-12'>
-                  绘 制
-                </Button>
-              </div>
-            </form>
-          </Form>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name='city'
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>
+                        <span className='text-red-500'>*</span>市
+                      </FormLabel>
+                      <FormControl>
+                        <Select
+                          className='w-full'
+                          value={field.value}
+                          options={citiesOptions}
+                          onChange={field.onChange}
+                          size='large'
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <div className='mt-20'>
+                  <Button size='lg' disabled={loading} type='submit' className='w-full h-12'>
+                    绘 制
+                  </Button>
+                </div>
+              </form>
+            </Form>
+          </Spin>
         </div>
       )}
     </div>
