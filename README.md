@@ -1,9 +1,5 @@
 # King Talent
 
-## TypeError: request.endsWith is not a function. (In 'request.endsWith(".shared-runtime")'
-
-<https://bun.sh/blog/bun-v1.0.30>
-
-```bash
-bun update
-```
+- [rsuitejs](https://rsuitejs.com/zh/components/cascader/#aria-%E5%B1%9E%E6%80%A7)
+- [datetime-picker](https://shadcn-datetime-picker-pro.vercel.app/?path=/docs/datetimepicker--docs)
+- [element-china-area-data](https://github.com/Plortinus/element-china-area-data)

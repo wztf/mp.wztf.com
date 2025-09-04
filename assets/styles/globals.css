@@ -13,6 +13,11 @@
 @import 'animate.css';
 
 /**
+  * [rsuite](https://rsuitejs.com/zh/guide/usage/)
+  */
+@import 'rsuite/dist/rsuite-no-reset.min.css';
+
+/**
   * swiper
   */
 @import 'swiper/css';
@@ -221,6 +226,7 @@
     from {
       height: 0;
     }
+
     to {
       height: var(--radix-accordion-content-height);
     }
@@ -230,6 +236,7 @@
     from {
       height: var(--radix-accordion-content-height);
     }
+
     to {
       height: 0;
     }
@@ -247,4 +254,12 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+.dialog .nut-dialog {
+  @apply p-1;
+}
+
+.dialog .nut-dialog-content {
+  @apply mt-0 mb-0;
 }
