@@ -1300,6 +1300,22 @@
             "deprecationReason": null
           },
           {
+            "name": "hd_thumb",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "hd_type",
             "description": null,
             "args": [],
@@ -1323,22 +1339,6 @@
               "kind": "SCALAR",
               "name": "Int",
               "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "thumb",
-            "description": null,
-            "args": [],
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              }
             },
             "isDeprecated": false,
             "deprecationReason": null
@@ -2397,8 +2397,8 @@
               "kind": "NON_NULL",
               "name": null,
               "ofType": {
-                "kind": "OBJECT",
-                "name": "ChartObject",
+                "kind": "SCALAR",
+                "name": "String",
                 "ofType": null
               }
             },
@@ -4733,6 +4733,39 @@
                     "ofType": null
                   }
                 }
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "chart",
+            "description": "Retrieves a chart by its SHA256 sum from the database.\n\nThis asynchronous function takes a SHA256 sum as a string argument and returns a `ChartObject`\nif a matching chart is found in the database. If no matching chart is found, an error is logged\nand a boxed `std::error::Error` is returned.\n\n# Arguments\n\n* `ctx` - The execution context of the GraphQL query. This object contains information\nabout the current user and the database connection.\n* `input` - The SHA256 sum of the chart to be retrieved.\n\n# Errors\n\nReturns a boxed `std::error::Error` if the database query fails or if no matching chart is\nfound.",
+            "args": [
+              {
+                "name": "input",
+                "description": null,
+                "type": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "String",
+                    "ofType": null
+                  }
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              }
+            ],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "ChartObject",
+                "ofType": null
               }
             },
             "isDeprecated": false,

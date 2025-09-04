@@ -223,6 +223,11 @@ export declare namespace API {
   }
 
   export interface Chart {
+    id?: number
+    birthday: string
+    country: string
+    city: string
+    province: number
     hd_authority: string
     hd_cross: string
     hd_definition: string
@@ -231,10 +236,6 @@ export declare namespace API {
     hd_strategy: string
     hd_theme: string
     hd_type: string
-    birthday: string
-    country: string
-    city: string
-    province: number
-    thumb: string
+    hd_thumb: string
   }
 }

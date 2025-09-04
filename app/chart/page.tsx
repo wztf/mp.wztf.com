@@ -1,9 +1,11 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 'use client'
 
-import { ServerError, useMutation } from '@apollo/client'
+import { ServerError, useLazyQuery, useMutation } from '@apollo/client'
 import { ApolloError } from '@apollo/client/errors'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { Flex, Spinner } from '@radix-ui/themes'
+import { useAsyncEffect } from 'ahooks'
 import { Spin } from 'antd'
 import { format } from 'date-fns'
 import { zhCN } from 'date-fns/locale'
@@ -18,7 +20,7 @@ import { z } from 'zod'
 
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@components/ui/form'
 
-import { ChartInput, CreateChartDocument } from '@generated/graphql'
+import { ChartDocument, ChartInput, CreateChartDocument } from '@generated/graphql'
 
 import { Button } from '@/components/ui/button'
 import { DateTimeInput } from '@/components/ui/datetime-input'
@@ -49,17 +51,43 @@ const Page = () => {
     }
   })
 
-  const [loading, setLoading] = useState(false)
-  const [fetch, { data }] = useMutation(CreateChartDocument, {
+  const [loaded, setLoaded] = useState<boolean>(false)
+  const [fetch, { data, refetch }] = useLazyQuery(ChartDocument, {
+    variables: { input: '' },
+    onError: ({ networkError }: ApolloError) => {
+      const { result } = networkError as ServerError
+      const { errors } = result as Record<string, { message: string }[]>
+      toast.error(errors[0].message)
+    }
+  })
+
+  useEffect(() => {
+    if (data) {
+      setLoading(false)
+      setSpinning(false)
+      setChart(data?.chart as unknown as API.Chart)
+    }
+  }, [data])
+
+  const [chart, setChart] = useState<API.Chart | null>(null)
+
+  const [loading, setLoading] = useState<boolean>(true)
+  useAsyncEffect(async () => {
+    setLoading(true)
+    await fetch({ variables: { input: '4a5cbd105aa92166e4d1a38bb4cddf8d653681acb7cc3e8e0e3bc0d2b9215bb6' } })
+    setLoaded(true)
+  }, [])
+
+  const [spinning, setSpinning] = useState(false)
+  const [creator] = useMutation(CreateChartDocument, {
     variables: { input: {} as ChartInput },
     onError: ({ networkError }: ApolloError) => {
       const { result } = networkError as ServerError
       const { errors } = result as Record<string, { message: string }[]>
       if (errors) {
-        console.log(errors[0].message)
-        toast.error('获取人类图出错，请重试')
+        toast.error(errors[0].message ?? '获取人类图出错，请重试')
       }
-      setLoading(false)
+      setSpinning(false)
     }
   })
 
@@ -74,7 +102,7 @@ const Page = () => {
    */
   const onSubmit = async () => {
     if (loading) return
-    setLoading(true)
+    setSpinning(true)
 
     const values = form.getValues()
     const payload: ChartInput = {
@@ -83,30 +111,24 @@ const Page = () => {
       city: values.city,
       province: values.province
     }
-    await fetch({ variables: { input: payload } })
-  }
 
-  const [chart, setChart] = useState<API.Chart | null>({
-    hd_authority: '荐骨型权威',
-    hd_cross: '右角度交叉之渗透4 (54/53 | 57/51)',
-    hd_definition: '一分人',
-    hd_profile: '2/4',
-    hd_profile_cht: '隐士/机会主义者',
-    hd_strategy: '等待回应',
-    hd_theme: '挫败感',
-    hd_type: '生产者',
-    birthday: '1990-01-07 12:30:00',
-    country: 'Beijing',
-    city: 'BEIJING',
-    thumb: 'https://mp.wztf99.com/storage/images/1756807768494.jpg',
-    province: 0
-  })
-  useEffect(() => {
-    if (data) {
-      setLoading(false)
-      setChart(data.createChart as unknown as API.Chart)
+    try {
+      const { data } = await creator({ variables: { input: payload } })
+      if (loaded) {
+        await refetch({ input: data?.createChart })
+      } else {
+        await fetch({ variables: { input: data?.createChart as string } })
+      }
+    } catch (error) {
+      const { networkError } = error as ApolloError
+      const { result } = networkError as ServerError
+      const { errors } = result as Record<string, { message: string }[]>
+      if (errors) {
+        toast.error(errors[0].message ?? '获取人类图出错，请重试')
+      }
+      setSpinning(false)
     }
-  }, [data])
+  }
 
   /**
    * Recursively transforms the `data` array of `DataItem` objects
@@ -171,10 +193,14 @@ const Page = () => {
   return (
     <div className='max-w-(--breakpoint-xl) mx-auto'>
       <h4 className='text-xl text-center mt-5'>你的专属人类图</h4>
-      {chart ? (
-        <div className='text-center space-y-5'>
+      {loading ? (
+        <Flex justify='center' className='w-full py-10 mx-auto'>
+          <Spinner size='3' />
+        </Flex>
+      ) : chart ? (
+        <div className='text-center space-y-5 mt-5'>
           <div>
-            <img src={chart?.thumb} alt='' className='text-center mx-auto' />
+            <img src={chart?.hd_thumb} alt='' className='text-center mx-auto' />
           </div>
           <div className='p-5'>
             <Table className='space-y-5'>
@@ -218,7 +244,7 @@ const Page = () => {
         </div>
       ) : (
         <div className='p-5'>
-          <Spin spinning={loading}>
+          <Spin spinning={spinning}>
             <Form {...form}>
               <form
                 onSubmit={e => {
@@ -269,7 +295,7 @@ const Page = () => {
                       <FormControl>
                         <Cascader
                           block
-                          loading={loading}
+                          loading={spinning}
                           data={areaData}
                           size='lg'
                           defaultValue={city}
@@ -283,7 +309,7 @@ const Page = () => {
                   )}
                 />
                 <div className='mt-20'>
-                  <Button size='lg' disabled={loading} type='button' className='w-full h-12' onClick={onSubmit}>
+                  <Button size='lg' disabled={spinning} type='button' className='w-full h-12' onClick={onSubmit}>
                     绘 制
                   </Button>
                 </div>

@@ -337,3 +337,21 @@ query Packages {
     avg
   }
 }
+
+query Chart($input: String!) {
+  chart(input: $input) {
+    birthday
+    country
+    city
+    province
+    hd_authority
+    hd_cross
+    hd_definition
+    hd_profile
+    hd_profile_cht
+    hd_strategy
+    hd_theme
+    hd_type
+    hd_thumb
+  }
+}
